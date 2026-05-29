@@ -583,7 +583,7 @@
         <button class="toggle-btn" onclick="switchPanel()">Alternar Painel</button>
     </div>
 
-    <script>
+   <script>
         (function() {
             let currentMode = "digital";
             let totalDistance = 0;
@@ -662,14 +662,17 @@
             generateSpeedTape(tapeTrackDigital);
             generateSpeedTape(tapeTrackAnalog);
 
+            // ==========================================
+            // FUNÇÃO CORRIGIDA CONTRA O "EFEITO FANTASMA"
+            // ==========================================
             window.atualizarVelocidade = function(velocidadeKmh, lat, lon, bearing) {
                 if (gpsWarning.style.display !== 'none') gpsWarning.style.display = 'none';
                 gpsErrorCount = 0;
                 
-                // Marca o tempo exato do recebimento dos dados do sensor
                 lastUpdateTime = Date.now();
 
-                window.velocidadeAlvoGPS = velocidadeKmh > 0.1 ? velocidadeKmh : 0;
+                // FILTRO DE PARADA: Se o GPS oscilar parado abaixo de 1.5 km/h, crava em zero.
+                window.velocidadeAlvoGPS = velocidadeKmh > 1.5 ? velocidadeKmh : 0;
 
                 if (window.velocidadeAlvoGPS > 0) {
                     totalSomaVelocidades += window.velocidadeAlvoGPS;
@@ -680,12 +683,14 @@
                     }
                 }
 
-                if (lat && lon && lastCoord) {
+                // CADEADO DE ODÔMETRO: Só computa distância real se o veículo estiver de fato acima de 2.0 km/h
+                if (lat && lon && lastCoord && window.velocidadeAlvoGPS > 2.0) {
                     let d = haversine(lastCoord.lat, lastCoord.lon, lat, lon);
                     if (d > 0 && d < 500) { 
                         totalDistance += d;
                     }
                 }
+                
                 if (lat && lon) lastCoord = { lat, lon };
 
                 if (!lat && window.velocidadeAlvoGPS > 0) {
@@ -719,30 +724,25 @@
 
             window.addEventListener('resize', resizeCanvas);
 
-            // ==========================================
-            // CICLO DE RENDERIZAÇÃO INTELIGENTE (OTIMIZADO)
-            // ==========================================
             function renderizarCicloSuave() {
                 const agora = Date.now();
                 const tempoSemGps = agora - lastUpdateTime;
 
-                // TRAVA DE TEMPO: Se o sinal demorar mais de 1.2 segundos, o carro parou ou reduziu bruscamente.
                 if (tempoSemGps > 1200) {
                     window.velocidadeAlvoGPS = Math.max(0, window.velocidadeAlvoGPS - 5); 
                 }
 
-                // CÁLCULO DO FILTRO DINÂMICO DE SUAVIZAÇÃO
                 const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
                 const absDiferenca = Math.abs(diferenca);
                 
-                let fatorSuavizacao = 0.25; // Velocidade de cruzeiro estável
+                let fatorSuavizacao = 0.25;
 
                 if (absDiferenca > 15) {
-                    fatorSuavizacao = 0.65; // Acelerações fortes ou frenagens bruscas
+                    fatorSuavizacao = 0.65; 
                 } else if (absDiferenca > 5) {
-                    fatorSuavizacao = 0.45; // Mudanças moderadas
+                    fatorSuavizacao = 0.45; 
                 } else if (absDiferenca < 1 && window.velocidadeAlvoGPS === 0) {
-                    fatorSuavizacao = 1.0;  // Zera o painel imediatamente no fim da parada
+                    fatorSuavizacao = 1.0;  
                 }
 
                 velocidadeSuaveExibida += diferenca * fatorSuavizacao;
@@ -933,7 +933,6 @@
                 ctx.fillText(`${Math.round(speed)} km/h`, cx, dY + dH * 0.76);
             }
 
-            // Ativação otimizada do sensor de geolocalização do navegador
             if ("geolocation" in navigator) {
                 navigator.geolocation.watchPosition(updateGPS, handleGPSError, { 
                     enableHighAccuracy: true, 
@@ -946,5 +945,4 @@
             renderizarCicloSuave();
         })();
     </script>
-</body>
 </html>
