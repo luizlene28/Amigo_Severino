@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>AutoVelox Pro – Velocímetro Profissional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-deep: #06060c;
+            --card-bg: rgba(18, 18, 28, 0.92);
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --accent-red: #e0243f;
+            --accent-amber: #f5a623;
+            --accent-green: #00ff88;
+            --font-digital: 'Orbitron', 'Segoe UI', monospace;
+            --font-ui: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            background: radial-gradient(ellipse at 50% 20%, #0f0f1a 0%, #030308 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 6px 24px 6px;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            transition: background 0.4s ease;
+        }
+
+        /* ========== CABEÇALHO ========== */
+        .app-header {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            margin-bottom: 12px;
+            background: rgba(22, 22, 34, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .header-top-row {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-digital);
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5px;
+        }
+        .app-logo .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            box-shadow: 0 0 8px var(--accent-red);
+        }
+
+        .digital-clock {
+            font-family: var(--font-digital);
+            font-size: 1.8rem;
+            color: #ffffff;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            text-align: center;
+            padding: 4px 0;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 2px;
+            transition: color 0.3s, background 0.3s, border-color 0.3s, text-shadow 0.3s;
+        }
+
+        .app-badge {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            color: var(--accent-green);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* ========== HUD PRINCIPAL ========== */
+        .hud-container {
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 14px 12px;
+            border-radius: 24px;
+            box-shadow: 0 28px 60px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .speed-stage {
+            width: 100%;
+            height: 44vh;
+            max-height: 500px;
+            min-height: 340px;
+            border-radius: 20px;
+            background: rgba(10, 10, 18, 0.85);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 4px 24px rgba(0, 0, 0, 0.95);
+            margin-bottom: 12px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        #panel-digital {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            position: absolute;
+        }
+
+        .speed-number-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 35px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1.5px solid #ffffff;
+            border-radius: 16px;
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1), 0 8px 25px rgba(0, 0, 0, 0.5);
+            margin-top: 15px;
+            margin-bottom: 5px;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .speed-number {
+            font-family: var(--font-digital);
+            font-weight: 900;
+            font-size: clamp(8rem, 28vw, 13.5rem);
+            color: #00ff88;
+            line-height: 0.8;
+            letter-spacing: -3px;
+            transition: color 0.3s;
+        }
+        .speed-unit {
+            font-family: var(--font-digital);
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            letter-spacing: 6px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-top: 12px;
+            transition: color 0.3s;
+        }
+
+        #panel-analog {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            position: absolute;
+        }
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            margin-top: 2px;
+        }
+        canvas {
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 50%;
+        }
+
+        .escondido {
+            display: none !important;
+        }
+
+        /* ========== BARRA DE ROLAGEM (mantida do último ajuste) ========== */
+        .speed-tape-container {
+            width: 100%;
+            height: 65px;
+            background: linear-gradient(180deg, #f4f4f4 0%, #ffffff 20%, #ffffff 80%, #e0e0e0 100%);
+            border-top: 2px solid #ccc;
+            border-bottom: 2px solid #aaa;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.25), 0 6px 12px rgba(0,0,0,0.4);
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            margin-top: auto;
+            z-index: 3;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .speed-tape-container::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 100%;
+            height: 28px;
+            background: linear-gradient(180deg,
+                rgba(0, 180, 90, 0.3) 0%,
+                rgba(0, 255, 136, 0.5) 50%,
+                rgba(0, 180, 90, 0.3) 100%);
+            border-top: 2px solid rgba(0, 255, 136, 0.8);
+            border-bottom: 2px solid rgba(0, 150, 80, 0.7);
+            box-shadow: inset 0 0 10px rgba(0,255,136,0.5), 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .speed-tape-track {
+            display: flex;
+            position: absolute;
+            height: 100%;
+            align-items: center;
+            left: 50%;
+            transform: translateX(0px);
+            will-change: transform;
+            z-index: 2;
+        }
+
+        .tape-mark {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 100%;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .tape-number {
+            font-family: var(--font-digital);
+            font-size: 1.35rem;
+            color: #222;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9), 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        .tape-tick {
+            width: 2px;
+            height: 14px;
+            background: #333;
+            margin-top: 4px;
+            box-shadow: 0 1px 2px rgba(255,255,255,0.7);
+        }
+        .tape-minor-tick {
+            width: 2px;
+            height: 8px;
+            background: #666;
+            margin-top: 4px;
+            box-shadow: 0 1px 1px rgba(255,255,255,0.5);
+        }
+        .tape-minor-number {
+            font-family: var(--font-digital);
+            font-size: 0.85rem;
+            color: #444;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.8);
+        }
+
+        .tape-pointer {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(90deg, #b01020, #ff2a40, #b01020);
+            box-shadow: 0 0 14px rgba(255, 0, 0, 0.8), inset 0 0 5px rgba(255,255,255,0.4);
+            transform: translateX(-50%);
+            z-index: 4;
+            border-radius: 3px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: #12121c;
+            border-radius: 20px;
+            margin: 0 0 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+            transition: background 0.3s;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4a90d9, #e0243f);
+            border-radius: 20px;
+        }
+
+        .gps-warning {
+            text-align: center;
+            color: var(--accent-amber);
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 2px 0 12px;
+            width: 100%;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 10px 2px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: background 0.3s, border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .card span {
+            display: block;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: #ffffff;
+            margin-top: 4px;
+            font-family: var(--font-digital);
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+        .card label {
+            font-size: 0.58rem;
+            letter-spacing: 1.5px;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        /* Botão de tema dentro do card Rumo */
+        .theme-toggle-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 4px auto 0;
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+            padding: 0;
+        }
+
+        .toggle-btn {
+            margin: 2px auto 0;
+            padding: 12px 24px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: #14141a;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 280px;
+            display: block;
+            font-size: 0.85rem;
+            font-family: var(--font-digital);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+        }
+        .toggle-btn:active {
+            transform: scale(0.96);
+            background: #1c1c24;
+        }
+
+        /* ========== MODO CLARO (TEMA INVERSO) ========== */
+        body.light-mode {
+            background: radial-gradient(ellipse at 50% 20%, #e8eaed 0%, #f5f7fa 100%);
+        }
+        body.light-mode .app-header {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #cccccc;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        body.light-mode .app-logo {
+            color: rgba(0,0,0,0.6);
+        }
+        body.light-mode .digital-clock {
+            color: #1a1a1a;
+            background: rgba(0,0,0,0.03);
+            border-color: #cccccc;
+            text-shadow: 0 0 8px rgba(0,180,90,0.3);
+        }
+        body.light-mode .hud-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #cccccc;
+            box-shadow: 0 28px 60px rgba(0,0,0,0.15);
+        }
+        body.light-mode .speed-stage {
+            background: rgba(240, 240, 245, 0.9);
+            border-color: #cccccc;
+            box-shadow: inset 0 4px 24px rgba(0,0,0,0.1);
+        }
+        body.light-mode .speed-number-container {
+            background: rgba(255,255,255,0.85);
+            border-color: #444444;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.1), 0 8px 25px rgba(0,0,0,0.2);
+        }
+        body.light-mode .speed-number {
+            color: #007744;
+        }
+        body.light-mode .speed-unit {
+            color: rgba(0,0,0,0.5);
+        }
+        body.light-mode .card {
+            background: rgba(0,0,0,0.03);
+            border-color: #cccccc;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        body.light-mode .card label {
+            color: #555555;
+        }
+        body.light-mode .card span {
+            color: #111111;
+        }
+        body.light-mode .theme-toggle-btn {
+            background: rgba(0,0,0,0.05);
+            border-color: #999999;
+            color: #333333;
+        }
+        body.light-mode .progress-container {
+            background: #dddddd;
+        }
+        body.light-mode .toggle-btn {
+            background: #e0e0e0;
+            color: #111111;
+            border-color: #aaaaaa;
+        }
+        body.light-mode .speed-tape-container {
+            background: linear-gradient(180deg, #eaeaea 0%, #ffffff 20%, #ffffff 80%, #dcdcdc 100%);
+            border-top-color: #bbbbbb;
+            border-bottom-color: #999999;
+        }
+        /* A faixa verde permanece, apenas ajustamos levemente as cores dos números e traços */
+        body.light-mode .tape-number,
+        body.light-mode .tape-minor-number {
+            color: #111;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+        }
+        body.light-mode .tape-tick {
+            background: #222;
+        }
+        body.light-mode .tape-minor-tick {
+            background: #555;
+        }
+        body.light-mode .tape-pointer {
+            background: linear-gradient(90deg, #b01020, #ff2a40, #b01020);
+        }
+
+        @media (max-width: 600px) {
+            .speed-stage {
+                height: 44vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-header">
+        <div class="header-top-row">
+            <div class="app-logo">
+                <span class="dot"></span>SEVERINO-LC
+            </div>
+            <div class="app-badge">PRO</div>
+        </div>
+        <div class="digital-clock" id="topClock">00:00:00</div>
+    </div>
+
+    <div class="hud-container">
+        <div class="speed-stage" id="speedStage">
+            
+            <div id="panel-digital">
+                <div class="speed-number-container">
+                    <div class="speed-number" id="speed-val">00</div>
+                    <div class="speed-unit">km/h</div>
+                </div>
+                <div class="speed-tape-container" id="tape-digital">
+                    <div class="tape-pointer"></div>
+                    <div class="speed-tape-track" id="tape-track-digital"></div>
+                </div>
+            </div>
+
+            <div id="panel-analog" class="escondido">
+                <div class="canvas-container">
+                    <canvas id="gaugeCanvas" width="500" height="500" aria-label="Velocímetro analógico"></canvas>
+                </div>
+                <div class="speed-tape-container" id="tape-analog">
+                    <div class="tape-pointer"></div>
+                    <div class="speed-tape-track" id="tape-track-analog"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="gps-warning" id="gpsWarning">🔍 Buscando sinal GPS...</div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="p-bar"></div>
+        </div>
+
+        <div class="grid">
+            <div class="card"><label>Distância</label><span id="dist-val">0.00 km</span></div>
+            <div class="card"><label>Média</label><span id="avg-val">0.0</span></div>
+            <div class="card" style="flex-direction: row; align-items: center; justify-content: center; gap: 8px; padding: 8px 4px;">
+                <div style="text-align: center;">
+                    <label>Rumo</label>
+                    <span id="dir-val">-</span>
+                </div>
+                <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Alternar tema">🌙</button>
+            </div>
+        </div>
+
+        <button class="toggle-btn" onclick="switchPanel()">Alternar Painel</button>
+    </div>
+
+    <script>
+        (function() {
+            let currentMode = "digital";
+            let totalDistance = 0;
+            let lastCoord = null;
+            let gpsErrorCount = 0;
+            let lastUpdateTime = Date.now();
+            
+            window.velocidadeAlvoGPS = 0;
+            let velocidadeSuaveExibida = 0;
+            let totalSomaVelocidades = 0;
+            let totalLeiturasGps = 0;
+
+            // Controle de tema
+            window.isLightMode = false;
+
+            const speedVal = document.getElementById('speed-val');
+            const pBar = document.getElementById('p-bar');
+            const distVal = document.getElementById('dist-val');
+            const avgVal = document.getElementById('avg-val');
+            const dirVal = document.getElementById('dir-val');
+            const canvas = document.getElementById('gaugeCanvas');
+            const ctx = canvas.getContext('2d');
+            const gpsWarning = document.getElementById('gpsWarning');
+            const panelDigital = document.getElementById('panel-digital');
+            const panelAnalog = document.getElementById('panel-analog');
+            const speedStage = document.getElementById('speedStage');
+            const topClock = document.getElementById('topClock');
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            
+            const tapeTrackDigital = document.getElementById('tape-track-digital');
+            const tapeTrackAnalog = document.getElementById('tape-track-analog');
+            const tapeMarkWidth = 80; 
+
+            // Alternar tema
+            themeToggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                window.isLightMode = document.body.classList.contains('light-mode');
+                themeToggleBtn.textContent = window.isLightMode ? '☀️' : '🌙';
+                // Força redesenho do canvas na próxima frame
+            });
+
+            function updateClock() {
+                const now = new Date();
+                topClock.innerText = String(now.getHours()).padStart(2, '0') + ':' +
+                                     String(now.getMinutes()).padStart(2, '0') + ':' +
+                                     String(now.getSeconds()).padStart(2, '0');
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
+
+            function generateSpeedTape(trackElement) {
+                if (!trackElement) return;
+                trackElement.innerHTML = ''; 
+                const maxSpeed = 200;
+                
+                for (let i = 0; i <= maxSpeed; i += 20) {
+                    const mark = document.createElement('div');
+                    mark.className = 'tape-mark';
+                    mark.innerHTML = `
+                        <div class="tape-number">${i}</div>
+                        <div class="tape-tick"></div>
+                    `;
+                    trackElement.appendChild(mark);
+
+                    if (i < maxSpeed) {
+                        const minorMark = document.createElement('div');
+                        minorMark.className = 'tape-mark';
+                        minorMark.innerHTML = `
+                            <div class="tape-minor-number">${i + 10}</div>
+                            <div class="tape-minor-tick"></div>
+                        `;
+                        trackElement.appendChild(minorMark);
+                    }
+                }
+            }
+
+            generateSpeedTape(tapeTrackDigital);
+            generateSpeedTape(tapeTrackAnalog);
+
+            window.atualizarVelocidade = function(velocidadeKmh, lat, lon, bearing) {
+                if (gpsWarning.style.display !== 'none') gpsWarning.style.display = 'none';
+                gpsErrorCount = 0;
+                lastUpdateTime = Date.now();
+
+                window.velocidadeAlvoGPS = velocidadeKmh > 0.05 ? velocidadeKmh : 0;
+
+                if (window.velocidadeAlvoGPS > 0) {
+                    totalSomaVelocidades += window.velocidadeAlvoGPS;
+                    totalLeiturasGps++;
+                    
+                    if (avgVal) {
+                        avgVal.innerText = (totalSomaVelocidades / totalLeiturasGps).toFixed(1);
+                    }
+                }
+
+                if (lat && lon && lastCoord) {
+                    let d = haversine(lastCoord.lat, lastCoord.lon, lat, lon);
+                    if (d > 0 && d < 500) { 
+                        totalDistance += d;
+                    }
+                }
+                if (lat && lon) lastCoord = { lat, lon };
+
+                if (!lat && window.velocidadeAlvoGPS > 0) {
+                    totalDistance += (window.velocidadeAlvoGPS / 3.6); 
+                }
+
+                if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
+                if (dirVal && bearing !== undefined) dirVal.innerText = getCardinals(bearing);
+            };
+
+            window.switchPanel = function() {
+                if (currentMode === "digital") {
+                    panelDigital.classList.add('escondido');
+                    panelAnalog.classList.remove('escondido');
+                    currentMode = "analog";
+                    setTimeout(() => { resizeCanvas(); }, 40);
+                } else {
+                    panelDigital.classList.remove('escondido');
+                    panelAnalog.classList.add('escondido');
+                    currentMode = "digital";
+                }
+            };
+
+            function resizeCanvas() {
+                if (!canvas || !speedStage) return;
+                const rect = canvas.parentNode.getBoundingClientRect();
+                const size = Math.min(rect.width, rect.height) * 0.99; 
+                canvas.width = size;
+                canvas.height = size;
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+
+            function renderizarCicloSuave() {
+                velocidadeSuaveExibida += (window.velocidadeAlvoGPS - velocidadeSuaveExibida) * 0.32;
+                
+                if (Math.abs(velocidadeSuaveExibida) < 0.05) velocidadeSuaveExibida = 0;
+
+                const displaySpeed = Math.round(velocidadeSuaveExibida);
+
+                if (speedVal) {
+                    speedVal.innerText = displaySpeed.toString().padStart(2, '0');
+                }
+
+                drawGauge(velocidadeSuaveExibida);
+
+                const tapeDeslocamento = ((velocidadeSuaveExibida / 10) * tapeMarkWidth) + (tapeMarkWidth / 2);
+                
+                if (tapeTrackDigital) {
+                    tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
+                }
+                if (tapeTrackAnalog) {
+                    tapeTrackAnalog.style.transform = `translateX(${-tapeDeslocamento}px)`;
+                }
+
+                const pct = Math.min((velocidadeSuaveExibida / 200) * 100, 100);
+                if (pBar) pBar.style.width = pct + "%";
+
+                requestAnimationFrame(renderizarCicloSuave);
+            }
+
+            function updateGPS(pos) {
+                let rawSpeed = pos.coords.speed || 0;
+                if (rawSpeed < 0) rawSpeed = 0;
+                window.atualizarVelocidade(rawSpeed * 3.6, pos.coords.latitude, pos.coords.longitude, pos.coords.heading);
+            }
+
+            function handleGPSError(err) {
+                gpsErrorCount++;
+                if (gpsWarning) {
+                    gpsWarning.style.display = 'block';
+                    gpsWarning.innerText = gpsErrorCount > 3 ? '⚠ Sinal GPS perdido.' : '🔍 Buscando sinal GPS...';
+                }
+                if (Date.now() - lastUpdateTime > 15000) {
+                    window.velocidadeAlvoGPS = 0;
+                }
+            }
+
+            function haversine(lat1, lon1, lat2, lon2) {
+                const R = 6371000;
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            }
+
+            function getCardinals(deg) {
+                if (deg === null || isNaN(deg)) return "-";
+                const sectors = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+                return sectors[Math.round(deg / 45) % 8];
+            }
+
+            function drawGauge(speed) {
+                if (!canvas || !ctx) return;
+                const w = canvas.width;
+                const w_h = canvas.height;
+                const cx = w / 2;
+                const cy = w_h / 2;
+                const radius = Math.min(w, w_h) * 0.47;
+                const light = window.isLightMode;
+
+                // Cores ajustadas conforme o tema
+                const bgColor = light ? '#f0f2f5' : '#0a0a12';
+                const outerRingColor = light ? '#333333' : '#00ff88';
+                const arcBaseColor = light ? '#aaaaaa' : '#ffffff';
+                const arcProgressStart = light ? '#c91a30' : '#c91a30';
+                const arcProgressEnd = light ? '#ff3b50' : '#ff3b50';
+                const tickMajorColor = light ? '#222222' : '#ffffff';
+                const tickMinorColor = light ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.4)';
+                const numberColor = light ? '#005533' : '#00ff88';
+                const needleColor = light ? '#cc2233' : '#ff3b50';
+                const centerDotStroke = light ? '#222222' : '#ffffff';
+                const odoTextColor = light ? '#b37400' : '#f5a623';
+                const speedTextColor = light ? '#007744' : '#00ff88';
+                const infoBoxBg = light ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.92)';
+                const infoBoxTextShadow = light ? 'none' : '0 0 5px rgba(0,0,0,0.8)';
+
+                ctx.clearRect(0, 0, w, w_h);
+
+                // Fundo do gauge
+                ctx.fillStyle = bgColor;
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius + 14, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Aro externo
+                ctx.save();
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = light ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.45)';
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius + 14, 0, Math.PI * 2);
+                ctx.strokeStyle = outerRingColor;
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+                ctx.restore();
+
+                // Círculo interno
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius + 7, 0, Math.PI * 2);
+                ctx.fillStyle = bgColor;
+                ctx.fill();
+
+                const startAngle = Math.PI * 0.78;
+                const endAngleTotal = Math.PI * 2.22;
+                const maxSpeed = 200;
+                const clampedSpeed = Math.min(speed, maxSpeed);
+                const progressAngle = startAngle + (clampedSpeed / maxSpeed) * (endAngleTotal - startAngle);
+
+                // Arco base
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, startAngle, endAngleTotal);
+                ctx.strokeStyle = arcBaseColor;
+                ctx.lineWidth = 12;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+
+                // Arco progresso
+                const arcGrad = ctx.createLinearGradient(0, 0, w, 0);
+                arcGrad.addColorStop(0, arcProgressStart);
+                arcGrad.addColorStop(1, arcProgressEnd);
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, startAngle, progressAngle);
+                ctx.strokeStyle = arcGrad;
+                ctx.lineWidth = 12;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+
+                // Traços
+                for (let i = 0; i <= maxSpeed; i += 5) {
+                    const angle = startAngle + (i / maxSpeed) * (endAngleTotal - startAngle);
+                    const isMajor = i % 20 === 0;
+                    const tickLength = isMajor ? 14 : 8;
+                    const innerRadius = radius - 6;
+                    ctx.beginPath();
+                    ctx.moveTo(cx + Math.cos(angle) * innerRadius, cy + Math.sin(angle) * innerRadius);
+                    ctx.lineTo(cx + Math.cos(angle) * (innerRadius - tickLength), cy + Math.sin(angle) * (innerRadius - tickLength));
+                    ctx.strokeStyle = isMajor ? tickMajorColor : tickMinorColor;
+                    ctx.lineWidth = isMajor ? 3 : 1;
+                    ctx.stroke();
+                }
+
+                // Números
+                ctx.font = `bold ${Math.floor(radius * 0.13)}px 'Orbitron', sans-serif`;
+                ctx.fillStyle = numberColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                for (let i = 0; i <= maxSpeed; i += 20) {
+                    const angle = startAngle + (i / maxSpeed) * (endAngleTotal - startAngle);
+                    const numX = cx + Math.cos(angle) * (radius - 32);
+                    const numY = cy + Math.sin(angle) * (radius - 32);
+                    ctx.fillText(i.toString(), numX, numY);
+                }
+
+                // Ponteiro
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(progressAngle + Math.PI / 2);
+                ctx.beginPath();
+                ctx.moveTo(-5, 0);
+                ctx.lineTo(0, -radius + 15);
+                ctx.lineTo(5, 0);
+                ctx.closePath();
+                ctx.fillStyle = needleColor;
+                ctx.fill();
+                ctx.restore();
+
+                // Centro
+                ctx.beginPath();
+                ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+                ctx.fillStyle = bgColor;
+                ctx.fill();
+                ctx.strokeStyle = centerDotStroke;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Display inferior
+                const dW = radius * 0.88;
+                const dH = radius * 0.38;
+                const dX = cx - dW / 2;
+                const dY = cy + radius * 0.38;
+                ctx.fillStyle = infoBoxBg;
+                ctx.beginPath();
+                if(ctx.roundRect) ctx.roundRect(dX, dY, dW, dH, 8); else ctx.rect(dX, dY, dW, dH);
+                ctx.fill();
+
+                ctx.font = `bold ${Math.floor(dH * 0.36)}px 'Orbitron', monospace`;
+                ctx.fillStyle = odoTextColor;
+                ctx.fillText(`ODO: ${(totalDistance/1000).toFixed(1)} km`, cx, dY + dH * 0.32);
+
+                ctx.font = `bold ${Math.floor(dH * 0.52)}px 'Orbitron', monospace`;
+                ctx.fillStyle = speedTextColor;
+                ctx.fillText(`${Math.round(speed)} km/h`, cx, dY + dH * 0.76);
+            }
+
+            if ("geolocation" in navigator) {
+                navigator.geolocation.watchPosition(updateGPS, handleGPSError, { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 });
+            }
+
+            resizeCanvas();
+            renderizarCicloSuave();
+        })();
+    </script>
+</body>
+</html>

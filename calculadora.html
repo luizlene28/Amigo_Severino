@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Calculadora Nexus Pro 3D | Offline</title>
+    <style>
+        :root {
+            --bg-deep: #1a1a1f;
+            --bg-calc: #4a4d55;
+            --bg-display: #9aac9a;
+            --text-display: #1a1f1a;
+            --text-expression: #2d332d;
+            --border-calc: #3a3d44;
+            --cube-size: 42px;
+            --cube-half: 21px;
+            --btn-shadow-dark: #2a2d33;
+            --btn-num-bg: #d5d8de;
+            --btn-num-top: #e8eaef;
+            --btn-op-bg: #3b5f80;
+            --btn-op-top: #4f7aa6;
+            --btn-eq-bg: #b84a2a;
+            --btn-eq-top: #d45a3a;
+            --btn-clear-bg: #8b3a3a;
+            --btn-clear-top: #a84848;
+            --btn-sci-bg: #5a5d66;
+            --btn-sci-top: #6e717a;
+            --btn-shadow: #2a2d33;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-deep);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 10px;
+            margin: 0;
+            overflow-x: hidden;
+            perspective: 1200px;
+            background-image:
+                radial-gradient(ellipse at 30% 20%, rgba(120, 120, 140, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 60%, rgba(80, 90, 110, 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 80%, rgba(60, 60, 80, 0.08) 0%, transparent 50%);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                radial-gradient(1px 1px at 15% 25%, rgba(255, 255, 255, 0.25), transparent),
+                radial-gradient(1px 1px at 75% 35%, rgba(0, 229, 255, 0.3), transparent),
+                radial-gradient(1.5px 1.5px at 40% 70%, rgba(255, 255, 255, 0.2), transparent),
+                radial-gradient(1px 1px at 60% 15%, rgba(180, 180, 200, 0.3), transparent),
+                radial-gradient(1.5px 1.5px at 85% 55%, rgba(255, 255, 255, 0.2), transparent),
+                radial-gradient(1px 1px at 20% 80%, rgba(0, 229, 255, 0.25), transparent),
+                radial-gradient(1px 1px at 55% 45%, rgba(255, 255, 255, 0.2), transparent),
+                radial-gradient(1.5px 1.5px at 90% 10%, rgba(200, 200, 220, 0.25), transparent);
+            animation: particlesFloat 20s linear infinite;
+        }
+
+        @keyframes particlesFloat {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .calculator-container {
+            position: relative;
+            width: 100%;
+            max-width: 430px;
+            background: var(--bg-calc);
+            border-radius: 18px;
+            padding: 22px 18px 18px;
+            box-shadow:
+                0 30px 50px rgba(0, 0, 0, 0.7),
+                0 0 0 3px var(--border-calc),
+                0 0 0 5px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+            border: 2px solid #5a5d66;
+            transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            z-index: 1;
+            will-change: transform;
+            background: linear-gradient(180deg, #5a5d68 0%, #4a4d55 5%, #3f424a 100%);
+        }
+
+        .calculator-container:hover {
+            box-shadow:
+                0 35px 60px rgba(0, 0, 0, 0.75),
+                0 0 0 3px var(--border-calc),
+                0 0 0 5px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.25);
+        }
+
+        /* ============ 3D CUBE (mantido com neon) ============ */
+        .cube-wrapper {
+            position: absolute;
+            top: -18px;
+            left: -14px;
+            width: var(--cube-size);
+            height: var(--cube-size);
+            z-index: 10;
+            perspective: 200px;
+            filter: drop-shadow(0 0 12px rgba(179, 71, 234, 0.7));
+            cursor: pointer;
+            transition: filter 0.3s;
+        }
+        .cube-wrapper:hover {
+            filter: drop-shadow(0 0 22px rgba(0, 229, 255, 0.9));
+        }
+
+        .cube-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCube3D 8s linear infinite;
+            transition: animation-duration 0.3s;
+        }
+        .cube-wrapper:hover .cube-inner {
+            animation-duration: 3s;
+        }
+
+        @keyframes rotateCube3D {
+            0% {
+                transform: rotateX(-25deg) rotateY(0deg);
+            }
+            100% {
+                transform: rotateX(-25deg) rotateY(360deg);
+            }
+        }
+
+        .cube-face {
+            position: absolute;
+            width: var(--cube-size);
+            height: var(--cube-size);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65em;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            backface-visibility: visible;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+            user-select: none;
+            overflow: hidden;
+        }
+        .cube-face span {
+            font-size: 0.75em;
+            display: block;
+            text-align: center;
+        }
+
+        .cf-front {
+            background: linear-gradient(135deg, #b347ea, #7c3aed);
+            transform: translateZ(var(--cube-half));
+            box-shadow: 0 0 14px rgba(179, 71, 234, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .cf-back {
+            background: linear-gradient(135deg, #00e5ff, #0091ea);
+            transform: rotateY(180deg) translateZ(var(--cube-half));
+            box-shadow: 0 0 14px rgba(0, 229, 255, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .cf-right {
+            background: linear-gradient(135deg, #ff2d75, #c51162);
+            transform: rotateY(90deg) translateZ(var(--cube-half));
+            box-shadow: 0 0 14px rgba(255, 45, 117, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .cf-left {
+            background: linear-gradient(135deg, #39ff14, #00c853);
+            transform: rotateY(-90deg) translateZ(var(--cube-half));
+            box-shadow: 0 0 14px rgba(57, 255, 20, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .cf-top {
+            background: linear-gradient(135deg, #ff6d3a, #ff3d00);
+            transform: rotateX(90deg) translateZ(var(--cube-half));
+            box-shadow: 0 0 14px rgba(255, 109, 58, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .cf-bottom {
+            background: linear-gradient(135deg, #ffe600, #ffc400);
+            transform: rotateX(-90deg) translateZ(var(--cube-half));
+            box-shadow: 0 0 14px rgba(255, 230, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            color: #1a1a1a;
+            text-shadow: none;
+        }
+
+        /* ============ HEADER ============ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 8px 14px 8px 32px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            position: relative;
+            z-index: 5;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .brand-title {
+            color: #d5d8de;
+            font-weight: 800;
+            font-size: 1.05em;
+            letter-spacing: 1.5px;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+            background: none;
+            -webkit-text-fill-color: #d5d8de;
+            filter: none;
+            animation: none;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 6px;
+        }
+
+        .mode-btn {
+            background: #3a3d44;
+            color: #aaa;
+            border: 1px solid #2a2d33;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.78em;
+            font-weight: 700;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 0 #2a2d33, 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            position: relative;
+            top: 0;
+        }
+        .mode-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #2a2d33, 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .mode-btn.active {
+            background: #5a5f6a;
+            color: #fff;
+            border-color: #2a2d33;
+            box-shadow: 0 3px 0 #2a2d33, 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+            animation: none;
+        }
+
+        /* ============ FORMAT SELECTOR ============ */
+        .format-selector {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .format-btn {
+            background: #3a3d44;
+            color: #999;
+            border: 1px solid #2a2d33;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.7em;
+            font-weight: 700;
+            transition: all 0.12s ease;
+            flex: 1;
+            min-width: 50px;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 3px 0 #2a2d33, 0 3px 6px rgba(0, 0, 0, 0.25);
+            position: relative;
+            top: 0;
+        }
+        .format-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #2a2d33, 0 2px 3px rgba(0, 0, 0, 0.3);
+        }
+        .format-btn.active {
+            background: #5a5f6a;
+            border-color: #2a2d33;
+            color: #fff;
+            box-shadow: 0 3px 0 #2a2d33, 0 3px 6px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            font-weight: 800;
+        }
+
+        /* ============ DISPLAY LCD ============ */
+        .display {
+            background: var(--bg-display);
+            border-radius: 8px;
+            padding: 14px 12px;
+            margin-bottom: 16px;
+            border: 2px solid #6a6d70;
+            box-shadow:
+                inset 0 3px 8px rgba(0, 0, 0, 0.5),
+                0 0 0 2px #2a2d33,
+                0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: linear-gradient(180deg, #b8c8b8 0%, #9aac9a 30%, #8a9d8a 100%);
+        }
+        .display::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+        .display::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+        }
+
+        .expression {
+            color: var(--text-expression);
+            font-size: 0.85em;
+            min-height: 20px;
+            text-align: right;
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+            font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+            max-height: 2.6em;
+            overflow-y: auto;
+            margin-bottom: 4px;
+            padding-right: 2px;
+            text-shadow: none;
+        }
+        .expression::-webkit-scrollbar {
+            width: 3px;
+        }
+        .expression::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 3px;
+        }
+
+        .result {
+            color: var(--text-display);
+            text-align: right;
+            font-weight: 700;
+            font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+            letter-spacing: 1px;
+            line-height: 1.1;
+            text-shadow: none;
+            transition: font-size 0.2s ease, color 0.3s;
+            max-height: 3.3em;
+            overflow-y: auto;
+            padding-right: 2px;
+            font-size: 2.4em;
+        }
+        .result::-webkit-scrollbar {
+            width: 3px;
+        }
+        .result::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+        .result.error-display {
+            color: #8b1a1a;
+        }
+
+        .display-glow-line {
+            display: none;
+        }
+
+        /* ============ SCIENTIFIC PANEL ============ */
+        .scientific-panel {
+            display: none;
+            margin-bottom: 12px;
+        }
+        .scientific-panel.show {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 7px;
+        }
+
+        /* ============ BUTTONS GRID ============ */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 9px;
+        }
+
+        /* ============ BASE BUTTON STYLE - RELEVO PRONUNCIADO ============ */
+        button {
+            background: var(--btn-num-bg);
+            color: #1a1d22;
+            border: 1.5px solid #9a9da5;
+            padding: 14px 4px;
+            border-radius: 8px;
+            font-size: 1.15em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.06s ease;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            position: relative;
+            top: 0;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            box-shadow:
+                0 5px 0 #8a8d94,
+                0 7px 10px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.15);
+            background: linear-gradient(180deg, #e8eaef 0%, #d5d8de 60%, #c5c8d0 100%);
+        }
+        button:active {
+            transform: translateY(3px) translateZ(-2px);
+            box-shadow:
+                0 2px 0 #8a8d94,
+                0 3px 6px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: linear-gradient(180deg, #d5d8de 0%, #c5c8d0 60%, #b5b8c0 100%);
+        }
+
+        /* Number buttons */
+        button[data-action="number"] {
+            background: linear-gradient(180deg, #f0f2f5 0%, #d5d8de 60%, #c5c8d0 100%);
+            color: #1a1d22;
+            border-color: #a0a3aa;
+            box-shadow: 0 5px 0 #8a8d94, 0 7px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        button[data-action="number"]:active {
+            background: linear-gradient(180deg, #d5d8de 0%, #c5c8d0 60%, #b0b3bb 100%);
+            box-shadow: 0 2px 0 #8a8d94, 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Operator buttons */
+        .operator {
+            background: linear-gradient(180deg, #5f85aa 0%, #3b5f80 60%, #2f4f6a 100%) !important;
+            color: #fff !important;
+            border-color: #2a4a60 !important;
+            box-shadow: 0 5px 0 #2a4a60, 0 7px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+            font-weight: 800;
+        }
+        .operator:active {
+            background: linear-gradient(180deg, #3b5f80 0%, #2f4f6a 60%, #243f55 100%) !important;
+            box-shadow: 0 2px 0 #2a4a60, 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* Equals button */
+        .equals {
+            background: linear-gradient(180deg, #e07050 0%, #b84a2a 60%, #9a3d22 100%) !important;
+            border-color: #7a2d18 !important;
+            color: #fff !important;
+            grid-column: span 2;
+            font-size: 1.4em;
+            font-weight: 900;
+            box-shadow: 0 5px 0 #7a2d18, 0 7px 12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+            letter-spacing: 2px;
+        }
+        .equals:active {
+            background: linear-gradient(180deg, #b84a2a 0%, #9a3d22 60%, #7a2d18 100%) !important;
+            box-shadow: 0 2px 0 #7a2d18, 0 3px 8px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        }
+
+        /* Clear button */
+        .clear {
+            background: linear-gradient(180deg, #b86060 0%, #8b3a3a 60%, #6d2d2d 100%) !important;
+            border-color: #5a2020 !important;
+            color: #fff !important;
+            box-shadow: 0 5px 0 #5a2020, 0 7px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            font-weight: 800;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+        }
+        .clear:active {
+            background: linear-gradient(180deg, #8b3a3a 0%, #6d2d2d 60%, #552020 100%) !important;
+            box-shadow: 0 2px 0 #5a2020, 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* Scientific buttons */
+        .scientific {
+            background: linear-gradient(180deg, #7a7d86 0%, #5a5d66 60%, #4a4d55 100%) !important;
+            border-color: #3a3d44 !important;
+            font-size: 0.82em;
+            color: #fff !important;
+            box-shadow: 0 4px 0 #3a3d44, 0 6px 9px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+        }
+        .scientific:active {
+            background: linear-gradient(180deg, #5a5d66 0%, #4a4d55 60%, #3a3d44 100%) !important;
+            box-shadow: 0 1px 0 #3a3d44, 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* Percent button */
+        .percent-btn {
+            background: linear-gradient(180deg, #e0c080 0%, #c4a040 60%, #a88830 100%) !important;
+            border-color: #8a6d20 !important;
+            color: #1a1a1a !important;
+            box-shadow: 0 5px 0 #8a6d20, 0 7px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+            font-size: 0.85em;
+            text-shadow: none;
+        }
+        .percent-btn:active {
+            background: linear-gradient(180deg, #c4a040 0%, #a88830 60%, #8a6d20 100%) !important;
+            box-shadow: 0 2px 0 #8a6d20, 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        }
+
+        /* Backspace button */
+        button[data-action="backspace"] {
+            background: linear-gradient(180deg, #e5c5c5 0%, #c49595 60%, #a87878 100%);
+            color: #1a1a1a;
+            font-size: 1em;
+            border-color: #8a6565;
+            box-shadow: 0 5px 0 #8a6565, 0 7px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: none;
+        }
+        button[data-action="backspace"]:active {
+            background: linear-gradient(180deg, #c49595 0%, #a87878 60%, #8a6565 100%);
+            box-shadow: 0 2px 0 #8a6565, 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Decimal button */
+        button[data-action="decimal"] {
+            background: linear-gradient(180deg, #f0f2f5 0%, #d5d8de 60%, #c5c8d0 100%);
+            color: #1a1d22;
+            font-weight: 900;
+            font-size: 1.3em;
+            border-color: #a0a3aa;
+            box-shadow: 0 5px 0 #8a8d94, 0 7px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        button[data-action="decimal"]:active {
+            background: linear-gradient(180deg, #d5d8de 0%, #c5c8d0 60%, #b0b3bb 100%);
+            box-shadow: 0 2px 0 #8a8d94, 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* ============ RESPONSIVE STYLES ============ */
+        @media (max-width: 480px) {
+            :root {
+                --cube-size: 32px;
+                --cube-half: 16px;
+            }
+            .calculator-container {
+                padding: 18px 12px 14px;
+                border-radius: 14px;
+                max-width: 100%;
+            }
+            .cube-wrapper {
+                top: -14px;
+                left: -10px;
+            }
+            button {
+                padding: 11px 2px;
+                font-size: 1em;
+                border-radius: 6px;
+                box-shadow: 0 4px 0 #8a8d94, 0 5px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            }
+            button:active {
+                box-shadow: 0 2px 0 #8a8d94, 0 3px 5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+            }
+            .buttons-grid {
+                gap: 6px;
+            }
+            .scientific-panel.show {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 5px;
+            }
+            .result {
+                font-size: 1.9em;
+            }
+            .expression {
+                font-size: 0.75em;
+            }
+            .format-btn {
+                font-size: 0.65em;
+                padding: 5px 6px;
+                border-radius: 5px;
+            }
+            .mode-btn {
+                font-size: 0.7em;
+                padding: 6px 9px;
+                border-radius: 5px;
+            }
+            .percent-btn {
+                font-size: 0.78em;
+                padding: 10px 2px;
+            }
+            .header {
+                padding: 6px 10px 6px 24px;
+                margin-bottom: 12px;
+                border-radius: 8px;
+            }
+            .brand-title {
+                font-size: 0.9em;
+                letter-spacing: 1px;
+            }
+            .display {
+                padding: 12px 10px;
+                border-radius: 6px;
+                min-height: 65px;
+                margin-bottom: 12px;
+                border-width: 1.5px;
+            }
+            .scientific {
+                font-size: 0.72em;
+                padding: 9px 2px !important;
+                box-shadow: 0 3px 0 #3a3d44, 0 4px 7px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+            }
+            .cube-face {
+                font-size: 0.55em;
+                border-radius: 5px;
+            }
+            .operator,
+            .clear,
+            .equals,
+            .percent-btn {
+                box-shadow: 0 4px 0 currentColor, 0 5px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+            .operator {
+                box-shadow: 0 4px 0 #2a4a60, 0 5px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            }
+            .clear {
+                box-shadow: 0 4px 0 #5a2020, 0 5px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            }
+            .equals {
+                box-shadow: 0 4px 0 #7a2d18, 0 5px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+            }
+            .percent-btn {
+                box-shadow: 0 4px 0 #8a6d20, 0 5px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+            }
+        }
+
+        @media (max-width: 370px) {
+            :root {
+                --cube-size: 26px;
+                --cube-half: 13px;
+            }
+            .calculator-container {
+                padding: 14px 8px 10px;
+                border-radius: 12px;
+            }
+            .cube-wrapper {
+                top: -10px;
+                left: -6px;
+            }
+            button {
+                padding: 9px 1px;
+                font-size: 0.88em;
+                border-radius: 5px;
+                box-shadow: 0 3px 0 #8a8d94, 0 4px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+            }
+            button:active {
+                box-shadow: 0 1px 0 #8a8d94, 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            }
+            .buttons-grid {
+                gap: 4px;
+            }
+            .result {
+                font-size: 1.5em;
+            }
+            .expression {
+                font-size: 0.68em;
+            }
+            .brand-title {
+                font-size: 0.8em;
+            }
+            .mode-btn {
+                font-size: 0.65em;
+                padding: 5px 7px;
+            }
+            .format-btn {
+                font-size: 0.6em;
+                padding: 4px 5px;
+                border-radius: 4px;
+            }
+            .display {
+                padding: 10px 8px;
+                min-height: 55px;
+                border-radius: 5px;
+                border-width: 1.5px;
+            }
+            .cube-face {
+                font-size: 0.5em;
+                border-radius: 4px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .calculator-container {
+                max-width: 460px;
+                padding: 26px 22px 22px;
+            }
+            button {
+                padding: 16px 6px;
+                font-size: 1.25em;
+                border-radius: 9px;
+            }
+            .buttons-grid {
+                gap: 10px;
+            }
+            .result {
+                font-size: 2.6em;
+            }
+            .scientific-panel.show {
+                gap: 8px;
+            }
+            .scientific {
+                font-size: 0.88em;
+            }
+            :root {
+                --cube-size: 46px;
+                --cube-half: 23px;
+            }
+            .cube-wrapper {
+                top: -20px;
+                left: -16px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .calculator-container {
+                max-width: 480px;
+            }
+            button {
+                padding: 17px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container" id="calculatorContainer">
+        <!-- 3D Cube no topo esquerdo -->
+        <div class="cube-wrapper" title="Detalhes Nexus Pro">
+            <div class="cube-inner">
+                <div class="cube-face cf-front">N<span>EXUS</span></div>
+                <div class="cube-face cf-back">⚡<span>PRO</span></div>
+                <div class="cube-face cf-right">fx<span>SCI</span></div>
+                <div class="cube-face cf-left">M<span>MEM</span></div>
+                <div class="cube-face cf-top">π<span>3.14</span></div>
+                <div class="cube-face cf-bottom">=<span>CALC</span></div>
+            </div>
+        </div>
+
+        <div class="header">
+            <div class="brand-title">⚡ NEXUS PRO</div>
+            <div class="mode-selector">
+                <button class="mode-btn active" id="basicMode">Básica</button>
+                <button class="mode-btn" id="scientificMode">Científica</button>
+            </div>
+        </div>
+
+        <div class="format-selector">
+            <button class="format-btn active" data-format="normal">Normal</button>
+            <button class="format-btn" data-format="currency">R$</button>
+            <button class="format-btn" data-format="decimal">0.00</button>
+            <button class="format-btn" data-format="scientific">1e+3</button>
+        </div>
+
+        <div class="display">
+            <div class="expression" id="expression"></div>
+            <div class="result" id="result">0</div>
+            <div class="display-glow-line"></div>
+        </div>
+
+        <div class="scientific-panel" id="scientificPanel">
+            <button class="scientific" data-action="sin">sin</button>
+            <button class="scientific" data-action="cos">cos</button>
+            <button class="scientific" data-action="tan">tan</button>
+            <button class="scientific" data-action="log">log</button>
+            <button class="scientific" data-action="ln">ln</button>
+            <button class="scientific" data-action="sqrt">√</button>
+            <button class="scientific" data-action="pow">x²</button>
+            <button class="scientific" data-action="pow3">x³</button>
+            <button class="scientific" data-action="factorial">n!</button>
+            <button class="scientific" data-action="pi">π</button>
+        </div>
+
+        <div class="buttons-grid">
+            <button class="clear" data-action="clear">C</button>
+            <button class="operator" data-action="parenthesis">( )</button>
+            <button class="percent-btn" data-action="percent">%</button>
+            <button class="operator" data-action="divide">÷</button>
+
+            <button data-action="number" data-value="7">7</button>
+            <button data-action="number" data-value="8">8</button>
+            <button data-action="number" data-value="9">9</button>
+            <button class="operator" data-action="multiply">×</button>
+
+            <button data-action="number" data-value="4">4</button>
+            <button data-action="number" data-value="5">5</button>
+            <button data-action="number" data-value="6">6</button>
+            <button class="operator" data-action="subtract">−</button>
+
+            <button data-action="number" data-value="1">1</button>
+            <button data-action="number" data-value="2">2</button>
+            <button data-action="number" data-value="3">3</button>
+            <button class="operator" data-action="add">+</button>
+
+            <button data-action="number" data-value="0">0</button>
+            <button data-action="decimal">.</button>
+            <button data-action="backspace">⌫</button>
+            <button class="equals" data-action="equals">=</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const expressionEl = document.getElementById('expression');
+            const resultEl = document.getElementById('result');
+            const scientificPanel = document.getElementById('scientificPanel');
+            const calculatorContainer = document.getElementById('calculatorContainer');
+
+            let currentInput = '0';
+            let currentExpression = '';
+            let shouldResetScreen = false;
+            let lastResult = null;
+            let currentFormat = 'normal';
+            let isScientificMode = false;
+            let openParenthesis = 0;
+            let isTouchDevice = false;
+
+            function detectTouch() {
+                isTouchDevice = ('ontouchstart' in window) ||
+                    (navigator.maxTouchPoints > 0) ||
+                    (window.matchMedia('(pointer: coarse)').matches);
+            }
+            detectTouch();
+
+            function adjustResultFontSize() {
+                const text = resultEl.textContent || '0';
+                const len = text.length;
+                let fontSize;
+                if (len <= 7) {
+                    fontSize = '2.4em';
+                } else if (len <= 10) {
+                    fontSize = '1.9em';
+                } else if (len <= 14) {
+                    fontSize = '1.5em';
+                } else if (len <= 18) {
+                    fontSize = '1.2em';
+                } else if (len <= 24) {
+                    fontSize = '0.95em';
+                } else {
+                    fontSize = '0.78em';
+                }
+
+                if (window.innerWidth <= 480) {
+                    const mobileSizes = {
+                        '2.4em': '1.9em',
+                        '1.9em': '1.5em',
+                        '1.5em': '1.2em',
+                        '1.2em': '1em',
+                        '0.95em': '0.82em',
+                        '0.78em': '0.7em'
+                    };
+                    fontSize = mobileSizes[fontSize] || fontSize;
+                }
+                if (window.innerWidth <= 370) {
+                    const tinySizes = {
+                        '1.9em': '1.4em',
+                        '1.5em': '1.15em',
+                        '1.2em': '0.95em',
+                        '1em': '0.8em',
+                        '0.82em': '0.7em',
+                        '0.78em': '0.65em',
+                        '0.7em': '0.6em'
+                    };
+                    fontSize = tinySizes[fontSize] || fontSize;
+                }
+                resultEl.style.fontSize = fontSize;
+            }
+
+            function formatNumber(num, format) {
+                if (isNaN(num) || !isFinite(num)) return 'Erro';
+                switch (format) {
+                    case 'currency':
+                        return 'R$ ' + num.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                    case 'decimal':
+                        return num.toFixed(2).replace('.', ',');
+                    case 'scientific':
+                        return num.toExponential(4).replace('.', ',');
+                    default:
+                        return Number(num).toString().replace('.', ',');
+                }
+            }
+
+            function updateDisplay() {
+                const num = parseFloat(currentInput.replace(',', '.')) || 0;
+                const formatted = formatNumber(num, currentFormat);
+                if (currentInput === 'Erro') {
+                    resultEl.textContent = 'Erro';
+                    resultEl.classList.add('error-display');
+                } else {
+                    resultEl.textContent = formatted;
+                    resultEl.classList.remove('error-display');
+                }
+                expressionEl.textContent = currentExpression;
+                adjustResultFontSize();
+                if (expressionEl.scrollHeight > expressionEl.clientHeight) {
+                    expressionEl.scrollTop = expressionEl.scrollHeight;
+                }
+            }
+
+            function clearAll() {
+                currentInput = '0';
+                currentExpression = '';
+                shouldResetScreen = false;
+                lastResult = null;
+                openParenthesis = 0;
+                resultEl.classList.remove('error-display');
+                updateDisplay();
+            }
+
+            function inputNumber(num) {
+                if (shouldResetScreen) {
+                    currentInput = num;
+                    shouldResetScreen = false;
+                } else {
+                    if (currentInput === '0' && num !== '0') {
+                        currentInput = num;
+                    } else if (currentInput === '0' && num === '0') {
+                        currentInput = '0';
+                    } else {
+                        currentInput += num;
+                    }
+                }
+                updateDisplay();
+            }
+
+            function inputDecimal() {
+                if (shouldResetScreen) {
+                    currentInput = '0.';
+                    shouldResetScreen = false;
+                } else if (!currentInput.includes('.') && !currentInput.includes(',')) {
+                    currentInput += '.';
+                }
+                updateDisplay();
+            }
+
+            function inputOperator(op) {
+                if (shouldResetScreen && lastResult !== null) {
+                    currentExpression = formatNumber(lastResult, 'normal').replace(/\./g, ',') + ' ';
+                    shouldResetScreen = false;
+                }
+                const ops = { add: '+', subtract: '−', multiply: '×', divide: '÷', percent: '%' };
+                const opSymbol = ops[op] || op;
+                if (currentExpression.trim().endsWith(')') && op !== 'percent') {
+                    currentExpression += ' ' + opSymbol + ' ';
+                } else if (currentExpression.trim() === '' && currentInput === '0' && op === 'subtract') {
+                    currentInput = '-';
+                    currentExpression = '';
+                    shouldResetScreen = false;
+                    updateDisplay();
+                    return;
+                } else {
+                    currentExpression += currentInput + ' ' + opSymbol + ' ';
+                }
+                shouldResetScreen = true;
+                updateDisplay();
+            }
+
+            function calculate() {
+                try {
+                    let expression = (currentExpression + currentInput)
+                        .replace(/×/g, '*')
+                        .replace(/÷/g, '/')
+                        .replace(/−/g, '-')
+                        .replace(/%/g, '/100')
+                        .replace(/,/g, '.');
+                    expression = expression.replace(/(\d+)\(/g, '$1*(');
+                    expression = expression.replace(/\)\(/g, ')*(');
+                    if (/[+\-*/]$/.test(expression.trim())) {
+                        expression = expression.trim().replace(/[+\-*/]$/, '');
+                    }
+                    const result = eval(expression);
+                    if (!isFinite(result)) throw new Error('Divisão por zero');
+                    currentInput = result.toString().replace('.', ',');
+                    currentExpression = '';
+                    lastResult = result;
+                    shouldResetScreen = true;
+                    openParenthesis = 0;
+                    resultEl.classList.remove('error-display');
+                    updateDisplay();
+                } catch (e) {
+                    currentInput = 'Erro';
+                    currentExpression = '';
+                    shouldResetScreen = true;
+                    resultEl.classList.add('error-display');
+                    updateDisplay();
+                    setTimeout(() => {
+                        if (currentInput === 'Erro') clearAll();
+                    }, 1500);
+                }
+            }
+
+            function handleBackspace() {
+                if (shouldResetScreen) {
+                    clearAll();
+                    return;
+                }
+                if (currentInput.length > 1) {
+                    currentInput = currentInput.slice(0, -1);
+                } else {
+                    currentInput = '0';
+                }
+                updateDisplay();
+            }
+
+            function handleParenthesis() {
+                if (shouldResetScreen && lastResult !== null) {
+                    currentExpression = '';
+                    shouldResetScreen = false;
+                }
+                if (openParenthesis === 0 ||
+                    currentExpression.trim().endsWith('(') ||
+                    currentExpression.trim().endsWith('+') ||
+                    currentExpression.trim().endsWith('−') ||
+                    currentExpression.trim().endsWith('×') ||
+                    currentExpression.trim().endsWith('÷')) {
+                    if (!shouldResetScreen && currentInput !== '0' && currentExpression.trim() !== '') {
+                        currentExpression += currentInput + ' × (';
+                    } else {
+                        currentExpression += '(';
+                    }
+                    openParenthesis++;
+                    currentInput = '';
+                    shouldResetScreen = false;
+                } else if (openParenthesis > 0) {
+                    currentExpression += currentInput + ')';
+                    openParenthesis--;
+                    currentInput = '';
+                    shouldResetScreen = false;
+                }
+                updateDisplay();
+            }
+
+            function scientificOperation(action) {
+                const num = parseFloat(currentInput.replace(',', '.'));
+                if (isNaN(num) && action !== 'pi') return;
+                let result;
+                switch (action) {
+                    case 'sin':
+                        result = Math.sin(num * Math.PI / 180);
+                        break;
+                    case 'cos':
+                        result = Math.cos(num * Math.PI / 180);
+                        break;
+                    case 'tan':
+                        result = Math.tan(num * Math.PI / 180);
+                        break;
+                    case 'log':
+                        result = Math.log10(num);
+                        break;
+                    case 'ln':
+                        result = Math.log(num);
+                        break;
+                    case 'sqrt':
+                        result = Math.sqrt(num);
+                        break;
+                    case 'pow':
+                        result = Math.pow(num, 2);
+                        break;
+                    case 'pow3':
+                        result = Math.pow(num, 3);
+                        break;
+                    case 'factorial':
+                        if (num < 0 || !Number.isInteger(num)) {
+                            currentInput = 'Erro';
+                            updateDisplay();
+                            setTimeout(() => { if (currentInput === 'Erro') clearAll(); }, 1500);
+                            return;
+                        }
+                        result = 1;
+                        for (let i = 2; i <= num; i++) result *= i;
+                        break;
+                    case 'pi':
+                        result = Math.PI;
+                        break;
+                    default:
+                        return;
+                }
+                if (!isFinite(result) || isNaN(result)) {
+                    currentInput = 'Erro';
+                    updateDisplay();
+                    setTimeout(() => { if (currentInput === 'Erro') clearAll(); }, 1500);
+                    return;
+                }
+                currentInput = result.toString().replace('.', ',');
+                currentExpression = action + '(' + num.toString().replace('.', ',') + ') = ';
+                shouldResetScreen = true;
+                updateDisplay();
+            }
+
+            document.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const action = this.dataset.action;
+                    const value = this.dataset.value;
+                    if (action === 'number') {
+                        inputNumber(value);
+                    } else if (action === 'decimal') {
+                        inputDecimal();
+                    } else if (action === 'clear') {
+                        clearAll();
+                    } else if (action === 'backspace') {
+                        handleBackspace();
+                    } else if (action === 'equals') {
+                        calculate();
+                    } else if (action === 'parenthesis') {
+                        handleParenthesis();
+                    } else if (['add', 'subtract', 'multiply', 'divide', 'percent'].includes(action)) {
+                        inputOperator(action);
+                    } else if (action && scientificPanel.contains(this)) {
+                        scientificOperation(action);
+                    }
+                });
+
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.click();
+                }, { passive: false });
+            });
+
+            document.getElementById('basicMode').addEventListener('click', function() {
+                scientificPanel.classList.remove('show');
+                this.classList.add('active');
+                document.getElementById('scientificMode').classList.remove('active');
+                isScientificMode = false;
+            });
+
+            document.getElementById('scientificMode').addEventListener('click', function() {
+                scientificPanel.classList.add('show');
+                this.classList.add('active');
+                document.getElementById('basicMode').classList.remove('active');
+                isScientificMode = true;
+            });
+
+            document.querySelectorAll('.format-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.format-btn').forEach(b => b.classList.remove(
+                        'active'));
+                    this.classList.add('active');
+                    currentFormat = this.dataset.format;
+                    updateDisplay();
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                const key = e.key;
+                if (key >= '0' && key <= '9') inputNumber(key);
+                else if (key === '.' || key === ',') inputDecimal();
+                else if (key === '+') inputOperator('add');
+                else if (key === '-') inputOperator('subtract');
+                else if (key === '*') inputOperator('multiply');
+                else if (key === '/') {
+                    e.preventDefault();
+                    inputOperator('divide');
+                } else if (key === '%') inputOperator('percent');
+                else if (key === 'Enter' || key === '=') {
+                    e.preventDefault();
+                    calculate();
+                } else if (key === 'Backspace') {
+                    e.preventDefault();
+                    handleBackspace();
+                } else if (key === 'Escape') {
+                    e.preventDefault();
+                    clearAll();
+                } else if (key === '(' || key === ')') {
+                    e.preventDefault();
+                    handleParenthesis();
+                }
+            });
+
+            if (!isTouchDevice) {
+                calculatorContainer.addEventListener('mousemove', function(e) {
+                    const rect = calculatorContainer.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -6;
+                    const rotateY = ((x - centerX) / centerX) * 6;
+                    const clampedRX = Math.max(-8, Math.min(8, rotateX));
+                    const clampedRY = Math.max(-8, Math.min(8, rotateY));
+                    calculatorContainer.style.transform =
+                        `perspective(1000px) rotateX(${clampedRX}deg) rotateY(${clampedRY}deg) translateZ(0)`;
+                });
+
+                calculatorContainer.addEventListener('mouseleave', function() {
+                    calculatorContainer.style.transform =
+                        'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+                    calculatorContainer.style.transition = 'transform 0.5s ease-out';
+                    setTimeout(() => {
+                        calculatorContainer.style.transition = 'transform 0.15s ease-out';
+                    }, 500);
+                });
+            }
+
+            window.addEventListener('resize', function() {
+                adjustResultFontSize();
+                detectTouch();
+            });
+
+            updateDisplay();
+
+            console.log('%c🧊 Nexus Pro 3D Cube %cativo | %cModo: %cBásica %c| %cPressione "Científica" para modo avançado',
+                'color:#b347ea;font-weight:bold;',
+                '',
+                'color:#aaa;',
+                'color:#fff;',
+                'color:#aaa;',
+                'color:#00e5ff;');
+            console.log('%c💡 Dica: %cPasse o mouse sobre o cubo 3D no canto superior esquerdo!',
+                'color:#ff2d75;font-weight:bold;',
+                'color:#ccc;');
+        })();
+    </script>
+</body>
+</html>
