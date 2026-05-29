@@ -227,7 +227,7 @@
             display: none !important;
         }
 
-        /* ========== BARRA DE ROLAGEM (mantida do último ajuste) ========== */
+        /* ========== BARRA DE ROLAGEM ========== */
         .speed-tape-container {
             width: 100%;
             height: 65px;
@@ -502,7 +502,6 @@
             border-top-color: #bbbbbb;
             border-bottom-color: #999999;
         }
-        /* A faixa verde permanece, apenas ajustamos levemente as cores dos números e traços */
         body.light-mode .tape-number,
         body.light-mode .tape-minor-number {
             color: #111;
@@ -623,7 +622,6 @@
                 document.body.classList.toggle('light-mode');
                 window.isLightMode = document.body.classList.contains('light-mode');
                 themeToggleBtn.textContent = window.isLightMode ? '☀️' : '🌙';
-                // Força redesenho do canvas na próxima frame
             });
 
             function updateClock() {
@@ -667,9 +665,11 @@
             window.atualizarVelocidade = function(velocidadeKmh, lat, lon, bearing) {
                 if (gpsWarning.style.display !== 'none') gpsWarning.style.display = 'none';
                 gpsErrorCount = 0;
+                
+                // Marca o tempo exato do recebimento dos dados do sensor
                 lastUpdateTime = Date.now();
 
-                window.velocidadeAlvoGPS = velocidadeKmh > 0.05 ? velocidadeKmh : 0;
+                window.velocidadeAlvoGPS = velocidadeKmh > 0.1 ? velocidadeKmh : 0;
 
                 if (window.velocidadeAlvoGPS > 0) {
                     totalSomaVelocidades += window.velocidadeAlvoGPS;
@@ -719,10 +719,35 @@
 
             window.addEventListener('resize', resizeCanvas);
 
+            // ==========================================
+            // CICLO DE RENDERIZAÇÃO INTELIGENTE (OTIMIZADO)
+            // ==========================================
             function renderizarCicloSuave() {
-                velocidadeSuaveExibida += (window.velocidadeAlvoGPS - velocidadeSuaveExibida) * 0.32;
+                const agora = Date.now();
+                const tempoSemGps = agora - lastUpdateTime;
+
+                // TRAVA DE TEMPO: Se o sinal demorar mais de 1.2 segundos, o carro parou ou reduziu bruscamente.
+                if (tempoSemGps > 1200) {
+                    window.velocidadeAlvoGPS = Math.max(0, window.velocidadeAlvoGPS - 5); 
+                }
+
+                // CÁLCULO DO FILTRO DINÂMICO DE SUAVIZAÇÃO
+                const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
+                const absDiferenca = Math.abs(diferenca);
                 
-                if (Math.abs(velocidadeSuaveExibida) < 0.05) velocidadeSuaveExibida = 0;
+                let fatorSuavizacao = 0.25; // Velocidade de cruzeiro estável
+
+                if (absDiferenca > 15) {
+                    fatorSuavizacao = 0.65; // Acelerações fortes ou frenagens bruscas
+                } else if (absDiferenca > 5) {
+                    fatorSuavizacao = 0.45; // Mudanças moderadas
+                } else if (absDiferenca < 1 && window.velocidadeAlvoGPS === 0) {
+                    fatorSuavizacao = 1.0;  // Zera o painel imediatamente no fim da parada
+                }
+
+                velocidadeSuaveExibida += diferenca * fatorSuavizacao;
+                
+                if (Math.abs(velocidadeSuaveExibida) < 0.1) velocidadeSuaveExibida = 0;
 
                 const displaySpeed = Math.round(velocidadeSuaveExibida);
 
@@ -787,7 +812,6 @@
                 const radius = Math.min(w, w_h) * 0.47;
                 const light = window.isLightMode;
 
-                // Cores ajustadas conforme o tema
                 const bgColor = light ? '#f0f2f5' : '#0a0a12';
                 const outerRingColor = light ? '#333333' : '#00ff88';
                 const arcBaseColor = light ? '#aaaaaa' : '#ffffff';
@@ -801,17 +825,14 @@
                 const odoTextColor = light ? '#b37400' : '#f5a623';
                 const speedTextColor = light ? '#007744' : '#00ff88';
                 const infoBoxBg = light ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.92)';
-                const infoBoxTextShadow = light ? 'none' : '0 0 5px rgba(0,0,0,0.8)';
 
                 ctx.clearRect(0, 0, w, w_h);
 
-                // Fundo do gauge
                 ctx.fillStyle = bgColor;
                 ctx.beginPath();
                 ctx.arc(cx, cy, radius + 14, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Aro externo
                 ctx.save();
                 ctx.shadowBlur = 10;
                 ctx.shadowColor = light ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.45)';
@@ -822,7 +843,6 @@
                 ctx.stroke();
                 ctx.restore();
 
-                // Círculo interno
                 ctx.beginPath();
                 ctx.arc(cx, cy, radius + 7, 0, Math.PI * 2);
                 ctx.fillStyle = bgColor;
@@ -834,7 +854,6 @@
                 const clampedSpeed = Math.min(speed, maxSpeed);
                 const progressAngle = startAngle + (clampedSpeed / maxSpeed) * (endAngleTotal - startAngle);
 
-                // Arco base
                 ctx.beginPath();
                 ctx.arc(cx, cy, radius, startAngle, endAngleTotal);
                 ctx.strokeStyle = arcBaseColor;
@@ -842,7 +861,6 @@
                 ctx.lineCap = 'round';
                 ctx.stroke();
 
-                // Arco progresso
                 const arcGrad = ctx.createLinearGradient(0, 0, w, 0);
                 arcGrad.addColorStop(0, arcProgressStart);
                 arcGrad.addColorStop(1, arcProgressEnd);
@@ -853,7 +871,6 @@
                 ctx.lineCap = 'round';
                 ctx.stroke();
 
-                // Traços
                 for (let i = 0; i <= maxSpeed; i += 5) {
                     const angle = startAngle + (i / maxSpeed) * (endAngleTotal - startAngle);
                     const isMajor = i % 20 === 0;
@@ -867,7 +884,6 @@
                     ctx.stroke();
                 }
 
-                // Números
                 ctx.font = `bold ${Math.floor(radius * 0.13)}px 'Orbitron', sans-serif`;
                 ctx.fillStyle = numberColor;
                 ctx.textAlign = 'center';
@@ -879,7 +895,6 @@
                     ctx.fillText(i.toString(), numX, numY);
                 }
 
-                // Ponteiro
                 ctx.save();
                 ctx.translate(cx, cy);
                 ctx.rotate(progressAngle + Math.PI / 2);
@@ -892,7 +907,6 @@
                 ctx.fill();
                 ctx.restore();
 
-                // Centro
                 ctx.beginPath();
                 ctx.arc(cx, cy, 10, 0, Math.PI * 2);
                 ctx.fillStyle = bgColor;
@@ -901,7 +915,6 @@
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // Display inferior
                 const dW = radius * 0.88;
                 const dH = radius * 0.38;
                 const dX = cx - dW / 2;
@@ -920,8 +933,13 @@
                 ctx.fillText(`${Math.round(speed)} km/h`, cx, dY + dH * 0.76);
             }
 
+            // Ativação otimizada do sensor de geolocalização do navegador
             if ("geolocation" in navigator) {
-                navigator.geolocation.watchPosition(updateGPS, handleGPSError, { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 });
+                navigator.geolocation.watchPosition(updateGPS, handleGPSError, { 
+                    enableHighAccuracy: true, 
+                    maximumAge: 0, 
+                    timeout: 4000 
+                });
             }
 
             resizeCanvas();
