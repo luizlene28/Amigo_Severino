@@ -76,13 +76,20 @@
             position: absolute;
             inset: -10px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 169, 96, 0.25) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(212, 169, 96, 0.3) 0%, transparent 70%);
             z-index: -1;
             animation: cubeGlowPulse 3s ease-in-out infinite;
         }
         @keyframes cubeGlowPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.25); }
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.25);
+            }
         }
 
         /* === OVERLAY UI === */
@@ -123,8 +130,15 @@
             margin-right: 2px;
         }
         @keyframes gentlePulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(255, 200, 100, 0.6)); }
-            50% { transform: scale(1.18); filter: drop-shadow(0 0 16px rgba(255, 180, 60, 0.9)); }
+            0%,
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 6px rgba(255, 200, 100, 0.6));
+            }
+            50% {
+                transform: scale(1.18);
+                filter: drop-shadow(0 0 16px rgba(255, 180, 60, 0.9));
+            }
         }
 
         /* Indicador de heading */
@@ -132,7 +146,7 @@
             text-align: center;
             pointer-events: none;
             margin-top: auto;
-            margin-bottom: 85px; /* Ajustado para dar espaço ao botão */
+            margin-bottom: 85px;
         }
         #heading-display .heading-card {
             display: inline-block;
@@ -205,8 +219,13 @@
             animation: activeGlow 2s ease-in-out infinite;
         }
         @keyframes activeGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(76, 175, 132, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(76, 175, 132, 0.7); }
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(76, 175, 132, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(76, 175, 132, 0.7);
+            }
         }
         #permission-btn.disabled-state {
             background: #1a1a1a;
@@ -254,8 +273,7 @@
                 bottom: 40px;
             }
         }
-        
-        /* Ajuste específico para celulares deitados (Landscape) */
+
         @media (max-height: 500px) and (orientation: landscape) {
             #heading-display {
                 margin-bottom: 10px;
@@ -270,7 +288,7 @@
                 transform: none;
             }
             #cube-container {
-                display: none; /* Esconde o mini cubo em telas muito baixas para liberar espaço */
+                display: none;
             }
             #precision-warning {
                 display: none;
@@ -308,11 +326,13 @@
         <span>⚠️ A bússola digital possui precisão filtrada e estabilizada. Use como referência.</span>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
+    </script>
     <script>
         (function() {
             if (typeof THREE === 'undefined') {
-                document.body.innerHTML = '<div style="color:#fff;text-align:center;padding:40px;"><h2>Erro ao carregar Three.js</h2></div>';
+                document.body.innerHTML =
+                    '<div style="color:#fff;text-align:center;padding:40px;"><h2>Erro ao carregar Three.js</h2></div>';
                 return;
             }
 
@@ -330,22 +350,21 @@
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.1;
+            renderer.toneMappingExposure = 1.15;
             renderer.outputEncoding = THREE.sRGBEncoding;
 
             const scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x06080f, 0.00015);
+            scene.fog = new THREE.FogExp2(0x06080f, 0.00012);
 
-            // Câmera com FOV adaptável no script de resize
             const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 80);
             camera.position.set(0, 7.0, 11.5);
             camera.lookAt(0, 0.2, 0);
 
-            // ============ ILUMINAÇÃO ============
-            const ambientLight = new THREE.AmbientLight(0x334466, 0.9);
+            // ============ ILUMINAÇÃO MELHORADA ============
+            const ambientLight = new THREE.AmbientLight(0x445577, 1.0);
             scene.add(ambientLight);
 
-            const keyLight = new THREE.DirectionalLight(0xfffaf0, 1.3);
+            const keyLight = new THREE.DirectionalLight(0xfffaf0, 1.4);
             keyLight.position.set(8, 14, 6);
             keyLight.castShadow = true;
             keyLight.shadow.mapSize.width = 2048;
@@ -354,30 +373,49 @@
             keyLight.shadow.normalBias = 0.02;
             scene.add(keyLight);
 
-            const fillLight = new THREE.PointLight(0x5577cc, 0.7, 25);
+            const fillLight = new THREE.PointLight(0x6688cc, 0.8, 25);
             fillLight.position.set(-6, 2, -4);
             scene.add(fillLight);
 
-            const rimLight = new THREE.PointLight(0xff9966, 0.55, 20);
+            const rimLight = new THREE.PointLight(0xff9966, 0.6, 20);
             rimLight.position.set(0, -1.5, 7);
             scene.add(rimLight);
 
-            // ============ PLANETA TERRA NO FUNDO ============
+            const accentLight = new THREE.PointLight(0xffcc88, 0.5, 15);
+            accentLight.position.set(0, 3.5, -5);
+            scene.add(accentLight);
+
+            // ============ PLANETA TERRA NO FUNDO (MELHORADO) ============
             const earthGroup = new THREE.Group();
             scene.add(earthGroup);
 
             function createEarthTexture() {
                 const canvas = document.createElement('canvas');
-                canvas.width = 1024; canvas.height = 512;
+                canvas.width = 1024;
+                canvas.height = 512;
                 const ctx = canvas.getContext('2d');
                 const oceanGrad = ctx.createRadialGradient(512, 200, 50, 512, 256, 600);
-                oceanGrad.addColorStop(0, '#1e6ec7'); oceanGrad.addColorStop(0.5, '#1555a0'); oceanGrad.addColorStop(1, '#0b3570');
-                ctx.fillStyle = oceanGrad; ctx.fillRect(0, 0, 1024, 512);
+                oceanGrad.addColorStop(0, '#2a80d4');
+                oceanGrad.addColorStop(0.5, '#1a5ea8');
+                oceanGrad.addColorStop(1, '#0d3d78');
+                ctx.fillStyle = oceanGrad;
+                ctx.fillRect(0, 0, 1024, 512);
 
-                ctx.fillStyle = '#4a9e3f'; ctx.strokeStyle = '#357a2b'; ctx.lineWidth = 2;
+                ctx.fillStyle = '#5aae4f';
+                ctx.strokeStyle = '#408a35';
+                ctx.lineWidth = 2;
+                ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                ctx.shadowBlur = 6;
+
                 function drawContinent(cx, cy, rx, ry, rotation = 0) {
-                    ctx.save(); ctx.translate(cx, cy); ctx.rotate(rotation); ctx.beginPath();
-                    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore();
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(rotation);
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.restore();
                 }
                 drawContinent(180, 130, 85, 115, 0.1);
                 drawContinent(230, 290, 50, 85, 0.05);
@@ -385,12 +423,15 @@
                 drawContinent(520, 275, 58, 105, -0.05);
                 drawContinent(720, 155, 105, 95, 0.08);
                 drawContinent(790, 340, 32, 26, 0.15);
+                ctx.shadowBlur = 0;
                 return new THREE.CanvasTexture(canvas);
             }
 
             const earthGeo = new THREE.SphereGeometry(3, 48, 48);
             const earthMat = new THREE.MeshStandardMaterial({
-                map: createEarthTexture(), roughness: 0.6, metalness: 0.05
+                map: createEarthTexture(),
+                roughness: 0.55,
+                metalness: 0.08
             });
             const earth = new THREE.Mesh(earthGeo, earthMat);
             earth.position.y = -8.5;
@@ -402,56 +443,97 @@
 
             const baseGeo = new THREE.CylinderGeometry(4.2, 4.7, 0.55, 64);
             const baseMat = new THREE.MeshStandardMaterial({
-                color: 0x1c1f2e, metalness: 0.85, roughness: 0.2
+                color: 0x1a1e2c,
+                metalness: 0.9,
+                roughness: 0.18
             });
             const base = new THREE.Mesh(baseGeo, baseMat);
-            base.receiveShadow = true; base.castShadow = true;
+            base.receiveShadow = true;
+            base.castShadow = true;
             compassGroup.add(base);
 
-            const ringGeo = new THREE.TorusGeometry(4.55, 0.12, 16, 64);
+            const ringGeo = new THREE.TorusGeometry(4.55, 0.14, 16, 64);
             const ringMat = new THREE.MeshStandardMaterial({
-                color: 0xe8c468, metalness: 0.95, roughness: 0.15
+                color: 0xf0d060,
+                metalness: 0.95,
+                roughness: 0.12,
+                emissive: 0x221100,
+                emissiveIntensity: 0.3
             });
             const ring = new THREE.Mesh(ringGeo, ringMat);
-            ring.rotation.x = Math.PI / 2; ring.position.y = 0.3;
+            ring.rotation.x = Math.PI / 2;
+            ring.position.y = 0.3;
             compassGroup.add(ring);
 
             // Marcadores da rosa dos ventos
             for (let i = 0; i < 72; i++) {
                 const angle = (i / 72) * Math.PI * 2;
                 let length = (i % 18 === 0) ? 0.75 : ((i % 9 === 0) ? 0.5 : 0.28);
-                let color = (i % 18 === 0) ? 0xe8c468 : ((i % 9 === 0) ? 0xcccccc : 0x666677);
+                let color = (i % 18 === 0) ? 0xf0d060 : ((i % 9 === 0) ? 0xdddddd : 0x777788);
 
-                const markerGeo = new THREE.BoxGeometry(0.06, 0.015, length);
-                const markerMat = new THREE.MeshStandardMaterial({ color: color, metalness: 0.7 });
+                const markerGeo = new THREE.BoxGeometry(0.07, 0.018, length);
+                const markerMat = new THREE.MeshStandardMaterial({ color: color, metalness: 0.7, roughness: 0.3 });
                 const marker = new THREE.Mesh(markerGeo, markerMat);
                 marker.position.set(Math.cos(angle) * 4.45, 0.32, Math.sin(angle) * 4.45);
                 marker.rotation.y = -angle;
                 compassGroup.add(marker);
             }
 
-            // Labels de Direção
+            // ============ LABELS DE DIREÇÃO (VISIBILIDADE MELHORADA) ============
             function createLabel(text, color, x, z, isMain = false) {
                 const canvas = document.createElement('canvas');
-                canvas.width = 256; canvas.height = 256;
+                canvas.width = 512;
+                canvas.height = 512;
                 const ctx = canvas.getContext('2d');
+
+                // Sombra/contorno para destacar
+                ctx.shadowColor = 'rgba(0,0,0,0.9)';
+                ctx.shadowBlur = 28;
+                ctx.shadowOffsetX = 4;
+                ctx.shadowOffsetY = 4;
+
+                // Cor de preenchimento vibrante
                 ctx.fillStyle = color;
-                ctx.font = isMain ? 'bold 140px "Segoe UI", sans-serif' : 'bold 100px "Segoe UI", sans-serif';
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                ctx.fillText(text, 128, 128);
+                ctx.font = isMain ? 'bold 200px "Segoe UI", "Arial Black", sans-serif' :
+                    'bold 160px "Segoe UI", "Arial Black", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(text, 256, 256);
+
+                // Contorno adicional para máximo destaque
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+                ctx.strokeStyle = 'rgba(0,0,0,0.7)';
+                ctx.lineWidth = 12;
+                ctx.strokeText(text, 256, 256);
+
+                // Reaplicar preenchimento por cima do contorno
+                ctx.fillStyle = color;
+                ctx.fillText(text, 256, 256);
 
                 const texture = new THREE.CanvasTexture(canvas);
-                const material = new THREE.SpriteMaterial({ map: texture, depthTest: false, depthWrite: false });
+                texture.minFilter = THREE.LinearFilter;
+                texture.magFilter = THREE.LinearFilter;
+                const material = new THREE.SpriteMaterial({
+                    map: texture,
+                    depthTest: false,
+                    depthWrite: false,
+                    transparent: true
+                });
                 const sprite = new THREE.Sprite(material);
-                sprite.position.set(x, 1.3, z);
-                sprite.scale.set(2.2, 2.2, 1);
+                // Posicionamento elevado (Y maior) e mais próximo do centro para visibilidade
+                sprite.position.set(x, 2.1, z);
+                // Escala aumentada significativamente
+                sprite.scale.set(3.2, 3.2, 1);
                 compassGroup.add(sprite);
             }
 
-            createLabel('N', '#ff3333', 0, -5.2, true);
-            createLabel('S', '#33ccff', 0, 5.2, false);
-            createLabel('L', '#33dd55', 5.2, 0, false);
-            createLabel('O', '#ffbb33', -5.2, 0, false);
+            // Posições em raio 5.0 (ligeiramente para fora da borda da bússola)
+            createLabel('N', '#ff4444', 0, -5.0, true);
+            createLabel('S', '#44ccff', 0, 5.0, false);
+            createLabel('L', '#44ee66', 5.0, 0, false);
+            createLabel('O', '#ffaa33', -5.0, 0, false);
 
             // Ponteiro / Agulha
             const pointerGroup = new THREE.Group();
@@ -460,111 +542,137 @@
 
             const redNeedleMesh = new THREE.Mesh(
                 new THREE.BoxGeometry(0.35, 0.08, 3.3),
-                new THREE.MeshStandardMaterial({ color: 0xee2222, metalness: 0.3, emissive: 0x330000 })
+                new THREE.MeshStandardMaterial({ color: 0xee2222, metalness: 0.3, emissive: 0x330000,
+                    roughness: 0.25 })
             );
-            redNeedleMesh.position.z = -1.65; redNeedleMesh.castShadow = true;
+            redNeedleMesh.position.z = -1.65;
+            redNeedleMesh.castShadow = true;
             pointerGroup.add(redNeedleMesh);
 
             const grayNeedleMesh = new THREE.Mesh(
                 new THREE.BoxGeometry(0.35, 0.08, 2.7),
-                new THREE.MeshStandardMaterial({ color: 0x555566, roughness: 0.4 })
+                new THREE.MeshStandardMaterial({ color: 0x666677, roughness: 0.35 })
             );
             grayNeedleMesh.position.z = 1.35;
             pointerGroup.add(grayNeedleMesh);
 
             const centerSphere = new THREE.Mesh(
-                new THREE.SphereGeometry(0.28, 24, 24),
-                new THREE.MeshStandardMaterial({ color: 0xf0d060, metalness: 0.9 })
+                new THREE.SphereGeometry(0.3, 32, 32),
+                new THREE.MeshStandardMaterial({ color: 0xf5d870, metalness: 0.9, roughness: 0.1,
+                    emissive: 0x221100, emissiveIntensity: 0.4 })
             );
             pointerGroup.add(centerSphere);
 
-            // Vidro protetor
+            // Vidro protetor (mais refinado)
             const glass = new THREE.Mesh(
                 new THREE.SphereGeometry(2.4, 48, 48),
-                new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.2, roughness: 0.1, clearcoat: 1.0 })
+                new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.18,
+                    roughness: 0.08,
+                    clearcoat: 1.0,
+                    clearcoatRoughness: 0.05
+                })
             );
             glass.position.y = 0.6;
             compassGroup.add(glass);
 
-            // Estrelas de fundo
+            // Estrelas de fundo (mais densas e brilhantes)
             const starsGeo = new THREE.BufferGeometry();
-            const starsCount = 400;
+            const starsCount = 600;
             const starsPositions = new Float32Array(starsCount * 3);
-            for(let i=0; i<starsCount*3; i++) { starsPositions[i] = (Math.random() - 0.5) * 40; }
+            for (let i = 0; i < starsCount * 3; i++) {
+                starsPositions[i] = (Math.random() - 0.5) * 45;
+            }
             starsGeo.setAttribute('position', new THREE.BufferAttribute(starsPositions, 3));
-            const stars = new THREE.Points(starsGeo, new THREE.PointsMaterial({ size: 0.04, color: 0xffffff, transparent: true, opacity: 0.6 }));
+            const stars = new THREE.Points(starsGeo, new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.7
+            }));
             scene.add(stars);
 
             // ============ MINI CUBO AUXILIAR (TOPO) ============
             const cubeScene = new THREE.Scene();
             const cubeCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 10);
-            cubeCamera.position.set(1.6, 1.2, 2.2); cubeCamera.lookAt(0, 0, 0);
+            cubeCamera.position.set(1.6, 1.2, 2.2);
+            cubeCamera.lookAt(0, 0, 0);
 
             const cubeRenderer = new THREE.WebGLRenderer({ canvas: cubeCanvas, antialias: true, alpha: true });
             cubeRenderer.setSize(62, 62);
 
             const cubeMesh = new THREE.Mesh(
                 new THREE.BoxGeometry(0.85, 0.85, 0.85),
-                new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.6 })
+                new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    metalness: 0.3,
+                    roughness: 0.2,
+                    transparent: true,
+                    opacity: 0.7
+                })
             );
-            cubeMesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(cubeMesh.geometry), new THREE.LineBasicMaterial({ color: 0xf0d060 })));
+            const edgesGeo = new THREE.EdgesGeometry(cubeMesh.geometry);
+            const edgesLine = new THREE.LineSegments(edgesGeo, new THREE.LineBasicMaterial({ color: 0xf5d870,
+                linewidth: 1 }));
+            cubeMesh.add(edgesLine);
             cubeScene.add(cubeMesh);
-            cubeScene.add(new THREE.AmbientLight(0xffffff, 1.5));
+            cubeScene.add(new THREE.AmbientLight(0xffffff, 1.6));
 
-            // ============ LÓGICA DE FILTRAGEM E PRECISÃO CRÍTICA ============
+            // ============ LÓGICA DE FILTRAGEM E PRECISÃO ============
             let currentHeading = 0;
             let targetHeading = 0;
             let isSensorActive = false;
-            
-            // Variáveis auxiliares para o filtro passa-baixa (Filtro Alpha)
+
             let lastHeading = 0;
-            const SMOOTH_FACTOR = 0.08; // Controla a suavidade vs tempo de resposta (0.01 a 0.2)
+            const SMOOTH_FACTOR = 0.07;
 
             function updateHeadingDisplay(heading) {
                 const directions = ['N', 'NE', 'L', 'SE', 'S', 'SO', 'O', 'NO'];
                 const index = Math.round(heading / 45) % 8;
                 const dir = directions[index];
-                
+
                 if (dir === 'N') directionText.innerHTML = 'N • <span class="highlight-north">NORTE</span>';
-                else if (dir === 'S') directionText.innerHTML = 'S • <span style="color:#33ccff;">SUL</span>';
-                else if (dir === 'L') directionText.innerHTML = 'L • <span style="color:#33dd55;">LESTE</span>';
-                else if (dir === 'O') directionText.innerHTML = 'O • <span style="color:#ffbb33;">OESTE</span>';
-                else directionText.innerHTML = `${dir} • <span style="color:#ccc;">${['NORDESTE','NOROESTE','SUDESTE','SUDOESTE'][['NE','NO','SE','SO'].indexOf(dir)]}</span>`;
-                
+                else if (dir === 'S') directionText.innerHTML =
+                    'S • <span style="color:#33ccff;text-shadow:0 0 14px rgba(50,200,255,0.6);">SUL</span>';
+                else if (dir === 'L') directionText.innerHTML =
+                    'L • <span style="color:#33dd55;text-shadow:0 0 14px rgba(50,220,80,0.6);">LESTE</span>';
+                else if (dir === 'O') directionText.innerHTML =
+                    'O • <span style="color:#ffbb33;text-shadow:0 0 14px rgba(255,180,50,0.6);">OESTE</span>';
+                else directionText.innerHTML =
+                    `${dir} • <span style="color:#ddd;text-shadow:0 0 10px rgba(200,200,200,0.4);">${['NORDESTE','NOROESTE','SUDESTE','SUDOESTE'][['NE','NO','SE','SO'].indexOf(dir)]}</span>`;
+
                 degreesText.textContent = `${Math.round(heading)}°`;
             }
 
             function handleOrientation(event) {
                 if (!isSensorActive) return;
-                
+
                 let rawHeading = 0;
                 if (event.webkitCompassHeading !== undefined) {
-                    rawHeading = event.webkitCompassHeading; // iOS (Extremamente preciso)
+                    rawHeading = event.webkitCompassHeading;
                 } else if (event.alpha !== null) {
-                    rawHeading = 360 - event.alpha; // Android padrão
+                    rawHeading = 360 - event.alpha;
                 } else {
                     return;
                 }
 
-                // Normaliza entre 0 e 360
                 rawHeading = (rawHeading + 360) % 360;
 
-                // Evita problemas de descontinuidade matemática ao passar de 359° para 0°
                 let diff = rawHeading - lastHeading;
                 if (diff > 180) rawHeading -= 360;
                 if (diff < -180) rawHeading += 360;
 
-                // Aplicação do Filtro Passa-Baixa (Remove ruídos de trepidação)
                 targetHeading = lastHeading + SMOOTH_FACTOR * (rawHeading - lastHeading);
-                
-                // Normaliza o resultado final filtrado
                 targetHeading = (targetHeading + 360) % 360;
                 lastHeading = targetHeading;
             }
 
             async function requestSensorPermission() {
                 try {
-                    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent
+                        .requestPermission === 'function') {
                         const permission = await DeviceOrientationEvent.requestPermission();
                         if (permission === 'granted') startSensors();
                         else showSensorFallback();
@@ -593,29 +701,25 @@
                 permissionBtn.classList.add('disabled-state');
             }
 
-            // ============ ALGORITMO DE RESPONSIVIDADE ADAPTATIVO ============
+            // ============ RESPONSIVIDADE ADAPTATIVA ============
             function handleResize() {
                 const w = window.innerWidth;
                 const h = window.innerHeight;
-                
+
                 renderer.setSize(w, h);
                 camera.aspect = w / h;
 
-                // Previne o corte lateral: se a tela for muito vertical (celulares em pé), 
-                // aumentamos o campo de visão (FOV) para afastar a bússola proporcionalmente.
                 if (w < h) {
-                    camera.fov = 55 + (h / w) * 8; // Ajuste dinâmico baseado na proporção real
+                    camera.fov = 55 + (h / w) * 8;
                     camera.position.set(0, 8.5, 12.5);
                 } else {
-                    // Telas horizontais (Monitores de PC ou celular deitado)
                     camera.fov = 45;
                     camera.position.set(0, 7.0, 11.0);
                 }
-                
+
                 camera.lookAt(0, 0.2, 0);
                 camera.updateProjectionMatrix();
 
-                // Redimensionar mini cubo superior
                 const cubeSize = w < 600 ? 48 : 62;
                 cubeContainer.style.width = cubeSize + 'px';
                 cubeContainer.style.height = cubeSize + 'px';
@@ -635,17 +739,15 @@
                 stars.rotation.y += 0.0001;
 
                 if (isSensorActive) {
-                    // Interpolação suave final para a rotação no Three.js
                     let delta = targetHeading - currentHeading;
                     if (delta > 180) delta -= 360;
                     if (delta < -180) delta += 360;
                     currentHeading += delta * 0.15;
                     currentHeading = (currentHeading + 360) % 360;
-                    
+
                     pointerGroup.rotation.y = THREE.MathUtils.degToRad(currentHeading);
                     updateHeadingDisplay(currentHeading);
                 } else {
-                    // Modo demonstração cíclico caso não tenha sensor ativo
                     demoAngle = (demoAngle + 0.2) % 360;
                     pointerGroup.rotation.y = THREE.MathUtils.degToRad(demoAngle);
                     updateHeadingDisplay(demoAngle);
@@ -662,7 +764,7 @@
             // Inicialização
             permissionBtn.addEventListener('click', requestSensorPermission);
             permissionBtn.addEventListener('touchend', requestSensorPermission);
-            
+
             handleResize();
             requestAnimationFrame(animate);
         })();
