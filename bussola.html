@@ -46,7 +46,6 @@
             position: relative;
         }
 
-        /* Canvas principal ocupa todo o fundo */
         #main-canvas {
             position: fixed;
             inset: 0;
@@ -72,7 +71,6 @@
             display: block;
             border-radius: var(--radius-md);
         }
-        /* Brilho decorativo atrás do cubo */
         #cube-container::before {
             content: '';
             position: absolute;
@@ -83,15 +81,8 @@
             animation: cubeGlowPulse 3s ease-in-out infinite;
         }
         @keyframes cubeGlowPulse {
-            0%,
-            100% {
-                opacity: 0.5;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.25);
-            }
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.25); }
         }
 
         /* === OVERLAY UI === */
@@ -106,14 +97,13 @@
             padding: 20px 20px 12px;
         }
 
-        /* Título superior central */
         .header-title {
             text-align: center;
             pointer-events: none;
         }
         .header-title .app-name {
             display: inline-block;
-            font-size: clamp(18px, 3.5vw, 22px);
+            font-size: clamp(16px, 3.5vw, 22px);
             font-weight: 700;
             letter-spacing: 0.04em;
             color: #ffffff;
@@ -133,15 +123,8 @@
             margin-right: 2px;
         }
         @keyframes gentlePulse {
-            0%,
-            100% {
-                transform: scale(1);
-                filter: drop-shadow(0 0 6px rgba(255, 200, 100, 0.6));
-            }
-            50% {
-                transform: scale(1.18);
-                filter: drop-shadow(0 0 16px rgba(255, 180, 60, 0.9));
-            }
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(255, 200, 100, 0.6)); }
+            50% { transform: scale(1.18); filter: drop-shadow(0 0 16px rgba(255, 180, 60, 0.9)); }
         }
 
         /* Indicador de heading */
@@ -149,7 +132,7 @@
             text-align: center;
             pointer-events: none;
             margin-top: auto;
-            margin-bottom: 70px;
+            margin-bottom: 85px; /* Ajustado para dar espaço ao botão */
         }
         #heading-display .heading-card {
             display: inline-block;
@@ -162,14 +145,14 @@
             box-shadow: var(--shadow-lg);
         }
         #heading-display .direction-label {
-            font-size: clamp(26px, 5vw, 34px);
+            font-size: clamp(22px, 5vw, 34px);
             font-weight: 800;
             letter-spacing: 0.03em;
             color: #ffffff;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
         }
         #heading-display .degrees-label {
-            font-size: clamp(14px, 2.5vw, 17px);
+            font-size: clamp(13px, 2.5vw, 17px);
             font-weight: 500;
             color: var(--text-secondary);
             letter-spacing: 0.05em;
@@ -185,7 +168,7 @@
             text-align: center;
             pointer-events: auto;
             position: fixed;
-            bottom: 100px;
+            bottom: 45px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 25;
@@ -196,7 +179,7 @@
             border: 1.5px solid rgba(255, 255, 255, 0.2);
             padding: 13px 30px;
             border-radius: 40px;
-            font-size: clamp(14px, 2.8vw, 16px);
+            font-size: clamp(13px, 2.8vw, 16px);
             font-weight: 600;
             letter-spacing: 0.03em;
             cursor: pointer;
@@ -207,7 +190,6 @@
             white-space: nowrap;
             font-family: var(--font-display);
             outline: none;
-            -webkit-tap-highlight-color: transparent;
         }
         #permission-btn:active {
             transform: scale(0.94);
@@ -223,13 +205,8 @@
             animation: activeGlow 2s ease-in-out infinite;
         }
         @keyframes activeGlow {
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(76, 175, 132, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(76, 175, 132, 0.7);
-            }
+            0%, 100% { box-shadow: 0 0 20px rgba(76, 175, 132, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(76, 175, 132, 0.7); }
         }
         #permission-btn.disabled-state {
             background: #1a1a1a;
@@ -242,104 +219,73 @@
         /* === AVISO DE PRECISÃO (RODAPÉ) === */
         #precision-warning {
             position: fixed;
-            bottom: 10px;
+            bottom: 12px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 15;
             pointer-events: none;
             text-align: center;
-            max-width: 90vw;
+            width: 90vw;
         }
         #precision-warning span {
-            font-size: clamp(9px, 1.6vw, 10.5px);
+            font-size: clamp(9px, 1.6vw, 11px);
             color: rgba(180, 185, 200, 0.55);
             letter-spacing: 0.03em;
             font-weight: 400;
             line-height: 1.35;
-            font-family: var(--font-display);
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
         }
-        #precision-warning .warn-icon {
-            display: inline-block;
-            margin-right: 3px;
-            font-size: 1.1em;
-            vertical-align: -1px;
-        }
 
-        /* === RESPONSIVIDADE === */
+        /* === AJUSTES DE RESPONSIVIDADE E DISPOSITIVOS === */
         @media (max-width: 600px) {
             #cube-container {
-                top: 10px;
-                left: 10px;
-                width: 46px;
-                height: 46px;
+                top: 14px;
+                left: 14px;
+                width: 48px;
+                height: 48px;
             }
             #ui-overlay {
-                padding: 12px 10px 8px;
-            }
-            .header-title .app-name {
-                padding: 8px 18px;
-                font-size: 16px;
-                border-radius: 30px;
-            }
-            #heading-display .heading-card {
-                padding: 10px 20px;
-                border-radius: var(--radius-lg);
-            }
-            #heading-display .direction-label {
-                font-size: 24px;
-            }
-            #sensor-btn-wrapper {
-                bottom: 80px;
-            }
-            #permission-btn {
-                padding: 11px 24px;
-                font-size: 14px;
-                border-radius: 30px;
-            }
-            #precision-warning span {
-                font-size: 9px;
-            }
-        }
-        @media (min-width: 1200px) {
-            #cube-container {
-                top: 24px;
-                left: 24px;
-                width: 72px;
-                height: 72px;
-            }
-            #heading-display .direction-label {
-                font-size: 38px;
-            }
-            #permission-btn {
-                padding: 15px 36px;
-                font-size: 17px;
-            }
-        }
-        @media (max-height: 700px) {
-            #sensor-btn-wrapper {
-                bottom: 65px;
+                padding: 12px 12px 8px;
             }
             #heading-display {
-                margin-bottom: 40px;
+                margin-bottom: 90px;
+            }
+            #sensor-btn-wrapper {
+                bottom: 40px;
+            }
+        }
+        
+        /* Ajuste específico para celulares deitados (Landscape) */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #heading-display {
+                margin-bottom: 10px;
+                position: fixed;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            #sensor-btn-wrapper {
+                bottom: 15px;
+                left: 20px;
+                transform: none;
+            }
+            #cube-container {
+                display: none; /* Esconde o mini cubo em telas muito baixas para liberar espaço */
             }
             #precision-warning {
-                bottom: 6px;
+                display: none;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Canvas principal da cena 3D -->
     <canvas id="main-canvas"></canvas>
 
-    <!-- Mini cubo 3D no topo esquerdo -->
     <div id="cube-container">
         <canvas id="cube-canvas"></canvas>
     </div>
 
-    <!-- Overlay UI -->
     <div id="ui-overlay">
         <div class="header-title">
             <span class="app-name">
@@ -354,34 +300,22 @@
         </div>
     </div>
 
-    <!-- Botão de sensores -->
     <div id="sensor-btn-wrapper">
         <button id="permission-btn" aria-label="Ativar sensores de orientação">📡 ATIVAR SENSORES</button>
     </div>
 
-    <!-- Aviso de precisão -->
     <div id="precision-warning">
-        <span><span class="warn-icon">⚠️</span> A bússola digital possui precisão limitada e não substitui uma bússola convencional. Utilize apenas como referência.</span>
+        <span>⚠️ A bússola digital possui precisão filtrada e estabilizada. Use como referência.</span>
     </div>
 
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         (function() {
-            // ============ VERIFICAÇÃO THREE.JS ============
             if (typeof THREE === 'undefined') {
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-                script.onerror = () => {
-                    document.body.innerHTML =
-                        '<div style="color:#fff;text-align:center;padding:40px;font-family:sans-serif;"><h2>Erro ao carregar Three.js</h2><p>Verifique sua conexão com a internet.</p></div>';
-                };
-                document.head.appendChild(script);
-                throw new Error('Three.js não carregado - aguardando fallback');
+                document.body.innerHTML = '<div style="color:#fff;text-align:center;padding:40px;"><h2>Erro ao carregar Three.js</h2></div>';
+                return;
             }
 
-            // ============ REFERÊNCIAS DOM ============
             const mainCanvas = document.getElementById('main-canvas');
             const cubeCanvas = document.getElementById('cube-canvas');
             const directionText = document.getElementById('direction-text');
@@ -399,16 +333,15 @@
             renderer.toneMappingExposure = 1.1;
             renderer.outputEncoding = THREE.sRGBEncoding;
 
-            // ============ CENA PRINCIPAL ============
             const scene = new THREE.Scene();
             scene.fog = new THREE.FogExp2(0x06080f, 0.00015);
 
-            // Câmera
+            // Câmera com FOV adaptável no script de resize
             const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 80);
-            camera.position.set(0, 6.5, 11.5);
-            camera.lookAt(0, 0.3, 0);
+            camera.position.set(0, 7.0, 11.5);
+            camera.lookAt(0, 0.2, 0);
 
-            // ============ ILUMINAÇÃO PROFISSIONAL ============
+            // ============ ILUMINAÇÃO ============
             const ambientLight = new THREE.AmbientLight(0x334466, 0.9);
             scene.add(ambientLight);
 
@@ -417,12 +350,6 @@
             keyLight.castShadow = true;
             keyLight.shadow.mapSize.width = 2048;
             keyLight.shadow.mapSize.height = 2048;
-            keyLight.shadow.camera.near = 0.5;
-            keyLight.shadow.camera.far = 60;
-            keyLight.shadow.camera.left = -15;
-            keyLight.shadow.camera.right = 15;
-            keyLight.shadow.camera.top = 15;
-            keyLight.shadow.camera.bottom = -15;
             keyLight.shadow.bias = -0.0001;
             keyLight.shadow.normalBias = 0.02;
             scene.add(keyLight);
@@ -435,510 +362,217 @@
             rimLight.position.set(0, -1.5, 7);
             scene.add(rimLight);
 
-            const topLight = new THREE.PointLight(0xffffff, 0.4, 18);
-            topLight.position.set(0, 10, 0);
-            scene.add(topLight);
-
-            // ============ GRUPO TERRA ============
+            // ============ PLANETA TERRA NO FUNDO ============
             const earthGroup = new THREE.Group();
             scene.add(earthGroup);
 
-            // Textura procedural da Terra
             function createEarthTexture() {
                 const canvas = document.createElement('canvas');
-                canvas.width = 1024;
-                canvas.height = 512;
+                canvas.width = 1024; canvas.height = 512;
                 const ctx = canvas.getContext('2d');
-
-                // Gradiente oceânico
                 const oceanGrad = ctx.createRadialGradient(512, 200, 50, 512, 256, 600);
-                oceanGrad.addColorStop(0, '#1e6ec7');
-                oceanGrad.addColorStop(0.5, '#1555a0');
-                oceanGrad.addColorStop(1, '#0b3570');
-                ctx.fillStyle = oceanGrad;
-                ctx.fillRect(0, 0, 1024, 512);
+                oceanGrad.addColorStop(0, '#1e6ec7'); oceanGrad.addColorStop(0.5, '#1555a0'); oceanGrad.addColorStop(1, '#0b3570');
+                ctx.fillStyle = oceanGrad; ctx.fillRect(0, 0, 1024, 512);
 
-                // Ruído sutil no oceano
-                ctx.globalAlpha = 0.12;
-                for (let i = 0; i < 2000; i++) {
-                    const rx = Math.random() * 1024;
-                    const ry = Math.random() * 512;
-                    ctx.fillStyle = Math.random() > 0.5 ? '#3a90e0' : '#0c4080';
-                    ctx.fillRect(rx, ry, 2, 2);
-                }
-                ctx.globalAlpha = 1;
-
-                // Continentes
-                const landColor = '#4a9e3f';
-                const landDark = '#357a2b';
-                ctx.fillStyle = landColor;
-                ctx.strokeStyle = landDark;
-                ctx.lineWidth = 2;
-
+                ctx.fillStyle = '#4a9e3f'; ctx.strokeStyle = '#357a2b'; ctx.lineWidth = 2;
                 function drawContinent(cx, cy, rx, ry, rotation = 0) {
-                    ctx.save();
-                    ctx.translate(cx, cy);
-                    ctx.rotate(rotation);
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.stroke();
-                    // Detalhes internos
-                    ctx.fillStyle = landDark;
-                    ctx.beginPath();
-                    ctx.ellipse(rx * 0.25, ry * 0.2, rx * 0.35, ry * 0.3, 0.3, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#5cb84d';
-                    ctx.beginPath();
-                    ctx.ellipse(-rx * 0.2, -ry * 0.15, rx * 0.25, ry * 0.25, -0.2, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = landColor;
-                    ctx.restore();
+                    ctx.save(); ctx.translate(cx, cy); ctx.rotate(rotation); ctx.beginPath();
+                    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore();
                 }
-
-                drawContinent(180, 130, 85, 115, 0.1); // América do Norte
-                drawContinent(230, 290, 50, 85, 0.05); // América do Sul
-                drawContinent(510, 140, 65, 72, 0); // Europa
-                drawContinent(520, 275, 58, 105, -0.05); // África
-                drawContinent(720, 155, 105, 95, 0.08); // Ásia
-                drawContinent(790, 340, 32, 26, 0.15); // Austrália
-                drawContinent(140, 350, 18, 35, 0.3); // Groenlândia (aproximada)
-
-                // Nuvens atmosféricas
-                ctx.globalAlpha = 0.2;
-                ctx.fillStyle = '#ffffff';
-                for (let i = 0; i < 300; i++) {
-                    const cx = Math.random() * 1024;
-                    const cy = Math.random() * 512;
-                    ctx.beginPath();
-                    ctx.ellipse(cx, cy, Math.random() * 30 + 8, Math.random() * 12 + 3, Math.random() * Math.PI, 0, Math
-                        .PI * 2);
-                    ctx.fill();
-                }
-                ctx.globalAlpha = 1;
-
+                drawContinent(180, 130, 85, 115, 0.1);
+                drawContinent(230, 290, 50, 85, 0.05);
+                drawContinent(510, 140, 65, 72, 0);
+                drawContinent(520, 275, 58, 105, -0.05);
+                drawContinent(720, 155, 105, 95, 0.08);
+                drawContinent(790, 340, 32, 26, 0.15);
                 return new THREE.CanvasTexture(canvas);
             }
 
-            const earthGeo = new THREE.SphereGeometry(3, 72, 72);
+            const earthGeo = new THREE.SphereGeometry(3, 48, 48);
             const earthMat = new THREE.MeshStandardMaterial({
-                map: createEarthTexture(),
-                roughness: 0.55,
-                metalness: 0.05,
-                emissive: 0x112244,
-                emissiveIntensity: 0.15,
+                map: createEarthTexture(), roughness: 0.6, metalness: 0.05
             });
             const earth = new THREE.Mesh(earthGeo, earthMat);
-            earth.position.y = -8;
-            earth.castShadow = true;
-            earth.receiveShadow = true;
+            earth.position.y = -8.5;
             earthGroup.add(earth);
-
-            // Anel atmosférico
-            const atmoGeo = new THREE.TorusGeometry(3.08, 0.08, 32, 100);
-            const atmoMat = new THREE.MeshStandardMaterial({
-                color: 0x99ccff,
-                emissive: 0x335577,
-                emissiveIntensity: 0.5,
-                transparent: true,
-                opacity: 0.35,
-                roughness: 0.4,
-                metalness: 0.2,
-            });
-            const atmosphere = new THREE.Mesh(atmoGeo, atmoMat);
-            atmosphere.position.y = -8;
-            atmosphere.rotation.x = Math.PI / 2;
-            earthGroup.add(atmosphere);
 
             // ============ BÚSSOLA PRINCIPAL ============
             const compassGroup = new THREE.Group();
             scene.add(compassGroup);
 
-            // Base cilíndrica
-            const baseGeo = new THREE.CylinderGeometry(4.2, 4.7, 0.55, 80);
+            const baseGeo = new THREE.CylinderGeometry(4.2, 4.7, 0.55, 64);
             const baseMat = new THREE.MeshStandardMaterial({
-                color: 0x1c1f2e,
-                metalness: 0.85,
-                roughness: 0.18,
-                emissive: 0x0a0d18,
-                emissiveIntensity: 0.4,
+                color: 0x1c1f2e, metalness: 0.85, roughness: 0.2
             });
             const base = new THREE.Mesh(baseGeo, baseMat);
-            base.castShadow = true;
-            base.receiveShadow = true;
+            base.receiveShadow = true; base.castShadow = true;
             compassGroup.add(base);
 
-            // Anel dourado externo
-            const ringGeo = new THREE.TorusGeometry(4.55, 0.12, 24, 90);
+            const ringGeo = new THREE.TorusGeometry(4.55, 0.12, 16, 64);
             const ringMat = new THREE.MeshStandardMaterial({
-                color: 0xe8c468,
-                metalness: 0.95,
-                roughness: 0.15,
-                emissive: 0x332211,
-                emissiveIntensity: 0.5,
+                color: 0xe8c468, metalness: 0.95, roughness: 0.15
             });
             const ring = new THREE.Mesh(ringGeo, ringMat);
-            ring.rotation.x = Math.PI / 2;
-            ring.position.y = 0.3;
+            ring.rotation.x = Math.PI / 2; ring.position.y = 0.3;
             compassGroup.add(ring);
 
             // Marcadores da rosa dos ventos
             for (let i = 0; i < 72; i++) {
                 const angle = (i / 72) * Math.PI * 2;
-                let length, color;
-                if (i % 18 === 0) { length = 0.75;
-                    color = 0xe8c468; } // Principais
-                else if (i % 9 === 0) { length = 0.5;
-                    color = 0xcccccc; } // Secundários
-                else { length = 0.28;
-                    color = 0x666677; } // Terciários
+                let length = (i % 18 === 0) ? 0.75 : ((i % 9 === 0) ? 0.5 : 0.28);
+                let color = (i % 18 === 0) ? 0xe8c468 : ((i % 9 === 0) ? 0xcccccc : 0x666677);
 
                 const markerGeo = new THREE.BoxGeometry(0.06, 0.015, length);
-                const markerMat = new THREE.MeshStandardMaterial({
-                    color: color,
-                    metalness: 0.7,
-                    roughness: 0.35,
-                    emissive: i % 18 === 0 ? 0x221100 : 0x000000,
-                    emissiveIntensity: i % 18 === 0 ? 0.4 : 0,
-                });
+                const markerMat = new THREE.MeshStandardMaterial({ color: color, metalness: 0.7 });
                 const marker = new THREE.Mesh(markerGeo, markerMat);
-                marker.position.x = Math.cos(angle) * 4.45;
-                marker.position.z = Math.sin(angle) * 4.45;
-                marker.position.y = 0.32;
+                marker.position.set(Math.cos(angle) * 4.45, 0.32, Math.sin(angle) * 4.45);
                 marker.rotation.y = -angle;
-                marker.castShadow = true;
                 compassGroup.add(marker);
             }
 
-            // Função para criar labels 3D com sprites
+            // Labels de Direção
             function createLabel(text, color, x, z, isMain = false) {
                 const canvas = document.createElement('canvas');
-                canvas.width = 256;
-                canvas.height = 256;
+                canvas.width = 256; canvas.height = 256;
                 const ctx = canvas.getContext('2d');
-
-                if (isMain) {
-                    ctx.shadowColor = color;
-                    ctx.shadowBlur = 35;
-                    ctx.fillStyle = color;
-                    ctx.font = 'bold 150px "Segoe UI", system-ui, sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(text, 128, 128);
-                    ctx.shadowBlur = 0;
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 10;
-                    ctx.strokeText(text, 128, 128);
-                } else {
-                    ctx.fillStyle = color;
-                    ctx.font = 'bold 105px "Segoe UI", system-ui, sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(text, 128, 128);
-                    ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-                    ctx.lineWidth = 5;
-                    ctx.strokeText(text, 128, 128);
-                }
+                ctx.fillStyle = color;
+                ctx.font = isMain ? 'bold 140px "Segoe UI", sans-serif' : 'bold 100px "Segoe UI", sans-serif';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText(text, 128, 128);
 
                 const texture = new THREE.CanvasTexture(canvas);
-                texture.minFilter = THREE.LinearFilter;
-                texture.magFilter = THREE.LinearFilter;
-                const material = new THREE.SpriteMaterial({
-                    map: texture,
-                    blending: THREE.NormalBlending,
-                    depthTest: false,
-                    depthWrite: false,
-                });
+                const material = new THREE.SpriteMaterial({ map: texture, depthTest: false, depthWrite: false });
                 const sprite = new THREE.Sprite(material);
-                sprite.position.set(x, 1.45, z);
-                sprite.scale.set(2.3, 2.3, 1);
+                sprite.position.set(x, 1.3, z);
+                sprite.scale.set(2.2, 2.2, 1);
                 compassGroup.add(sprite);
-                return sprite;
             }
 
             createLabel('N', '#ff3333', 0, -5.2, true);
             createLabel('S', '#33ccff', 0, 5.2, false);
             createLabel('L', '#33dd55', 5.2, 0, false);
             createLabel('O', '#ffbb33', -5.2, 0, false);
-            createLabel('NE', '#ff8844', 3.5, -3.5, false);
-            createLabel('NO', '#ff8844', -3.5, -3.5, false);
-            createLabel('SE', '#4488ff', 3.5, 3.5, false);
-            createLabel('SO', '#4488ff', -3.5, 3.5, false);
 
-            // Ponteiro (agulha)
+            // Ponteiro / Agulha
             const pointerGroup = new THREE.Group();
+            pointerGroup.position.y = 0.35;
             compassGroup.add(pointerGroup);
-            pointerGroup.position.y = 0.32;
 
-            // Agulha vermelha (Norte)
-            const redNeedleGeo = new THREE.BoxGeometry(0.35, 0.08, 3.3);
-            const redNeedleMat = new THREE.MeshStandardMaterial({
-                color: 0xee2222,
-                metalness: 0.25,
-                roughness: 0.35,
-                emissive: 0x330000,
-                emissiveIntensity: 0.7,
-            });
-            const redNeedle = new THREE.Mesh(redNeedleGeo, redNeedleMat);
-            redNeedle.position.z = -1.65;
-            redNeedle.castShadow = true;
-            pointerGroup.add(redNeedle);
+            const redNeedleMesh = new THREE.Mesh(
+                new THREE.BoxGeometry(0.35, 0.08, 3.3),
+                new THREE.MeshStandardMaterial({ color: 0xee2222, metalness: 0.3, emissive: 0x330000 })
+            );
+            redNeedleMesh.position.z = -1.65; redNeedleMesh.castShadow = true;
+            pointerGroup.add(redNeedleMesh);
 
-            // Agulha cinza (Sul)
-            const grayNeedleGeo = new THREE.BoxGeometry(0.35, 0.08, 2.7);
-            const grayNeedleMat = new THREE.MeshStandardMaterial({
-                color: 0x555566,
-                metalness: 0.5,
-                roughness: 0.3,
-            });
-            const grayNeedle = new THREE.Mesh(grayNeedleGeo, grayNeedleMat);
-            grayNeedle.position.z = 1.35;
-            pointerGroup.add(grayNeedle);
+            const grayNeedleMesh = new THREE.Mesh(
+                new THREE.BoxGeometry(0.35, 0.08, 2.7),
+                new THREE.MeshStandardMaterial({ color: 0x555566, roughness: 0.4 })
+            );
+            grayNeedleMesh.position.z = 1.35;
+            pointerGroup.add(grayNeedleMesh);
 
-            // Centro dourado
-            const centerGeo = new THREE.SphereGeometry(0.28, 40, 40);
-            const centerMat = new THREE.MeshStandardMaterial({
-                color: 0xf0d060,
-                metalness: 0.9,
-                roughness: 0.08,
-                emissive: 0x332200,
-                emissiveIntensity: 0.6,
-            });
-            const centerSphere = new THREE.Mesh(centerGeo, centerMat);
-            centerSphere.position.y = 0.04;
-            centerSphere.castShadow = true;
+            const centerSphere = new THREE.Mesh(
+                new THREE.SphereGeometry(0.28, 24, 24),
+                new THREE.MeshStandardMaterial({ color: 0xf0d060, metalness: 0.9 })
+            );
             pointerGroup.add(centerSphere);
 
-            // Cúpula de vidro
-            const glassGeo = new THREE.SphereGeometry(2.4, 64, 64);
-            const glassMat = new THREE.MeshPhysicalMaterial({
-                color: 0xffffff,
-                metalness: 0.05,
-                roughness: 0.08,
-                transparent: true,
-                opacity: 0.28,
-                clearcoat: 1.0,
-                clearcoatRoughness: 0.08,
-                envMapIntensity: 0.3,
-            });
-            const glass = new THREE.Mesh(glassGeo, glassMat);
-            glass.position.y = 0.75;
-            glass.castShadow = true;
-            glass.receiveShadow = true;
+            // Vidro protetor
+            const glass = new THREE.Mesh(
+                new THREE.SphereGeometry(2.4, 48, 48),
+                new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.2, roughness: 0.1, clearcoat: 1.0 })
+            );
+            glass.position.y = 0.6;
             compassGroup.add(glass);
 
-            // ============ NAVES ESPACIAIS (SPRITES) ============
-            const spaceships = [];
-            const shipEmojis = ['🚀', '🛸', '🛰️', '🛩️', '✈️', '🛸', '🚀', '🛰️', '🛸', '🚁'];
-
-            function createSpaceship() {
-                const canvas = document.createElement('canvas');
-                canvas.width = 128;
-                canvas.height = 128;
-                const ctx = canvas.getContext('2d');
-                const emoji = shipEmojis[Math.floor(Math.random() * shipEmojis.length)];
-                ctx.font = '78px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(emoji, 64, 64);
-
-                const texture = new THREE.CanvasTexture(canvas);
-                texture.minFilter = THREE.LinearFilter;
-                const material = new THREE.SpriteMaterial({
-                    map: texture,
-                    blending: THREE.AdditiveBlending,
-                    depthTest: false,
-                    depthWrite: false,
-                    opacity: 0.85,
-                });
-                const sprite = new THREE.Sprite(material);
-                sprite.position.set(
-                    (Math.random() - 0.5) * 22,
-                    (Math.random() - 0.5) * 16 - 3,
-                    (Math.random() - 0.5) * 22
-                );
-                sprite.scale.set(1.4, 1.4, 1);
-                sprite.userData = {
-                    speed: Math.random() * 0.018 + 0.008,
-                    rotationSpeed: Math.random() * 0.018 - 0.009,
-                    orbitRadius: Math.random() * 6 + 7,
-                    orbitSpeed: Math.random() * 0.004 + 0.0015,
-                    angle: Math.random() * Math.PI * 2,
-                    verticalSpeed: Math.random() * 0.008 - 0.004,
-                };
-                scene.add(sprite);
-                return sprite;
-            }
-
-            for (let i = 0; i < 16; i++) {
-                spaceships.push(createSpaceship());
-            }
-
-            // ============ PARTÍCULAS ESTELARES ============
+            // Estrelas de fundo
             const starsGeo = new THREE.BufferGeometry();
-            const starsCount = 600;
+            const starsCount = 400;
             const starsPositions = new Float32Array(starsCount * 3);
-            const starsSizes = new Float32Array(starsCount);
-            for (let i = 0; i < starsCount; i++) {
-                starsPositions[i * 3] = (Math.random() - 0.5) * 35;
-                starsPositions[i * 3 + 1] = (Math.random() - 0.5) * 28;
-                starsPositions[i * 3 + 2] = (Math.random() - 0.5) * 30;
-                starsSizes[i] = Math.random() * 0.06 + 0.015;
-            }
+            for(let i=0; i<starsCount*3; i++) { starsPositions[i] = (Math.random() - 0.5) * 40; }
             starsGeo.setAttribute('position', new THREE.BufferAttribute(starsPositions, 3));
-            starsGeo.setAttribute('size', new THREE.BufferAttribute(starsSizes, 1));
-            const starsMat = new THREE.PointsMaterial({
-                size: 0.04,
-                color: 0xffffff,
-                blending: THREE.AdditiveBlending,
-                transparent: true,
-                opacity: 0.75,
-                depthWrite: false,
-            });
-            const stars = new THREE.Points(starsGeo, starsMat);
+            const stars = new THREE.Points(starsGeo, new THREE.PointsMaterial({ size: 0.04, color: 0xffffff, transparent: true, opacity: 0.6 }));
             scene.add(stars);
 
-            // ============ CUBO 3D DECORATIVO (TOPO ESQUERDO) ============
+            // ============ MINI CUBO AUXILIAR (TOPO) ============
             const cubeScene = new THREE.Scene();
-            const cubeCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 20);
-            cubeCamera.position.set(1.6, 1.2, 2.2);
-            cubeCamera.lookAt(0, 0, 0);
+            const cubeCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 10);
+            cubeCamera.position.set(1.6, 1.2, 2.2); cubeCamera.lookAt(0, 0, 0);
 
             const cubeRenderer = new THREE.WebGLRenderer({ canvas: cubeCanvas, antialias: true, alpha: true });
-            cubeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            cubeRenderer.setSize(
-                cubeContainer.clientWidth || 62,
-                cubeContainer.clientHeight || 62
+            cubeRenderer.setSize(62, 62);
+
+            const cubeMesh = new THREE.Mesh(
+                new THREE.BoxGeometry(0.85, 0.85, 0.85),
+                new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.6 })
             );
-            cubeRenderer.setClearColor(0x000000, 0);
-
-            // Cubo principal
-            const cubeGeo = new THREE.BoxGeometry(0.85, 0.85, 0.85);
-            const cubeMat = new THREE.MeshPhysicalMaterial({
-                color: 0xffffff,
-                metalness: 0.3,
-                roughness: 0.2,
-                transparent: true,
-                opacity: 0.55,
-                clearcoat: 0.6,
-                clearcoatRoughness: 0.1,
-                envMapIntensity: 0.4,
-            });
-            const cubeMesh = new THREE.Mesh(cubeGeo, cubeMat);
+            cubeMesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(cubeMesh.geometry), new THREE.LineBasicMaterial({ color: 0xf0d060 })));
             cubeScene.add(cubeMesh);
+            cubeScene.add(new THREE.AmbientLight(0xffffff, 1.5));
 
-            // Wireframe dourado do cubo
-            const wireGeo = new THREE.EdgesGeometry(cubeGeo);
-            const wireMat = new THREE.LineBasicMaterial({
-                color: 0xf0d060,
-                linewidth: 1,
-                transparent: true,
-                opacity: 0.9,
-            });
-            const wireframe = new THREE.LineSegments(wireGeo, wireMat);
-            cubeMesh.add(wireframe);
-
-            // Partículas orbitando o cubo
-            const orbitParticlesGeo = new THREE.BufferGeometry();
-            const orbitCount = 30;
-            const orbitPositionsArr = new Float32Array(orbitCount * 3);
-            for (let i = 0; i < orbitCount; i++) {
-                const theta = (i / orbitCount) * Math.PI * 2;
-                const radius = 0.9 + Math.random() * 0.35;
-                orbitPositionsArr[i * 3] = Math.cos(theta) * radius;
-                orbitPositionsArr[i * 3 + 1] = Math.sin(theta) * radius * 0.7;
-                orbitPositionsArr[i * 3 + 2] = Math.sin(theta) * radius * 0.5;
-            }
-            orbitParticlesGeo.setAttribute('position', new THREE.BufferAttribute(orbitPositionsArr, 3));
-            const orbitParticlesMat = new THREE.PointsMaterial({
-                size: 0.03,
-                color: 0xf0d878,
-                blending: THREE.AdditiveBlending,
-                transparent: true,
-                opacity: 0.8,
-                depthWrite: false,
-            });
-            const orbitParticles = new THREE.Points(orbitParticlesGeo, orbitParticlesMat);
-            cubeScene.add(orbitParticles);
-
-            // Iluminação do cubo
-            const cubeAmbient = new THREE.AmbientLight(0x444466, 1.2);
-            cubeScene.add(cubeAmbient);
-            const cubePointLight = new THREE.PointLight(0xffd8a0, 1.5, 8);
-            cubePointLight.position.set(2, 3, 3);
-            cubeScene.add(cubePointLight);
-            const cubeFillLight = new THREE.PointLight(0x6699cc, 0.6, 6);
-            cubeFillLight.position.set(-2, -1, -1);
-            cubeScene.add(cubeFillLight);
-
-            // ============ ESTADO DOS SENSORES ============
+            // ============ LÓGICA DE FILTRAGEM E PRECISÃO CRÍTICA ============
             let currentHeading = 0;
             let targetHeading = 0;
             let isSensorActive = false;
-            let permissionRequested = false;
+            
+            // Variáveis auxiliares para o filtro passa-baixa (Filtro Alpha)
+            let lastHeading = 0;
+            const SMOOTH_FACTOR = 0.08; // Controla a suavidade vs tempo de resposta (0.01 a 0.2)
 
-            // ============ FUNÇÕES DE SENSORES ============
             function updateHeadingDisplay(heading) {
                 const directions = ['N', 'NE', 'L', 'SE', 'S', 'SO', 'O', 'NO'];
                 const index = Math.round(heading / 45) % 8;
                 const dir = directions[index];
-                const degrees = Math.round(heading);
-
-                if (dir === 'N') {
-                    directionText.innerHTML = 'N • <span class="highlight-north">NORTE</span>';
-                } else if (dir === 'S') {
-                    directionText.innerHTML =
-                    'S • <span style="color:#33ccff;text-shadow:0 0 14px rgba(51,204,255,0.6);">SUL</span>';
-                } else if (dir === 'L') {
-                    directionText.innerHTML =
-                    'L • <span style="color:#33dd55;text-shadow:0 0 14px rgba(51,221,85,0.6);">LESTE</span>';
-                } else if (dir === 'O') {
-                    directionText.innerHTML =
-                    'O • <span style="color:#ffbb33;text-shadow:0 0 14px rgba(255,187,51,0.6);">OESTE</span>';
-                } else {
-                    directionText.innerHTML = `${dir} • <span style="color:#ccc;">${['NORDESTE','NOROESTE','SUDESTE','SUDOESTE'][['NE','NO','SE','SO'].indexOf(dir)]}</span>`;
-                }
-                degreesText.textContent = `${degrees}°`;
+                
+                if (dir === 'N') directionText.innerHTML = 'N • <span class="highlight-north">NORTE</span>';
+                else if (dir === 'S') directionText.innerHTML = 'S • <span style="color:#33ccff;">SUL</span>';
+                else if (dir === 'L') directionText.innerHTML = 'L • <span style="color:#33dd55;">LESTE</span>';
+                else if (dir === 'O') directionText.innerHTML = 'O • <span style="color:#ffbb33;">OESTE</span>';
+                else directionText.innerHTML = `${dir} • <span style="color:#ccc;">${['NORDESTE','NOROESTE','SUDESTE','SUDOESTE'][['NE','NO','SE','SO'].indexOf(dir)]}</span>`;
+                
+                degreesText.textContent = `${Math.round(heading)}°`;
             }
 
             function handleOrientation(event) {
                 if (!isSensorActive) return;
-                let heading;
+                
+                let rawHeading = 0;
                 if (event.webkitCompassHeading !== undefined) {
-                    heading = event.webkitCompassHeading;
+                    rawHeading = event.webkitCompassHeading; // iOS (Extremamente preciso)
                 } else if (event.alpha !== null) {
-                    heading = 360 - event.alpha;
+                    rawHeading = 360 - event.alpha; // Android padrão
                 } else {
                     return;
                 }
-                while (heading < 0) heading += 360;
-                while (heading >= 360) heading -= 360;
-                targetHeading = heading;
-                updateHeadingDisplay(heading);
+
+                // Normaliza entre 0 e 360
+                rawHeading = (rawHeading + 360) % 360;
+
+                // Evita problemas de descontinuidade matemática ao passar de 359° para 0°
+                let diff = rawHeading - lastHeading;
+                if (diff > 180) rawHeading -= 360;
+                if (diff < -180) rawHeading += 360;
+
+                // Aplicação do Filtro Passa-Baixa (Remove ruídos de trepidação)
+                targetHeading = lastHeading + SMOOTH_FACTOR * (rawHeading - lastHeading);
+                
+                // Normaliza o resultado final filtrado
+                targetHeading = (targetHeading + 360) % 360;
+                lastHeading = targetHeading;
             }
 
             async function requestSensorPermission() {
-                if (permissionRequested) return;
-                permissionRequested = true;
-
                 try {
-                    if (typeof DeviceOrientationEvent !== 'undefined') {
-                        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                            const permission = await DeviceOrientationEvent.requestPermission();
-                            if (permission === 'granted') {
-                                startSensors();
-                            } else {
-                                showSensorFallback('Permissão negada.');
-                            }
-                        } else {
-                            startSensors();
-                        }
+                    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                        const permission = await DeviceOrientationEvent.requestPermission();
+                        if (permission === 'granted') startSensors();
+                        else showSensorFallback();
                     } else {
-                        showSensorFallback('Sensores não suportados.');
+                        startSensors();
                     }
-                } catch (error) {
-                    console.error('Erro ao solicitar permissão:', error);
-                    showSensorFallback('Erro nos sensores.');
+                } catch (e) {
+                    showSensorFallback();
                 }
             }
 
@@ -946,149 +580,91 @@
                 isSensorActive = true;
                 permissionBtn.textContent = '✅ SENSORES ATIVOS';
                 permissionBtn.classList.add('active-state');
-                window.addEventListener('deviceorientation', handleOrientation);
+                window.addEventListener('deviceorientation', handleOrientation, true);
                 setTimeout(() => {
                     permissionBtn.style.opacity = '0';
-                    permissionBtn.style.pointerEvents = 'none';
                     setTimeout(() => { permissionBtn.style.display = 'none'; }, 400);
-                }, 2500);
+                }, 2000);
             }
 
-            function showSensorFallback(msg) {
+            function showSensorFallback() {
                 isSensorActive = false;
-                permissionBtn.textContent = '📱 MODO DEMONSTRAÇÃO';
+                permissionBtn.textContent = '📱 MODO VISUALIZAÇÃO';
                 permissionBtn.classList.add('disabled-state');
-                permissionBtn.disabled = true;
-                console.info('Fallback:', msg);
-                setTimeout(() => {
-                    permissionBtn.style.opacity = '0.5';
-                }, 1000);
             }
 
-            // ============ ANIMAÇÃO ============
-            const clock = new THREE.Clock();
-            let demoAngle = Math.random() * 360;
-
-            function animate(timestamp) {
-                requestAnimationFrame(animate);
-
-                const dt = Math.min(clock.getDelta(), 0.1);
-
-                // Rotação da Terra
-                earth.rotation.y += 0.0015;
-                atmosphere.rotation.z += 0.0008;
-
-                // Movimento das naves
-                spaceships.forEach(ship => {
-                    ship.userData.angle += ship.userData.orbitSpeed;
-                    ship.position.x = Math.cos(ship.userData.angle) * ship.userData.orbitRadius;
-                    ship.position.z = Math.sin(ship.userData.angle) * ship.userData.orbitRadius;
-                    ship.position.y += ship.userData.verticalSpeed;
-                    if (ship.position.y > 13) ship.position.y = -13;
-                    if (ship.position.y < -13) ship.position.y = 13;
-                    ship.material.rotation += ship.userData.rotationSpeed;
-                });
-
-                // Estrelas
-                stars.rotation.y += 0.00015;
-                stars.rotation.x += 0.00008;
-
-                // Bússola
-                if (isSensorActive) {
-                    const smoothingFactor = 0.12;
-                    let delta = targetHeading - currentHeading;
-                    if (delta > 180) delta -= 360;
-                    if (delta < -180) delta += 360;
-                    currentHeading += delta * smoothingFactor;
-                    while (currentHeading < 0) currentHeading += 360;
-                    while (currentHeading >= 360) currentHeading -= 360;
-                    pointerGroup.rotation.y = THREE.MathUtils.degToRad(currentHeading);
-                } else {
-                    demoAngle += 0.25;
-                    if (demoAngle >= 360) demoAngle -= 360;
-                    pointerGroup.rotation.y += 0.004;
-                    updateHeadingDisplay(demoAngle);
-                    if (Math.floor(demoAngle) % 30 === 0) {
-                        degreesText.textContent = `${Math.round(demoAngle)}°`;
-                    }
-                }
-
-                // Renderizar cena principal
-                renderer.render(scene, camera);
-
-                // Animar cubo decorativo
-                const t = timestamp * 0.001;
-                cubeMesh.rotation.x += 0.008;
-                cubeMesh.rotation.y += 0.012;
-                cubeMesh.rotation.z += 0.005;
-                orbitParticles.rotation.y += 0.015;
-                orbitParticles.rotation.x += 0.008;
-                // Pequena oscilação na escala do cubo
-                const scalePulse = 1 + Math.sin(t * 1.8) * 0.04;
-                cubeMesh.scale.setScalar(scalePulse);
-                cubeRenderer.render(cubeScene, cubeCamera);
-            }
-
-            // ============ EVENT LISTENERS ============
-            permissionBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                requestSensorPermission();
-            });
-            permissionBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                requestSensorPermission();
-            });
-
-            // Responsividade
+            // ============ ALGORITMO DE RESPONSIVIDADE ADAPTATIVO ============
             function handleResize() {
                 const w = window.innerWidth;
                 const h = window.innerHeight;
+                
                 renderer.setSize(w, h);
                 camera.aspect = w / h;
+
+                // Previne o corte lateral: se a tela for muito vertical (celulares em pé), 
+                // aumentamos o campo de visão (FOV) para afastar a bússola proporcionalmente.
+                if (w < h) {
+                    camera.fov = 55 + (h / w) * 8; // Ajuste dinâmico baseado na proporção real
+                    camera.position.set(0, 8.5, 12.5);
+                } else {
+                    // Telas horizontais (Monitores de PC ou celular deitado)
+                    camera.fov = 45;
+                    camera.position.set(0, 7.0, 11.0);
+                }
+                
+                camera.lookAt(0, 0.2, 0);
                 camera.updateProjectionMatrix();
 
-                // Ajustar câmera para mobile
-                if (w < 600) {
-                    camera.position.set(0, 7.5, 13);
-                    camera.lookAt(0, 0.3, 0);
-                } else if (w < 1024) {
-                    camera.position.set(0, 7, 12);
-                    camera.lookAt(0, 0.3, 0);
-                } else {
-                    camera.position.set(0, 6.5, 11.5);
-                    camera.lookAt(0, 0.3, 0);
-                }
-
-                // Redimensionar cubo
-                const cubeSize = w < 600 ? 46 : w < 1024 ? 56 : 68;
+                // Redimensionar mini cubo superior
+                const cubeSize = w < 600 ? 48 : 62;
                 cubeContainer.style.width = cubeSize + 'px';
                 cubeContainer.style.height = cubeSize + 'px';
                 cubeRenderer.setSize(cubeSize, cubeSize);
             }
 
             window.addEventListener('resize', handleResize);
-            window.addEventListener('orientationchange', () => {
-                setTimeout(handleResize, 300);
-            });
+            window.addEventListener('orientationchange', () => { setTimeout(handleResize, 200); });
 
-            // ============ INICIALIZAÇÃO ============
-            handleResize();
-            updateHeadingDisplay(0);
+            // ============ LOOP DE ANIMAÇÃO ============
+            let demoAngle = 0;
 
-            // Verificar suporte a sensores
-            window.addEventListener('load', () => {
-                if (!('DeviceOrientationEvent' in window)) {
-                    showSensorFallback('Sensores não disponíveis.');
+            function animate(timestamp) {
+                requestAnimationFrame(animate);
+
+                earth.rotation.y += 0.001;
+                stars.rotation.y += 0.0001;
+
+                if (isSensorActive) {
+                    // Interpolação suave final para a rotação no Three.js
+                    let delta = targetHeading - currentHeading;
+                    if (delta > 180) delta -= 360;
+                    if (delta < -180) delta += 360;
+                    currentHeading += delta * 0.15;
+                    currentHeading = (currentHeading + 360) % 360;
+                    
+                    pointerGroup.rotation.y = THREE.MathUtils.degToRad(currentHeading);
+                    updateHeadingDisplay(currentHeading);
+                } else {
+                    // Modo demonstração cíclico caso não tenha sensor ativo
+                    demoAngle = (demoAngle + 0.2) % 360;
+                    pointerGroup.rotation.y = THREE.MathUtils.degToRad(demoAngle);
+                    updateHeadingDisplay(demoAngle);
                 }
-            });
 
-            // Iniciar animação
+                renderer.render(scene, camera);
+
+                // Animação do mini cubo
+                cubeMesh.rotation.x += 0.01;
+                cubeMesh.rotation.y += 0.015;
+                cubeRenderer.render(cubeScene, cubeCamera);
+            }
+
+            // Inicialização
+            permissionBtn.addEventListener('click', requestSensorPermission);
+            permissionBtn.addEventListener('touchend', requestSensorPermission);
+            
+            handleResize();
             requestAnimationFrame(animate);
-
-            // ============ EXPOR PARA DEBUG (OPCIONAL) ============
-            console.log('🧭 Bússola 3D Premium inicializada com sucesso.');
-            console.log('🌍 Modo:', isSensorActive ? 'Sensores ativos' : 'Demonstração');
-            console.log('💡 Dica: Toque em "ATIVAR SENSORES" para usar a bússola real do dispositivo.');
         })();
     </script>
 </body>
