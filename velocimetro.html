@@ -724,10 +724,11 @@
 
             window.addEventListener('resize', resizeCanvas);
 
-            function renderizarCicloSuave() {
+         function renderizarCicloSuave() {
                 const agora = Date.now();
                 const tempoSemGps = agora - lastUpdateTime;
 
+                // Se o sinal sumir por mais de 1.2 segundos, começa a baixar a velocidade
                 if (tempoSemGps > 1200) {
                     window.velocidadeAlvoGPS = Math.max(0, window.velocidadeAlvoGPS - 5); 
                 }
@@ -735,12 +736,13 @@
                 const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
                 const absDiferenca = Math.abs(diferenca);
                 
-                let fatorSuavizacao = 0.25;
+                // --- AJUSTE DE ARRANCADA RÁPIDA ---
+                // Se o carro estiver acelerando (diferença positiva), o painel reage quase instantaneamente (0.85)
+                // Se estiver apenas oscilando, ele mantém a suavidade (0.25)
+                let fatorSuavizacao = diferenca > 0 ? 0.85 : 0.25;
 
                 if (absDiferenca > 15) {
-                    fatorSuavizacao = 0.65; 
-                } else if (absDiferenca > 5) {
-                    fatorSuavizacao = 0.45; 
+                    fatorSuavizacao = 0.95; // Arrancada ou frenagem brusca: resposta imediata!
                 } else if (absDiferenca < 1 && window.velocidadeAlvoGPS === 0) {
                     fatorSuavizacao = 1.0;  
                 }
@@ -771,7 +773,6 @@
 
                 requestAnimationFrame(renderizarCicloSuave);
             }
-
             function updateGPS(pos) {
                 let rawSpeed = pos.coords.speed || 0;
                 if (rawSpeed < 0) rawSpeed = 0;
