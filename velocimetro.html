@@ -724,11 +724,10 @@
 
             window.addEventListener('resize', resizeCanvas);
 
-         function renderizarCicloSuave() {
+        function renderizarCicloSuave() {
                 const agora = Date.now();
                 const tempoSemGps = agora - lastUpdateTime;
 
-                // Se o sinal sumir por mais de 1.2 segundos, começa a baixar a velocidade
                 if (tempoSemGps > 1200) {
                     window.velocidadeAlvoGPS = Math.max(0, window.velocidadeAlvoGPS - 5); 
                 }
@@ -736,13 +735,12 @@
                 const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
                 const absDiferenca = Math.abs(diferenca);
                 
-                // --- AJUSTE DE ARRANCADA RÁPIDA ---
-                // Se o carro estiver acelerando (diferença positiva), o painel reage quase instantaneamente (0.85)
-                // Se estiver apenas oscilando, ele mantém a suavidade (0.25)
-                let fatorSuavizacao = diferenca > 0 ? 0.85 : 0.25;
+                // --- CALIBRAÇÃO DE ARRANCADA ULTRA RÁPIDA PARA O PONTEIRO ---
+                // Quase instantâneo (0.98) para subir e mais esperto (0.60) para descer
+                let fatorSuavizacao = diferenca > 0 ? 0.98 : 0.60;
 
                 if (absDiferenca > 15) {
-                    fatorSuavizacao = 0.95; // Arrancada ou frenagem brusca: resposta imediata!
+                    fatorSuavizacao = 0.99; 
                 } else if (absDiferenca < 1 && window.velocidadeAlvoGPS === 0) {
                     fatorSuavizacao = 1.0;  
                 }
@@ -751,12 +749,13 @@
                 
                 if (Math.abs(velocidadeSuaveExibida) < 0.1) velocidadeSuaveExibida = 0;
 
-                const displaySpeed = Math.round(velocidadeSuaveExibida);
-
+                // --- CORREÇÃO DO DIGITAL LENTO ---
+                // O visor digital agora lê direto a velocidade bruta calculada do GPS (sem filtro/atraso)
                 if (speedVal) {
-                    speedVal.innerText = displaySpeed.toString().padStart(2, '0');
+                    speedVal.innerText = Math.round(window.velocidadeAlvoGPS).toString().padStart(2, '0');
                 }
 
+                // O painel analógico segue a velocidade com a nova suavização ultra veloz
                 drawGauge(velocidadeSuaveExibida);
 
                 const tapeDeslocamento = ((velocidadeSuaveExibida / 10) * tapeMarkWidth) + (tapeMarkWidth / 2);
@@ -773,6 +772,7 @@
 
                 requestAnimationFrame(renderizarCicloSuave);
             }
+            
             function updateGPS(pos) {
                 let rawSpeed = pos.coords.speed || 0;
                 if (rawSpeed < 0) rawSpeed = 0;
