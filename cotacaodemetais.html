@@ -411,79 +411,99 @@
     </div>
 
    <script>
-    async function carregarCotacoesMetais() {
-        const badge = document.getElementById("loadStatus");
-        const fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-        
-        // Valores base de contingência comerciais por grama/quilo no Brasil
-        let ouroBase = 435.50; 
-        let prataBase = 5.25;  
-        let cobreBase = 46.80;  
-        let bronzeBase = 38.50;
-        let chumboBase = 11.20; 
-        let alumBase = 13.40;   
+async function carregarCotacoesMetais() {
+    const badge = document.getElementById("loadStatus");
+    const fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+    
+    // Valores de contingência padrão
+    let ouroBase = 435.50; 
+    let prataBase = 5.25;  
+    let cobreBase = 46.80;  
+    let bronzeBase = 38.50;
+    let chumboBase = 11.20; 
+    let alumBase = 13.40;   
 
-        try {
-            // Requisições paralelas de APIs financeiras públicas gratuitas
-            const [resAwesome, resCambio] = await Promise.all([
-                fetch("https://economia.awesomeapi.com.br/json/last/GOLD-BRL,USD-BRL"),
-                fetch("https://open.er-api.com/v6/latest/USD")
-            ]);
+    let statusOuro = false;
+    let statusCambio = false;
 
-            if (!resAwesome.ok || !resCambio.ok) throw new Error("Falha na requisição");
-
-            const dataAwesome = await resAwesome.json();
-            const dataCambio = await resCambio.json();
-
-            // 1. Definição do Dólar Comercial Atual
-            const taxaDolar = parseFloat(dataAwesome.USDBRL?.bid || dataCambio.rates.BRL);
-
-            // 2. Tratamento do Ouro (AwesomeAPI retorna o valor por grama direto em BRL)
-            if (dataAwesome.GOLDBRL) {
-                ouroBase = parseFloat(dataAwesome.GOLDBRL.bid);
+    // 1. Tenta buscar o Ouro (AwesomeAPI) de forma isolada
+    try {
+        const resOuro = await fetch("https://economia.awesomeapi.com.br/json/last/GOLD-BRL");
+        if (resOuro.ok) {
+            const dataOuro = await resOuro.json();
+            if (dataOuro.GOLDBRL) {
+                ouroBase = parseFloat(dataOuro.GOLDBRL.bid);
+                statusOuro = true;
             }
-
-            // 3. Simulação Dinâmica indexada baseada em Commodities de Mercado Geral
-            // Como APIs de Cobre/Alumínio puras da LME exigem tokens pagos caros, 
-            // usamos ancoragem de volatilidade através do câmbio real mais aproximação de mercado.
-            if (taxaDolar) {
-                // Prata internacional corrigida de Onça Troy para Grama (Média de $24 a $32 a onça)
-                // Usamos uma constante histórica de preço de mercado internacional aproximada de $0.90 de dólar por grama
-                prataBase = (0.92 * taxaDolar); 
-                
-                // Metais Industriais indexados ao preço por KG bruto estimado convertido pelo câmbio do dia
-                cobreBase = (8.50 * taxaDolar);
-                bronzeBase = (7.00 * taxaDolar); 
-                chumboBase = (2.05 * taxaDolar); 
-                alumBase = (2.45 * taxaDolar);
-            }
-
-            badge.innerText = "🟢 Ao vivo";
-            badge.className = "status-badge";
-            badge.style.color = ""; 
-            badge.style.borderColor = "";
-        } catch (err) {
-            console.warn("Utilizando referências comerciais em cache/offline:", err.message);
-            badge.innerText = "🕒 Padrão (Offline)";
-            badge.className = "status-badge loading";
-            badge.style.color = "#fdcb6e"; 
-            badge.style.borderColor = "rgba(253,203,110,0.3)";
         }
-
-        // Renderização matemática precisa das purezas no DOM
-        document.getElementById("priceOuro24k").innerText = fmt.format(ouroBase);
-        document.getElementById("priceOuro18k").innerText = fmt.format(ouroBase * 0.750);
-        document.getElementById("priceOuro10k").innerText = fmt.format(ouroBase * 0.417);
-        
-        document.getElementById("pricePrataPura").innerText = fmt.format(prataBase);
-        document.getElementById("pricePrata925").innerText = fmt.format(prataBase * 0.925);
-        
-        document.getElementById("priceCobre").innerText = fmt.format(cobreBase);
-        document.getElementById("priceBronze").innerText = fmt.format(bronzeBase);
-        document.getElementById("priceChumbo").innerText = fmt.format(chumboBase);
-        document.getElementById("priceAluminio").innerText = fmt.format(alumBase);
+    } catch (e) {
+        console.warn("API de Ouro instável. Usando cotação base para o Ouro.");
     }
 
+    // 2. Tenta buscar o Dólar (AwesomeAPI ou Fallback) de forma isolada
+    try {
+        const resUSD = await fetch("https://economia.awesomeapi.com.br/json/last/USD-BRL");
+        let taxaDolar = 0;
+
+        if (resUSD.ok) {
+            const dataUSD = await resUSD.json();
+            if (dataUSD.USDBRL) {
+                taxaDolar = parseFloat(dataUSD.USDBRL.bid);
+                statusCambio = true;
+            }
+        } 
+        
+        // Se a AwesomeAPI falhar no dólar, tenta a API reserva internacional
+        if (!taxaDolar) {
+            const resReserva = await fetch("https://open.er-api.com/v6/latest/USD");
+            if (resReserva.ok) {
+                const dataReserva = await resReserva.json();
+                taxaDolar = parseFloat(dataReserva.rates.BRL);
+                statusCambio = true;
+            }
+        }
+
+        // Se conseguiu o dólar, atualiza a Prata e os Industriais em tempo real
+        if (taxaDolar) {
+            prataBase = (0.92 * taxaDolar); 
+            cobreBase = (8.50 * taxaDolar);
+            bronzeBase = (7.00 * taxaDolar); 
+            chumboBase = (2.05 * taxaDolar); 
+            alumBase = (2.45 * taxaDolar);
+        }
+
+    } catch (e) {
+        console.warn("Erro ao obter taxas de câmbio.");
+    }
+
+    // 3. Gerenciamento inteligente do Selo de Status do Severino
+    if (statusOuro && statusCambio) {
+        badge.innerText = "🟢 Ao vivo";
+        badge.className = "status-badge";
+        badge.style.color = ""; badge.style.borderColor = "";
+    } else if (statusCambio) {
+        badge.innerText = "🟡 Metais Industriais Ao Vivo";
+        badge.className = "status-badge";
+        badge.style.color = "#fdcb6e"; badge.style.borderColor = "rgba(253,203,110,0.4)";
+    } else {
+        badge.innerText = "🕒 Padrão (Offline)";
+        badge.className = "status-badge loading";
+        badge.style.color = "#fdcb6e"; badge.style.borderColor = "rgba(253,203,110,0.3)";
+    }
+
+    // 4. Renderização final no seu HTML
+    document.getElementById("priceOuro24k").innerText = fmt.format(ouroBase);
+    document.getElementById("priceOuro18k").innerText = fmt.format(ouroBase * 0.750);
+    document.getElementById("priceOuro10k").innerText = fmt.format(ouroBase * 0.417);
+    
+    document.getElementById("pricePrataPura").innerText = fmt.format(prataBase);
+    document.getElementById("pricePrata925").innerText = fmt.format(prataBase * 0.925);
+    
+    document.getElementById("priceCobre").innerText = fmt.format(cobreBase);
+    document.getElementById("priceBronze").innerText = fmt.format(bronzeBase);
+    document.getElementById("priceChumbo").innerText = fmt.format(chumboBase);
+    document.getElementById("priceAluminio").innerText = fmt.format(alumBase);
+}
     // Inicialização segura
     document.addEventListener("DOMContentLoaded", () => {
         carregarCotacoesMetais();
