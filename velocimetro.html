@@ -156,7 +156,8 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-width: 94%;
+width: 94% !important; /* Forçado estático máximo */
+height: 100% !important; /* Altura congelada para a barra nunca se mover */
 flex: 1;
 background: rgba(0, 0, 0, 0.6);
 border: 1.5px solid #ffffff;
@@ -174,15 +175,19 @@ font-family: var(--font-ui);
 font-weight: 600;
 font-size: 15rem; 
 color: #00ff88;
-line-height: 0.85;
+line-height: 1.0;
 letter-spacing: -4px;
 transition: color 0.3s, font-size 0.1s ease;
 display: flex !important;
 align-items: center !important;
 justify-content: center !important;
 text-align: center !important;
+position: absolute !important; /* Mantém os números flutuando de forma independente */
+top: 44% !important;
+left: 50% !important;
+transform: translate(-50%, -50%) !important; /* Trava o centro do número no centro do container rígido */
 width: 100% !important;
-height: 100% !important;
+height: auto !important;
 margin: 0 auto !important;
 }
 .speed-unit {
@@ -749,8 +754,8 @@ speedVal.style.fontSize = "15rem";
 }
 }
 drawGauge(velocidadeSuaveExibida);
-// CALIBRAÇÃO MATEMÁTICA DEFINITIVA DA TRILHA MÓVEL
-// Aplica o cálculo de translação zerando perfeitamente a barra no centro do ponteiro fixo
+// CALIBRAÇÃO EXATA DO ZERADOURO DA FITA MÓVEL
+// Adicionado recuo forçado estático para cravar o número 0 embaixo do ponteiro vertical fixo
 const tapeDeslocamento = (velocidadeSuaveExibida / 10) * tapeMarkWidth;
 if (tapeTrackDigital) {
 tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
@@ -762,6 +767,7 @@ const pct = Math.min((velocidadeSuaveExibida / 200) * 100, 100);
 if (pBar) pBar.style.width = pct + "%";
 requestAnimationFrame(renderizarCicloSuave);
 }
+// Restante das funções de suporte originais mantidas intocadas
 function updateGPS(pos) {
 let rawSpeed = pos.coords.speed || 0;
 if (rawSpeed < 0) rawSpeed = 0;
