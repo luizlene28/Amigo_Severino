@@ -523,18 +523,19 @@
             }            
         }
 
-.container-botoes-fix {
+​.caixa-botoes-segura {
 display: flex !important;
 flex-direction: row !important;
 justify-content: space-between !important;
-gap: 10px !important;
+gap: 12px !important;
 width: 100% !important;
 max-width: 100% !important;
 padding: 0 15px !important;
 box-sizing: border-box !important;
-margin-top: 15px !important;
+margin-top: 20px !important;
+margin-bottom: 15px !important;
 }
-.btn-custom-funcao {
+​.card-btn {
 flex: 1 !important;
 width: 50% !important;
 padding: 15px 5px !important;
@@ -549,20 +550,20 @@ cursor: pointer !important;
 box-sizing: border-box !important;
 transition: background 0.2s !important;
 }
-.btn-cor-vermelho {
+​.btn-vermelho {
 background-color: #c91a30 !important;
 color: #ffffff !important;
 border: none !important;
 }
-.btn-cor-vermelho:active {
+​.btn-vermelho:active {
 background-color: #a01424 !important;
 }
-.btn-cor-escuro {
+​.btn-escuro {
 background-color: #1a1a2e !important;
 color: #ffffff !important;
 border: 1px solid #333333 !important;
 }
-.btn-cor-escuro:active {
+​.btn-escuro:active {
 background-color: #252542 !important;
 }
         
@@ -620,9 +621,9 @@ background-color: #252542 !important;
                     <label>Rumo</label>
                     <span id="dir-val">-</span>
                 </div>
-              <div class="container-botoes-fix">
-<button onclick="window.zerarHodometro()" class="btn-custom-funcao btn-cor-vermelho">ZERAR DIST.</button>
-<button onclick="window.switchPanel()" class="btn-custom-funcao btn-cor-escuro">ALTERNAR PAINEL</button>
+              <div class="caixa-botoes-segura">
+<div onclick="window.zerarHodometro()" class="card-btn btn-vermelho" role="button">ZERAR DIST.</div>
+<div onclick="window.switchPanel()" class="card-btn btn-escuro" role="button">ALTERNAR PAINEL</div>
 </div>
    <script>
         (function() {
