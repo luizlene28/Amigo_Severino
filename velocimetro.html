@@ -520,8 +520,52 @@
         @media (max-width: 600px) {
             .speed-stage {
                 height: 44vh;
-            }
+            }            
         }
+
+.container-botoes-fix {
+display: flex !important;
+flex-direction: row !important;
+justify-content: space-between !important;
+gap: 10px !important;
+width: 100% !important;
+max-width: 100% !important;
+padding: 0 15px !important;
+box-sizing: border-box !important;
+margin-top: 15px !important;
+}
+.btn-custom-funcao {
+flex: 1 !important;
+width: 50% !important;
+padding: 15px 5px !important;
+border-radius: 12px !important;
+font-family: 'Orbitron', sans-serif !important;
+font-weight: bold !important;
+font-size: 11px !important;
+letter-spacing: 0.5px !important;
+text-align: center !important;
+text-transform: uppercase !important;
+cursor: pointer !important;
+box-sizing: border-box !important;
+transition: background 0.2s !important;
+}
+.btn-cor-vermelho {
+background-color: #c91a30 !important;
+color: #ffffff !important;
+border: none !important;
+}
+.btn-cor-vermelho:active {
+background-color: #a01424 !important;
+}
+.btn-cor-escuro {
+background-color: #1a1a2e !important;
+color: #ffffff !important;
+border: 1px solid #333333 !important;
+}
+.btn-cor-escuro:active {
+background-color: #252542 !important;
+}
+        
     </style>
 </head>
 <body>
@@ -576,9 +620,9 @@
                     <label>Rumo</label>
                     <span id="dir-val">-</span>
                 </div>
-               <div class="botoes-container">
-    <button onclick="window.zerarHodometro()" class="btn-zerar">ZERAR DISTÂNCIA</button>
-    <button onclick="window.switchPanel()" class="btn-alternar">ALTERNAR PAINEL</button>
+              <div class="container-botoes-fix">
+<button onclick="window.zerarHodometro()" class="btn-custom-funcao btn-cor-vermelho">ZERAR DIST.</button>
+<button onclick="window.switchPanel()" class="btn-custom-funcao btn-cor-escuro">ALTERNAR PAINEL</button>
 </div>
    <script>
         (function() {
