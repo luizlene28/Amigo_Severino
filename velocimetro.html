@@ -634,11 +634,11 @@
             });
 
             function updateClock() {
-                const now = new Date();
-                topClock.innerText = String(now.getHours()).padStart(2, '0'); + ':' +
-                                     String(now.getMinutes()).padStart(2, '0') + ':' +
-                                     String(now.getSeconds()).padStart(2, '0');
-            }
+    const now = new Date();
+    topClock.innerText = String(now.getHours()).padStart(2, '0') + ':' +
+                         String(now.getMinutes()).padStart(2, '0') + ':' +
+                         String(now.getSeconds()).padStart(2, '0');
+}
             setInterval(updateClock, 1000);
             updateClock();
 
