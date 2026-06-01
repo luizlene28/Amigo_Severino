@@ -586,7 +586,13 @@
    <script>
         (function() {
             let currentMode = "digital";
-            let totalDistance = 0;
+            
+            // ==========================================
+            // MEMÓRIA COMPORTAMENTAL: RECUPERA A DISTÂNCIA SALVA
+            // Se não houver nada gravado (primeira vez), começa em 0
+            // ==========================================
+            let totalDistance = parseFloat(localStorage.getItem('severino_distancia')) || 0;
+            
             let lastCoord = null;
             let gpsErrorCount = 0;
             let lastUpdateTime = Date.now();
@@ -617,6 +623,9 @@
             const tapeTrackAnalog = document.getElementById('tape-track-analog');
             const tapeMarkWidth = 80; 
 
+            // Exibe a distância recuperada da memória logo na inicialização da página
+            if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
+
             // Alternar tema
             themeToggleBtn.addEventListener('click', () => {
                 document.body.classList.toggle('light-mode');
@@ -626,7 +635,7 @@
 
             function updateClock() {
                 const now = new Date();
-                topClock.innerText = String(now.getHours()).padStart(2, '0') + ':' +
+                topClock.innerText = String(now.getHours()).padStart(2, '0'); + ':' +
                                      String(now.getMinutes()).padStart(2, '0') + ':' +
                                      String(now.getSeconds()).padStart(2, '0');
             }
@@ -663,7 +672,7 @@
             generateSpeedTape(tapeTrackAnalog);
 
             // ==========================================
-            // FUNÇÃO CORRIGIDA CONTRA O "EFEITO FANTASMA"
+            // FUNÇÃO ATUALIZAR VELOCIDADE E DISTÂNCIA
             // ==========================================
             window.atualizarVelocidade = function(velocidadeKmh, lat, lon, bearing) {
                 if (gpsWarning.style.display !== 'none') gpsWarning.style.display = 'none';
@@ -671,7 +680,6 @@
                 
                 lastUpdateTime = Date.now();
 
-                // FILTRO DE PARADA: Se o GPS oscilar parado abaixo de 1.5 km/h, crava em zero.
                 window.velocidadeAlvoGPS = velocidadeKmh > 1.5 ? velocidadeKmh : 0;
 
                 if (window.velocidadeAlvoGPS > 0) {
@@ -683,11 +691,13 @@
                     }
                 }
 
-                // CADEADO DE ODÔMETRO: Só computa distância real se o veículo estiver de fato acima de 2.0 km/h
+                // CADEADO DE ODÔMETRO
                 if (lat && lon && lastCoord && window.velocidadeAlvoGPS > 2.0) {
                     let d = haversine(lastCoord.lat, lastCoord.lon, lat, lon);
                     if (d > 0 && d < 500) { 
                         totalDistance += d;
+                        // GRAVAÇÃO EM SEGUNDO PLANO: Salva na gaveta interna do celular
+                        localStorage.setItem('severino_distancia', totalDistance.toString());
                     }
                 }
                 
@@ -695,10 +705,25 @@
 
                 if (!lat && window.velocidadeAlvoGPS > 0) {
                     totalDistance += (window.velocidadeAlvoGPS / 3.6); 
+                    // GRAVAÇÃO DE SEGURANÇA (Caso falte coordenadas mas some velocidade)
+                    localStorage.setItem('severino_distancia', totalDistance.toString());
                 }
 
                 if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
                 if (dirVal && bearing !== undefined) dirVal.innerText = getCardinals(bearing);
+            };
+
+            // ==========================================
+            // FUNÇÃO GLOBAL ADICIONADA: PERMITE ZERAR VIA KODULAR
+            // Chame pelo bloco Web_Viewer1.EvaluateJS -> "window.zerarHodometro();"
+            // ==========================================
+            window.zerarHodometro = function() {
+                totalDistance = 0;
+                localStorage.setItem('severino_distancia', '0');
+                totalSomaVelocidades = 0;
+                totalLeiturasGps = 0;
+                if (distVal) distVal.innerText = "0.00 km";
+                if (avgVal) avgVal.innerText = "0.0";
             };
 
             window.switchPanel = function() {
@@ -724,7 +749,7 @@
 
             window.addEventListener('resize', resizeCanvas);
 
-        function renderizarCicloSuave() {
+            function renderizarCicloSuave() {
                 const agora = Date.now();
                 const tempoSemGps = agora - lastUpdateTime;
 
@@ -735,8 +760,6 @@
                 const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
                 const absDiferenca = Math.abs(diferenca);
                 
-                // --- CALIBRAÇÃO DE ARRANCADA ULTRA RÁPIDA PARA O PONTEIRO ---
-                // Quase instantâneo (0.98) para subir e mais esperto (0.60) para descer
                 let fatorSuavizacao = diferenca > 0 ? 0.98 : 0.60;
 
                 if (absDiferenca > 15) {
@@ -749,13 +772,10 @@
                 
                 if (Math.abs(velocidadeSuaveExibida) < 0.1) velocidadeSuaveExibida = 0;
 
-                // --- CORREÇÃO DO DIGITAL LENTO ---
-                // O visor digital agora lê direto a velocidade bruta calculada do GPS (sem filtro/atraso)
                 if (speedVal) {
                     speedVal.innerText = Math.round(window.velocidadeAlvoGPS).toString().padStart(2, '0');
                 }
 
-                // O painel analógico segue a velocidade com a nova suavização ultra veloz
                 drawGauge(velocidadeSuaveExibida);
 
                 const tapeDeslocamento = ((velocidadeSuaveExibida / 10) * tapeMarkWidth) + (tapeMarkWidth / 2);
@@ -945,5 +965,5 @@
             resizeCanvas();
             renderizarCicloSuave();
         })();
-    </script>
+</script>
 </html>
