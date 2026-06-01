@@ -172,7 +172,7 @@ position: relative;
 .speed-number {
 font-family: var(--font-ui);
 font-weight: 600;
-font-size: 15rem; /* Aumentado ao máximo absoluto para preencher a borda */
+font-size: 15rem; 
 color: #00ff88;
 line-height: 0.85;
 letter-spacing: -4px;
@@ -587,6 +587,7 @@ height: 44vh;
 <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Alternar tema">🌙</button>
 </div>
 </div>
+<!-- DOIS BOTÕES LADO A LADO PERFEITAMENTE CORRIGIDOS -->
 <div class="caixa-botoes-rodape">
 <button class="btn-rodape-acao btn-rodape-vermelho" onclick="window.zerarHodometro()">Zerar Dist.</button>
 <button class="btn-rodape-acao btn-rodape-escuro" onclick="switchPanel()">Alternar Painel</button>
@@ -748,8 +749,9 @@ speedVal.style.fontSize = "15rem";
 }
 }
 drawGauge(velocidadeSuaveExibida);
-// Calibração e sincronização precisa com o ponto zero centralizado
-const tapeDeslocamento = ((velocidadeSuaveExibida / 10) * tapeMarkWidth) - (tapeMarkWidth / 2);
+// CALIBRAÇÃO MATEMÁTICA DEFINITIVA DA TRILHA MÓVEL
+// Aplica o cálculo de translação zerando perfeitamente a barra no centro do ponteiro fixo
+const tapeDeslocamento = (velocidadeSuaveExibida / 10) * tapeMarkWidth;
 if (tapeTrackDigital) {
 tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
 }
