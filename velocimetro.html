@@ -149,7 +149,7 @@ width: 100%;
 height: 100%;
 z-index: 2;
 position: absolute;
-padding: 8px 0;
+padding: 10px 0;
 }
 .speed-number-container {
 display: flex;
@@ -164,20 +164,24 @@ border-radius: 16px;
 box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1), 0 8px 25px rgba(0, 0, 0, 0.5);
 margin-top: 2px;
 margin-bottom: 6px;
-padding: 5px; /* Reduzido drasticamente para liberar área interna para os números */
+padding: 10px 5px;
 transition: background 0.3s, border-color 0.3s;
 overflow: hidden;
 }
 .speed-number {
 font-family: var(--font-digital);
 font-weight: 900;
-font-size: 12.5rem; /* Inicializado no talo para 2 dígitos */
+font-size: 11rem; /* Ajustado ligeiramente para centralização perfeita sem vazar */
 color: #00ff88;
-line-height: 0.75;
+line-height: 1.0; /* Corrigido para alinhar perfeitamente no centro vertical */
 letter-spacing: -2px;
 transition: color 0.3s, font-size 0.15s ease-out;
+display: flex;
+align-items: center;
+justify-content: center;
 text-align: center;
 width: 100%;
+flex: 1;
 }
 .speed-unit {
 font-family: var(--font-digital);
@@ -186,7 +190,8 @@ letter-spacing: 6px;
 color: rgba(255, 255, 255, 0.4);
 text-transform: uppercase;
 font-weight: 700;
-margin-top: 0px;
+margin-top: auto; /* Garante que o KM/H fique fixo na base inferior */
+padding-bottom: 4px;
 transition: color 0.3s;
 }
 #panel-analog {
@@ -718,7 +723,7 @@ const tempoSemGps = agora - lastUpdateTime;
 if (tempoSemGps > 1200) {
 window.velocidadeAlvoGPS = Math.max(0, window.velocidadeAlvoGPS - 5);
 }
-const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
+const diferenca = window.velocidadeAlvoGPS - velocidadSuaveExibida;
 const absDiferenca = Math.abs(diferenca);
 let fatorSuavizacao = diferenca > 0 ? 0.98 : 0.60;
 if (absDiferenca > 15) {
@@ -731,11 +736,11 @@ if (Math.abs(velocidadeSuaveExibida) < 0.1) velocidadeSuaveExibida = 0;
 const valorArredondado = Math.round(window.velocidadeAlvoGPS);
 if (speedVal) {
 speedVal.innerText = valorArredondado.toString().padStart(2, '0');
-// CÁLCULO DINÂMICO DO TAMANHO DA FONTE CONFORME A QUANTIDADE DE DÍGITOS
+// AJUSTE DINÂMICO E PROTEÇÃO DE CENTRALIZAÇÃO PARA 3 DÍGITOS
 if (valorArredondado >= 100) {
-speedVal.style.fontSize = "9rem"; // Ajuste ideal e seguro para 3 dígitos dentro da borda branca
+speedVal.style.fontSize = "7.5rem"; // Encaixe limpo e perfeitamente no centro para 3 dígitos
 } else {
-speedVal.style.fontSize = "12.5rem"; // Tamanho máximo gigante para 2 dígitos
+speedVal.style.fontSize = "11rem"; // Tamanho máximo centralizado para 2 dígitos
 }
 }
 drawGauge(velocidadeSuaveExibida);
