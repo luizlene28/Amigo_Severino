@@ -274,7 +274,7 @@ position: absolute;
 height: 100%;
 align-items: center;
 left: 50%;
-/* Mantém o recuo físico estático para cravar o 0 exatamente no centro */
+/* Mantém o recuo físico estático de -40px para prender o 0 no meio do ponteiro */
 margin-left: -40px; 
 transform: translateX(0px);
 will-change: transform;
@@ -641,11 +641,12 @@ String(now.getSeconds()).padStart(2, '0');
 setInterval(updateClock, 1000);
 updateClock();
 
+// MODIFICADO: Fita alterada para gerar marcas de 5 em 5 km/h de forma perfeita
 function generateSpeedTape(trackElement) {
 if (!trackElement) return;
 trackElement.innerHTML = '';
 const maxSpeed = 200;
-for (let i = 0; i <= maxSpeed; i += 20) {
+for (let i = 0; i <= maxSpeed; i += 10) {
 const mark = document.createElement('div');
 mark.className = 'tape-mark';
 mark.innerHTML = `<div class="tape-number">${i}</div> <div class="tape-tick"></div>`;
@@ -653,7 +654,7 @@ trackElement.appendChild(mark);
 if (i < maxSpeed) {
 const minorMark = document.createElement('div');
 minorMark.className = 'tape-mark';
-minorMark.innerHTML = `<div class="tape-minor-number">${i + 10}</div> <div class="tape-minor-tick"></div>`;
+minorMark.innerHTML = `<div class="tape-minor-number">${i + 5}</div> <div class="tape-minor-tick"></div>`;
 trackElement.appendChild(minorMark);
 }
 }
@@ -726,7 +727,7 @@ const tempoSemGps = agora - lastUpdateTime;
 if (tempoSemGps > 1200) {
 window.velocidadeAlvoGPS = Math.max(0, window.velocidadeAlvoGPS - 5);
 }
-const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
+const diferenca = window.velocidadeAlvoGPS - velocidadSuaveExibida;
 const absDiferenca = Math.abs(diferenca);
 let fatorSuavizacao = diferenca > 0 ? 0.98 : 0.60;
 if (absDiferenca > 15) {
@@ -747,8 +748,8 @@ speedVal.style.fontSize = "15rem";
 }
 drawGauge(velocidadeSuaveExibida);
 
-// CORREÇÃO DO SINCRO: Mudança de (velocidade/10) para (velocidade/20) para casar perfeitamente 1:1 com a fita
-const tapeDeslocamento = (velocidadeSuaveExibida / 20) * tapeMarkWidth;
+// MODIFICADO: Dividido por 5 para casar perfeitamente o sincronismo 1:1 com a nova escala de 5 em 5 km/h
+const tapeDeslocamento = (velocidadeSuaveExibida / 5) * tapeMarkWidth;
 if (tapeTrackDigital) {
 tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
 }
