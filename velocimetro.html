@@ -577,10 +577,12 @@
                     <label>Rumo</label>
                     <span id="dir-val">-</span>
                 </div>
-              <div class="caixa-botoes-segura">
-<div onclick="window.zerarHodometro()" class="card-btn btn-vermelho" role="button">ZERAR DIST.</div>
-<div onclick="window.switchPanel()" class="card-btn btn-escuro" role="button">ALTERNAR PAINEL</div>
-</div>
+               <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Alternar tema">🌙</button>
+            </div>
+        </div>
+
+        <button class="toggle-btn" onclick="switchPanel()">Alternar Painel</button>
+    </div>
    <script>
         (function() {
             let currentMode = "digital";
