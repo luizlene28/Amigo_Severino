@@ -125,9 +125,9 @@ transition: background 0.3s, border-color 0.3s;
 }
 .speed-stage {
 width: 100%;
-height: 44vh;
-max-height: 500px;
-min-height: 340px;
+height: 46vh; /* Leve aumento para dar suporte ao ganho de escala */
+max-height: 520px;
+min-height: 360px;
 border-radius: 20px;
 background: rgba(10, 10, 18, 0.85);
 border: 2px solid rgba(255, 255, 255, 0.05);
@@ -144,43 +144,45 @@ transition: background 0.3s, border-color 0.3s;
 display: flex;
 flex-direction: column;
 align-items: center;
-justify-content: center;
+justify-content: space-between; /* Melhor distribuição interna */
 width: 100%;
 height: 100%;
 z-index: 2;
 position: absolute;
+padding: 10px 0;
 }
 .speed-number-container {
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-padding: 20px 35px;
+width: 92%; /* Alargado para ocupar quase toda a área útil */
+flex: 1;
 background: rgba(0, 0, 0, 0.6);
 border: 1.5px solid #ffffff;
 border-radius: 16px;
 box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1), 0 8px 25px rgba(0, 0, 0, 0.5);
-margin-top: 15px;
-margin-bottom: 5px;
+margin-top: 5px;
+margin-bottom: 8px;
 transition: background 0.3s, border-color 0.3s;
 }
 .speed-number {
 font-family: var(--font-digital);
 font-weight: 900;
-font-size: clamp(8rem, 28vw, 13.5rem);
+font-size: clamp(9.5rem, 33vw, 15.5rem); /* Maximização do tamanho digital */
 color: #00ff88;
-line-height: 0.8;
-letter-spacing: -3px;
+line-height: 0.75;
+letter-spacing: -4px;
 transition: color 0.3s;
 }
 .speed-unit {
 font-family: var(--font-digital);
-font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+font-size: clamp(1rem, 2.8vw, 1.35rem);
 letter-spacing: 6px;
 color: rgba(255, 255, 255, 0.4);
 text-transform: uppercase;
 font-weight: 700;
-margin-top: 12px;
+margin-top: 4px;
 transition: color 0.3s;
 }
 #panel-analog {
@@ -200,7 +202,7 @@ align-items: center;
 justify-content: center;
 position: relative;
 width: 100%;
-margin-top: 2px;
+height: 100%;
 }
 canvas {
 display: block;
@@ -208,15 +210,14 @@ width: auto;
 height: auto;
 max-width: 100%;
 max-height: 100%;
-border-radius: 50%;
 }
 .escondido {
 display: none !important;
 }
 /* ========== BARRA DE ROLAGEM ========== */
 .speed-tape-container {
-width: 100%;
-height: 65px;
+width: 94%;
+height: 60px;
 background: linear-gradient(180deg, #f4f4f4 0%, #ffffff 20%, #ffffff 80%, #e0e0e0 100%);
 border-top: 2px solid #ccc;
 border-bottom: 2px solid #aaa;
@@ -234,7 +235,7 @@ transition: background 0.3s, border-color 0.3s;
 content: '';
 position: absolute;
 left: 0;
-top: 12px;
+top: 10px;
 width: 100%;
 height: 28px;
 background: linear-gradient(180deg,
@@ -436,7 +437,7 @@ border: 1px solid rgba(255, 255, 255, 0.12) !important;
 .btn-rodape-escuro:active {
 background: #1c1c24 !important;
 }
-/* ========== MODO CLARO (TEMA INVERSO) ========== */
+/* ========== TEMA INVERSO ========== */
 body.light-mode {
 background: radial-gradient(ellipse at 50% 20%, #e8eaed 0%, #f5f7fa 100%);
 }
@@ -520,7 +521,7 @@ border-color: #aaaaaa !important;
 }
 @media (max-width: 600px) {
 .speed-stage {
-height: 44vh;
+height: 46vh;
 }
 }
 </style>
@@ -582,7 +583,6 @@ height: 44vh;
 let currentMode = "digital";
 // ==========================================
 // MEMÓRIA COMPORTAMENTAL: RECUPERA A DISTÂNCIA SALVA
-// Se não houver nada gravado (primeira vez), começa em 0
 // ==========================================
 let totalDistance = parseFloat(localStorage.getItem('severino_distancia')) || 0;
 let lastCoord = null;
@@ -678,7 +678,7 @@ if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
 if (dirVal && bearing !== undefined) dirVal.innerText = getCardinals(bearing);
 };
 // ==========================================
-// FUNÇÃO GLOBAL: ATUALIZADA PARA ZERAR DISTÂNCIA E MÉDIA COMPLETAMENTE
+// FUNÇÃO GLOBAL: ZERAR HODÔMETRO
 // ==========================================
 window.zerarHodometro = function() {
 totalDistance = 0;
@@ -703,7 +703,8 @@ currentMode = "digital";
 function resizeCanvas() {
 if (!canvas || !speedStage) return;
 const rect = canvas.parentNode.getBoundingClientRect();
-const size = Math.min(rect.width, rect.height) * 0.99;
+// Otimização de Escala: Aumentado de 0.99 para 1.18 para ocupar o máximo possível
+const size = Math.min(rect.width, rect.height) * 1.18;
 canvas.width = size;
 canvas.height = size;
 }
@@ -772,7 +773,8 @@ const w = canvas.width;
 const w_h = canvas.height;
 const cx = w / 2;
 const cy = w_h / 2;
-const radius = Math.min(w, w_h) * 0.47;
+// Raio máximo expandido de 0.47 para 0.48 para colar nas bordas do visor
+const radius = Math.min(w, w_h) * 0.48;
 const light = window.isLightMode;
 const bgColor = light ? '#f0f2f5' : '#0a0a12';
 const outerRingColor = light ? '#333333' : '#00ff88';
