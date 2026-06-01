@@ -149,14 +149,14 @@ width: 100%;
 height: 100%;
 z-index: 2;
 position: absolute;
-padding: 12px 0;
+padding: 10px 0;
 }
 .speed-number-container {
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-width: 92%;
+width: 94%;
 flex: 1;
 background: rgba(0, 0, 0, 0.6);
 border: 1.5px solid #ffffff;
@@ -167,18 +167,23 @@ margin-bottom: 6px;
 padding: 0;
 transition: background 0.3s, border-color 0.3s;
 overflow: hidden;
+position: relative;
 }
 .speed-number {
-font-family: var(--font-ui); /* Alterado para Inter para remover o corte interno dos zeros */
-font-weight: 600; /* Espessura de linha mais fina, limpa e elegante */
-font-size: 9rem; /* Tamanho calibrado para centralização total em 2 dígitos */
+font-family: var(--font-ui);
+font-weight: 600;
+font-size: 15rem; /* Aumentado ao máximo absoluto para preencher a borda */
 color: #00ff88;
-line-height: 1.0;
-letter-spacing: -2px;
+line-height: 0.85;
+letter-spacing: -4px;
 transition: color 0.3s, font-size 0.1s ease;
-display: block !important;
+display: flex !important;
+align-items: center !important;
+justify-content: center !important;
 text-align: center !important;
 width: 100% !important;
+height: 100% !important;
+margin: 0 auto !important;
 }
 .speed-unit {
 font-family: var(--font-digital);
@@ -187,11 +192,12 @@ letter-spacing: 6px;
 color: rgba(255, 255, 255, 0.4);
 text-transform: uppercase;
 font-weight: 700;
-margin-top: auto;
-padding-bottom: 4px;
-transition: color 0.3s;
+position: absolute;
+bottom: 8px;
 text-align: center;
 width: 100%;
+z-index: 5;
+pointer-events: none;
 }
 #panel-analog {
 display: flex;
@@ -278,7 +284,7 @@ flex-shrink: 0;
 position: relative;
 }
 .tape-number {
-font-family: var(--font-ui); /* Modificado para Inter para consistência e sem cortes na fita */
+font-family: var(--font-ui);
 font-size: 1.35rem;
 color: #222;
 font-weight: 700;
@@ -581,7 +587,6 @@ height: 44vh;
 <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Alternar tema">🌙</button>
 </div>
 </div>
-<!-- DOIS BOTÕES LADO A LADO PERFEITAMENTE CORRIGIDOS -->
 <div class="caixa-botoes-rodape">
 <button class="btn-rodape-acao btn-rodape-vermelho" onclick="window.zerarHodometro()">Zerar Dist.</button>
 <button class="btn-rodape-acao btn-rodape-escuro" onclick="switchPanel()">Alternar Painel</button>
@@ -712,7 +717,6 @@ currentMode = "digital";
 function resizeCanvas() {
 if (!canvas || !speedStage) return;
 const rect = canvas.parentNode.getBoundingClientRect();
-// Reduzido para escala padrão perfeita para o Kodular carregar sem travar o script
 const size = Math.min(rect.width, rect.height) * 0.99;
 canvas.width = size;
 canvas.height = size;
@@ -738,14 +742,14 @@ const valorArredondado = Math.round(window.velocidadeAlvoGPS);
 if (speedVal) {
 speedVal.innerText = valorArredondado.toString().padStart(2, '0');
 if (valorArredondado >= 100) {
-speedVal.style.fontSize = "6.8rem";
+speedVal.style.fontSize = "10rem";
 } else {
-speedVal.style.fontSize = "9rem";
+speedVal.style.fontSize = "15rem";
 }
 }
 drawGauge(velocidadeSuaveExibida);
-// Sincronização e calibração cirúrgica da fita de velocidade partindo exatamente do zero
-const tapeDeslocamento = (velocidadeSuaveExibida / 10) * tapeMarkWidth;
+// Calibração e sincronização precisa com o ponto zero centralizado
+const tapeDeslocamento = ((velocidadeSuaveExibida / 10) * tapeMarkWidth) - (tapeMarkWidth / 2);
 if (tapeTrackDigital) {
 tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
 }
