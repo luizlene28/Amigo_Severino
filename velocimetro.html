@@ -234,7 +234,7 @@ border-radius: 50%;
 .escondido {
 display: none !important;
 }
-/* ========== BARRA DE ROLAGEM (FITA) CORRIGIDA ========== */
+/* ========== BARRA DE ROLAGEM (FITA) ========== */
 .speed-tape-container {
 width: 100%;
 height: 65px;
@@ -274,7 +274,7 @@ position: absolute;
 height: 100%;
 align-items: center;
 left: 50%;
-/* Ajuste crítico: recua metade da largura de um bloco (80px / 2 = 40px) para centralizar perfeitamente o zero */
+/* Mantém o recuo físico estático para cravar o 0 exatamente no centro */
 margin-left: -40px; 
 transform: translateX(0px);
 will-change: transform;
@@ -747,8 +747,8 @@ speedVal.style.fontSize = "15rem";
 }
 drawGauge(velocidadeSuaveExibida);
 
-// Mudança aqui: Ajuste fino do deslocamento baseado no valor suavizado e na largura dos blocos
-const tapeDeslocamento = (velocidadeSuaveExibida / 10) * (tapeMarkWidth / 2);
+// CORREÇÃO DO SINCRO: Mudança de (velocidade/10) para (velocidade/20) para casar perfeitamente 1:1 com a fita
+const tapeDeslocamento = (velocidadeSuaveExibida / 20) * tapeMarkWidth;
 if (tapeTrackDigital) {
 tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
 }
