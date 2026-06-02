@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
 :root {
 --bg-deep: #06060c;
@@ -38,6 +39,19 @@ position: relative;
 user-select: none;
 transition: background 0.4s ease;
 }
+
+/* ========== PÁGINAS ========== */
+.pagina {
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 12px;
+}
+.pagina.oculta {
+display: none !important;
+}
+
 /* ========== CABEÇALHO ========== */
 .app-header {
 width: 100%;
@@ -105,6 +119,37 @@ color: var(--accent-green);
 font-weight: 700;
 text-transform: uppercase;
 }
+
+/* ========== NAVEGAÇÃO ENTRE PÁGINAS ========== */
+.nav-tabs {
+display: flex;
+width: 100%;
+gap: 8px;
+margin-bottom: 8px;
+}
+.nav-tab {
+flex: 1;
+padding: 10px;
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 12px;
+color: #aaa;
+font-family: var(--font-digital);
+font-weight: 700;
+font-size: 0.75rem;
+text-align: center;
+cursor: pointer;
+transition: all 0.3s;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+.nav-tab.ativo {
+background: rgba(0, 255, 136, 0.15);
+border-color: var(--accent-green);
+color: var(--accent-green);
+box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
 /* ========== HUD PRINCIPAL ========== */
 .hud-container {
 width: 100%;
@@ -222,7 +267,7 @@ justify-content: center;
 position: relative;
 width: 100%;
 height: 100%;
-margin-bottom: 50px; /* Garante área livre para a fita horizontal não sobrepor o círculo */
+margin-bottom: 50px;
 }
 canvas {
 display: block;
@@ -235,10 +280,11 @@ border-radius: 50%;
 .escondido {
 display: none !important;
 }
-/* ========== BARRA DE ROLAGEM (FITA) RECALIBRADA E OTIMIZADA ========== */
+
+/* ========== BARRA DE ROLAGEM (FITA) ========== */
 .speed-tape-container {
 width: 100%;
-height: 52px; /* Reduzido levemente para melhor aproveitamento vertical */
+height: 52px;
 background: linear-gradient(180deg, #f4f4f4 0%, #ffffff 20%, #ffffff 80%, #e0e0e0 100%);
 border-top: 2px solid #ccc;
 border-bottom: 2px solid #aaa;
@@ -252,7 +298,6 @@ margin-top: auto;
 z-index: 3;
 transition: background 0.3s, border-color 0.3s;
 }
-/* Trava de segurança para que a fita do painel analógico nunca empurre o canvas para fora */
 #tape-analog {
 position: absolute;
 bottom: 10px;
@@ -282,7 +327,6 @@ position: absolute;
 height: 100%;
 align-items: center;
 left: 50%;
-/* Ajustado dinamicamente para a nova largura de bloco (60px / 2 = 30px) garantindo o zero no centro */
 margin-left: -30px; 
 transform: translateX(0px);
 will-change: transform;
@@ -293,14 +337,14 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-width: 60px; /* Largura reduzida para compactar e caber em todas as telas sem quebras */
+width: 60px;
 height: 100%;
 flex-shrink: 0;
 position: relative;
 }
 .tape-number {
 font-family: var(--font-ui);
-font-size: 1.15rem; /* Ajustado proporcionalmente à nova largura */
+font-size: 1.15rem;
 color: #222;
 font-weight: 700;
 text-shadow: 0 1px 2px rgba(255,255,255,0.9), 0 -1px 0 rgba(0,0,0,0.3);
@@ -462,6 +506,109 @@ border: 1px solid rgba(255, 255, 255, 0.12) !important;
 .btn-rodape-escuro:active {
 background: #1c1c24 !important;
 }
+
+/* ========== PÁGINA DO MAPA ========== */
+.mapa-container {
+width: 100%;
+flex: 1;
+min-height: 60vh;
+border-radius: 20px;
+overflow: hidden;
+border: 2px solid rgba(255, 255, 255, 0.1);
+box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+position: relative;
+z-index: 1;
+}
+#mapaLeaflet {
+width: 100%;
+height: 100%;
+min-height: 60vh;
+background: #1a1a2e;
+}
+.mapa-controles {
+display: flex;
+gap: 10px;
+width: 100%;
+margin-top: 12px;
+flex-wrap: wrap;
+}
+.btn-mapa {
+flex: 1;
+min-width: 100px;
+padding: 12px 8px;
+border-radius: 12px;
+font-family: var(--font-digital);
+font-weight: 700;
+font-size: 0.7rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+cursor: pointer;
+border: 1px solid rgba(255, 255, 255, 0.15);
+color: #fff;
+background: rgba(20, 20, 30, 0.9);
+backdrop-filter: blur(10px);
+transition: all 0.3s;
+text-align: center;
+}
+.btn-mapa:active {
+transform: scale(0.96);
+}
+.btn-mapa.iniciar {
+background: rgba(0, 200, 100, 0.2);
+border-color: #00ff88;
+color: #00ff88;
+}
+.btn-mapa.parar {
+background: rgba(200, 30, 50, 0.2);
+border-color: #e0243f;
+color: #e0243f;
+}
+.btn-mapa.salvar {
+background: rgba(245, 166, 35, 0.2);
+border-color: #f5a623;
+color: #f5a623;
+}
+.lista-trechos {
+width: 100%;
+max-height: 200px;
+overflow-y: auto;
+margin-top: 12px;
+background: rgba(20, 20, 30, 0.8);
+border-radius: 16px;
+padding: 12px;
+border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.lista-trechos h3 {
+color: #aaa;
+font-size: 0.7rem;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+margin-bottom: 8px;
+font-family: var(--font-digital);
+}
+.trecho-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 10px;
+background: rgba(255, 255, 255, 0.03);
+border-radius: 8px;
+margin-bottom: 6px;
+color: #ccc;
+font-size: 0.75rem;
+border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.trecho-item button {
+background: rgba(200, 30, 50, 0.3);
+border: none;
+color: #ff6b6b;
+padding: 4px 10px;
+border-radius: 6px;
+cursor: pointer;
+font-size: 0.65rem;
+font-weight: 700;
+}
+
 /* ========== TEMA INVERSO ========== */
 body.light-mode {
 background: radial-gradient(ellipse at 50% 20%, #e8eaed 0%, #f5f7fa 100%);
@@ -544,6 +691,37 @@ background: #e0e0e0 !important;
 color: #111111 !important;
 border-color: #aaaaaa !important;
 }
+body.light-mode .nav-tab {
+background: rgba(0,0,0,0.05);
+border-color: #ccc;
+color: #555;
+}
+body.light-mode .nav-tab.ativo {
+background: rgba(0, 180, 90, 0.15);
+border-color: #007744;
+color: #007744;
+}
+body.light-mode .mapa-container {
+border-color: #ccc;
+}
+body.light-mode .btn-mapa {
+background: rgba(240, 240, 245, 0.9);
+color: #333;
+border-color: #ccc;
+}
+body.light-mode .lista-trechos {
+background: rgba(255, 255, 255, 0.8);
+border-color: #ddd;
+}
+body.light-mode .lista-trechos h3 {
+color: #555;
+}
+body.light-mode .trecho-item {
+background: rgba(0,0,0,0.03);
+color: #333;
+border-color: #ddd;
+}
+
 @media (max-width: 600px) {
 .speed-stage {
 height: 44vh;
@@ -552,6 +730,9 @@ height: 44vh;
 </style>
 </head>
 <body>
+
+<!-- ==================== PÁGINA 1: VELOCÍMETRO ==================== -->
+<div class="pagina" id="paginaVelocimetro">
 <div class="app-header">
 <div class="header-top-row">
 <div class="app-logo">
@@ -561,6 +742,12 @@ height: 44vh;
 </div>
 <div class="digital-clock" id="topClock">00:00:00</div>
 </div>
+
+<div class="nav-tabs">
+<div class="nav-tab ativo" onclick="mostrarPagina('velocimetro')">🏁 Velocímetro</div>
+<div class="nav-tab" onclick="mostrarPagina('mapa')">🗺️ Mapa & Rotas</div>
+</div>
+
 <div class="hud-container">
 <div class="speed-stage" id="speedStage">
 <div id="panel-digital">
@@ -603,8 +790,45 @@ height: 44vh;
 <button class="btn-rodape-acao btn-rodape-escuro" onclick="switchPanel()">Alternar Painel</button>
 </div>
 </div>
+</div>
+
+<!-- ==================== PÁGINA 2: MAPA E ROTAS ==================== -->
+<div class="pagina oculta" id="paginaMapa">
+<div class="app-header">
+<div class="header-top-row">
+<div class="app-logo">
+<span class="dot"></span>SEVERINO-LC
+</div>
+<div class="app-badge">PRO</div>
+</div>
+<div class="digital-clock" id="topClockMapa">00:00:00</div>
+</div>
+
+<div class="nav-tabs">
+<div class="nav-tab" onclick="mostrarPagina('velocimetro')">🏁 Velocímetro</div>
+<div class="nav-tab ativo" onclick="mostrarPagina('mapa')">🗺️ Mapa & Rotas</div>
+</div>
+
+<div class="mapa-container">
+<div id="mapaLeaflet"></div>
+</div>
+
+<div class="mapa-controles">
+<button class="btn-mapa iniciar" id="btnIniciarRota" onclick="iniciarRota()">▶ Iniciar Rota</button>
+<button class="btn-mapa parar" id="btnPararRota" onclick="pararRota()" disabled>⏹ Parar Rota</button>
+<button class="btn-mapa salvar" id="btnSalvarRota" onclick="salvarRota()" disabled>💾 Salvar Trajeto</button>
+</div>
+
+<div class="lista-trechos" id="listaTrechos">
+<h3>📋 Trajetos Salvos</h3>
+<div id="trechosContainer">Nenhum trajeto salvo ainda.</div>
+</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function() {
+// ========== VARIÁVEIS GLOBAIS ==========
 let currentMode = "digital";
 let totalDistance = parseFloat(localStorage.getItem('severino_distancia')) || 0;
 let lastCoord = null;
@@ -615,6 +839,8 @@ let velocidadeSuaveExibida = 0;
 let totalSomaVelocidades = 0;
 let totalLeiturasGps = 0;
 window.isLightMode = false;
+
+// ========== ELEMENTOS DOM VELOCÍMETRO ==========
 const speedVal = document.getElementById('speed-val');
 const pBar = document.getElementById('p-bar');
 const distVal = document.getElementById('dist-val');
@@ -627,11 +853,26 @@ const panelDigital = document.getElementById('panel-digital');
 const panelAnalog = document.getElementById('panel-analog');
 const speedStage = document.getElementById('speedStage');
 const topClock = document.getElementById('topClock');
+const topClockMapa = document.getElementById('topClockMapa');
 const themeToggleBtn = document.getElementById('themeToggleBtn');
 const tapeTrackDigital = document.getElementById('tape-track-digital');
 const tapeTrackAnalog = document.getElementById('tape-track-analog');
-const tapeMarkWidth = 60; // Reduzido de 80 para 60 para otimização de espaço
+const tapeMarkWidth = 60;
 
+// ========== ELEMENTOS DOM MAPA ==========
+let mapaLeaflet = null;
+let marcadorAtual = null;
+let polylineAtual = null;
+let coordenadasRota = [];
+let rotaAtiva = false;
+let watchIdGPS = null;
+
+const btnIniciarRota = document.getElementById('btnIniciarRota');
+const btnPararRota = document.getElementById('btnPararRota');
+const btnSalvarRota = document.getElementById('btnSalvarRota');
+const trechosContainer = document.getElementById('trechosContainer');
+
+// ========== INICIALIZAÇÃO ==========
 if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
 
 themeToggleBtn.addEventListener('click', () => {
@@ -640,15 +881,19 @@ window.isLightMode = document.body.classList.contains('light-mode');
 themeToggleBtn.textContent = window.isLightMode ? '☀️' : '🌙';
 });
 
+// ========== RELÓGIO ==========
 function updateClock() {
 const now = new Date();
-topClock.innerText = String(now.getHours()).padStart(2, '0') + ':' +
+const timeStr = String(now.getHours()).padStart(2, '0') + ':' +
 String(now.getMinutes()).padStart(2, '0') + ':' +
 String(now.getSeconds()).padStart(2, '0');
+topClock.innerText = timeStr;
+if (topClockMapa) topClockMapa.innerText = timeStr;
 }
 setInterval(updateClock, 1000);
 updateClock();
 
+// ========== FITA DE VELOCIDADE ==========
 function generateSpeedTape(trackElement) {
 if (!trackElement) return;
 trackElement.innerHTML = '';
@@ -669,6 +914,7 @@ trackElement.appendChild(minorMark);
 generateSpeedTape(tapeTrackDigital);
 generateSpeedTape(tapeTrackAnalog);
 
+// ========== ATUALIZAÇÃO DE VELOCIDADE ==========
 window.atualizarVelocidade = function(velocidadeKmh, lat, lon, bearing) {
 if (gpsWarning.style.display !== 'none') gpsWarning.style.display = 'none';
 gpsErrorCount = 0;
@@ -695,6 +941,34 @@ localStorage.setItem('severino_distancia', totalDistance.toString());
 }
 if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
 if (dirVal && bearing !== undefined) dirVal.innerText = getCardinals(bearing);
+
+// Atualiza posição no mapa se rota ativa
+if (rotaAtiva && lat && lon && mapaLeaflet) {
+const novaCoord = [lat, lon];
+coordenadasRota.push(novaCoord);
+if (marcadorAtual) {
+marcadorAtual.setLatLng(novaCoord);
+} else {
+marcadorAtual = L.marker(novaCoord, {
+icon: L.divIcon({
+className: 'marcador-gps',
+html: '<div style="background:#00ff88;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 15px #00ff88;"></div>',
+iconSize: [14, 14],
+iconAnchor: [7, 7]
+})
+}).addTo(mapaLeaflet);
+}
+mapaLeaflet.setView(novaCoord, mapaLeaflet.getZoom());
+if (polylineAtual) {
+polylineAtual.setLatLngs(coordenadasRota);
+} else {
+polylineAtual = L.polyline(coordenadasRota, {
+color: '#00ff88',
+weight: 4,
+opacity: 0.8
+}).addTo(mapaLeaflet);
+}
+}
 };
 
 window.zerarHodometro = function() {
@@ -728,6 +1002,7 @@ canvas.height = size;
 }
 window.addEventListener('resize', resizeCanvas);
 
+// ========== RENDERIZAÇÃO DO VELOCÍMETRO ==========
 function renderizarCicloSuave() {
 const agora = Date.now();
 const tempoSemGps = agora - lastUpdateTime;
@@ -754,8 +1029,6 @@ speedVal.style.fontSize = "15rem";
 }
 }
 drawGauge(velocidadeSuaveExibida);
-
-// Mantido cálculo exato de 5 em 5 km/h com base na nova largura de bloco (60px)
 const tapeDeslocamento = (velocidadeSuaveExibida / 5) * tapeMarkWidth;
 if (tapeTrackDigital) {
 tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
@@ -768,6 +1041,7 @@ if (pBar) pBar.style.width = pct + "%";
 requestAnimationFrame(renderizarCicloSuave);
 }
 
+// ========== GPS ==========
 function updateGPS(pos) {
 let rawSpeed = pos.coords.speed || 0;
 if (rawSpeed < 0) rawSpeed = 0;
@@ -795,6 +1069,8 @@ if (deg === null || isNaN(deg)) return "-";
 const sectors = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 return sectors[Math.round(deg / 45) % 8];
 }
+
+// ========== DESENHO DO VELOCÍMETRO ANALÓGICO ==========
 function drawGauge(speed) {
 if (!canvas || !ctx) return;
 const w = canvas.width;
@@ -909,6 +1185,170 @@ ctx.font = `bold ${Math.floor(dH * 0.52)}px 'Orbitron', monospace`;
 ctx.fillStyle = speedTextColor;
 ctx.fillText(`${Math.round(speed)} km/h`, cx, dY + dH * 0.76);
 }
+
+// ========== NAVEGAÇÃO ENTRE PÁGINAS ==========
+window.mostrarPagina = function(pagina) {
+const pagVel = document.getElementById('paginaVelocimetro');
+const pagMapa = document.getElementById('paginaMapa');
+const tabs = document.querySelectorAll('.nav-tab');
+
+if (pagina === 'velocimetro') {
+pagVel.classList.remove('oculta');
+pagMapa.classList.add('oculta');
+tabs[0].classList.add('ativo');
+tabs[1].classList.remove('ativo');
+if (mapaLeaflet) {
+setTimeout(() => { mapaLeaflet.invalidateSize(); }, 300);
+}
+} else {
+pagVel.classList.add('oculta');
+pagMapa.classList.remove('oculta');
+tabs[0].classList.remove('ativo');
+tabs[1].classList.add('ativo');
+if (!mapaLeaflet) {
+inicializarMapa();
+} else {
+setTimeout(() => { mapaLeaflet.invalidateSize(); }, 300);
+}
+}
+};
+
+// ========== INICIALIZAÇÃO DO MAPA ==========
+function inicializarMapa() {
+mapaLeaflet = L.map('mapaLeaflet', {
+attributionControl: false,
+zoomControl: true
+}).setView([-15.7801, -47.9292], 13); // Brasília como padrão
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+maxZoom: 19,
+}).addTo(mapaLeaflet);
+
+L.control.attribution({
+position: 'bottomright',
+prefix: '© OpenStreetMap'
+}).addTo(mapaLeaflet);
+
+carregarTrechosSalvos();
+}
+
+// ========== CONTROLE DE ROTA ==========
+window.iniciarRota = function() {
+if (!mapaLeaflet) inicializarMapa();
+rotaAtiva = true;
+coordenadasRota = [];
+if (polylineAtual) {
+mapaLeaflet.removeLayer(polylineAtual);
+polylineAtual = null;
+}
+if (marcadorAtual) {
+mapaLeaflet.removeLayer(marcadorAtual);
+marcadorAtual = null;
+}
+btnIniciarRota.disabled = true;
+btnPararRota.disabled = false;
+btnSalvarRota.disabled = true;
+
+// Centraliza na posição atual
+if (lastCoord) {
+mapaLeaflet.setView([lastCoord.lat, lastCoord.lon], 16);
+}
+};
+
+window.pararRota = function() {
+rotaAtiva = false;
+btnIniciarRota.disabled = false;
+btnPararRota.disabled = true;
+btnSalvarRota.disabled = false;
+};
+
+window.salvarRota = function() {
+if (coordenadasRota.length < 2) {
+alert('Trajeto muito curto para salvar!');
+return;
+}
+const trechos = JSON.parse(localStorage.getItem('severino_trechos') || '[]');
+const novoTrecho = {
+id: Date.now(),
+data: new Date().toLocaleString(),
+coordenadas: coordenadasRota,
+distancia: calcularDistanciaRota(coordenadasRota)
+};
+trechos.push(novoTrecho);
+localStorage.setItem('severino_trechos', JSON.stringify(trechos));
+coordenadasRota = [];
+if (polylineAtual) {
+mapaLeaflet.removeLayer(polylineAtual);
+polylineAtual = null;
+}
+if (marcadorAtual) {
+mapaLeaflet.removeLayer(marcadorAtual);
+marcadorAtual = null;
+}
+btnSalvarRota.disabled = true;
+btnIniciarRota.disabled = false;
+btnPararRota.disabled = true;
+carregarTrechosSalvos();
+};
+
+function calcularDistanciaRota(coords) {
+let dist = 0;
+for (let i = 1; i < coords.length; i++) {
+dist += haversine(coords[i-1][0], coords[i-1][1], coords[i][0], coords[i][1]);
+}
+return (dist / 1000).toFixed(2);
+}
+
+function carregarTrechosSalvos() {
+if (!trechosContainer) return;
+const trechos = JSON.parse(localStorage.getItem('severino_trechos') || '[]');
+if (trechos.length === 0) {
+trechosContainer.innerHTML = 'Nenhum trajeto salvo ainda.';
+return;
+}
+let html = '';
+trechos.forEach((t, index) => {
+html += `
+<div class="trecho-item">
+<span>📅 ${t.data} | 📏 ${t.distancia} km</span>
+<div>
+<button onclick="visualizarTrecho(${index})">👁 Ver</button>
+<button onclick="excluirTrecho(${index})">🗑 Excluir</button>
+</div>
+</div>`;
+});
+trechosContainer.innerHTML = html;
+}
+
+window.visualizarTrecho = function(index) {
+if (!mapaLeaflet) inicializarMapa();
+const trechos = JSON.parse(localStorage.getItem('severino_trechos') || '[]');
+if (!trechos[index]) return;
+const t = trechos[index];
+mostrarPagina('mapa');
+if (polylineAtual) mapaLeaflet.removeLayer(polylineAtual);
+if (marcadorAtual) mapaLeaflet.removeLayer(marcadorAtual);
+polylineAtual = L.polyline(t.coordenadas, {
+color: '#f5a623',
+weight: 5,
+opacity: 0.9
+}).addTo(mapaLeaflet);
+mapaLeaflet.fitBounds(polylineAtual.getBounds());
+};
+
+window.excluirTrecho = function(index) {
+if (!confirm('Excluir este trajeto?')) return;
+const trechos = JSON.parse(localStorage.getItem('severino_trechos') || '[]');
+trechos.splice(index, 1);
+localStorage.setItem('severino_trechos', JSON.stringify(trechos));
+carregarTrechosSalvos();
+if (polylineAtual) {
+mapaLeaflet.removeLayer(polylineAtual);
+polylineAtual = null;
+}
+};
+
+// ========== INICIALIZAÇÃO DO GPS ==========
 if ("geolocation" in navigator) {
 navigator.geolocation.watchPosition(updateGPS, handleGPSError, {
 enableHighAccuracy: true,
