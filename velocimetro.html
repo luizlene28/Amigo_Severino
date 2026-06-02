@@ -184,6 +184,7 @@ display: flex;
 flex-direction: column;
 align-items: center;
 transition: background 0.3s, border-color 0.3s;
+padding: 0;
 }
 #panel-digital {
 display: flex;
@@ -194,61 +195,47 @@ width: 100%;
 height: 100%;
 z-index: 2;
 position: absolute;
-padding: 10px 0;
-}
-.speed-number-container {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-width: 94% !important; 
-height: 100% !important; 
-flex: 1;
-background: rgba(0, 0, 0, 0.6);
-border: 1.5px solid #ffffff;
-border-radius: 16px;
-box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1), 0 8px 25px rgba(0, 0, 0, 0.5);
-margin-top: 2px;
-margin-bottom: 6px;
 padding: 0;
-transition: background 0.3s, border-color 0.3s;
-overflow: hidden;
-position: relative;
+left: 0;
+top: 0;
 }
-.speed-number {
-font-family: var(--font-ui);
-font-weight: 600;
-font-size: 15rem; 
-color: #00ff88;
-line-height: 1.0;
-letter-spacing: -4px;
-transition: color 0.3s, font-size 0.1s ease;
+
+/* Perfeita centralização e preenchimento da área útil */
+.speed-number-container {
 display: flex !important;
 align-items: center !important;
 justify-content: center !important;
-text-align: center !important;
-position: absolute !important; 
-top: 44% !important;
-left: 50% !important;
-transform: translate(-50%, -50%) !important; 
-width: 100% !important;
-height: auto !important;
-margin: 0 auto !important;
+width: 100% !important; 
+height: calc(100% - 58px) !important; 
+background: transparent !important;
+border: none !important;
+box-shadow: none !important;
+margin: 0 !important;
+padding: 4px 12px !important;
+overflow: hidden;
+position: relative;
 }
-.speed-unit {
-font-family: var(--font-digital);
-font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-letter-spacing: 6px;
-color: rgba(255, 255, 255, 0.4);
-text-transform: uppercase;
-font-weight: 700;
-position: absolute;
-bottom: 8px;
-text-align: center;
+
+/* ALTERADO: Container do painel SVG dinâmico */
+.speed-svg-display {
 width: 100%;
-z-index: 5;
-pointer-events: none;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+filter: drop-shadow(0px 0px 15px rgba(0, 255, 136, 0.6));
 }
+.speed-svg-display svg {
+width: 100%;
+height: 100%;
+max-height: 96%; /* Ocupa quase todo o espaço de cima a baixo */
+transition: filter 0.3s;
+}
+.svg-char {
+fill: #00ff88;
+transition: fill 0.3s;
+}
+
 #panel-analog {
 display: flex;
 flex-direction: column;
@@ -301,8 +288,8 @@ transition: background 0.3s, border-color 0.3s;
 #tape-analog {
 position: absolute;
 bottom: 10px;
-width: 94%;
-left: 3%;
+width: 100%;
+left: 0;
 }
 .speed-tape-container::before {
 content: '';
@@ -638,15 +625,16 @@ border-color: #cccccc;
 box-shadow: inset 0 4px 24px rgba(0,0,0,0.1);
 }
 body.light-mode .speed-number-container {
-background: rgba(255,255,255,0.85);
-border-color: #444444;
-box-shadow: inset 0 0 15px rgba(0,0,0,0.1), 0 8px 25px rgba(0,0,0,0.2);
+background: transparent !important;
+border: none !important;
+box-shadow: none !important;
 }
-body.light-mode .speed-number {
-color: #007744;
+/* Altera a cor do número digital em SVG para o tema claro */
+body.light-mode .svg-char {
+fill: #007744;
 }
-body.light-mode .speed-unit {
-color: rgba(0,0,0,0.5);
+body.light-mode .speed-svg-display {
+filter: drop-shadow(0px 0px 10px rgba(0, 119, 68, 0.3));
 }
 body.light-mode .card {
 background: rgba(0,0,0,0.03);
@@ -731,7 +719,6 @@ height: 44vh;
 </head>
 <body>
 
-<!-- ==================== PÁGINA 1: VELOCÍMETRO ==================== -->
 <div class="pagina" id="paginaVelocimetro">
 <div class="app-header">
 <div class="header-top-row">
@@ -752,8 +739,7 @@ height: 44vh;
 <div class="speed-stage" id="speedStage">
 <div id="panel-digital">
 <div class="speed-number-container">
-<div class="speed-number" id="speed-val">00</div>
-<div class="speed-unit">km/h</div>
+<div class="speed-svg-display" id="speed-svg-box"></div>
 </div>
 <div class="speed-tape-container" id="tape-digital">
 <div class="tape-pointer"></div>
@@ -792,7 +778,6 @@ height: 44vh;
 </div>
 </div>
 
-<!-- ==================== PÁGINA 2: MAPA E ROTAS ==================== -->
 <div class="pagina oculta" id="paginaMapa">
 <div class="app-header">
 <div class="header-top-row">
@@ -809,6 +794,7 @@ height: 44vh;
 <div class="nav-tab ativo" onclick="mostrarPagina('mapa')">🗺️ Mapa & Rotas</div>
 </div>
 
+<div class="hud-container">
 <div class="mapa-container">
 <div id="mapaLeaflet"></div>
 </div>
@@ -841,7 +827,7 @@ let totalLeiturasGps = 0;
 window.isLightMode = false;
 
 // ========== ELEMENTOS DOM VELOCÍMETRO ==========
-const speedVal = document.getElementById('speed-val');
+const speedSvgBox = document.getElementById('speed-svg-box');
 const pBar = document.getElementById('p-bar');
 const distVal = document.getElementById('dist-val');
 const avgVal = document.getElementById('avg-val');
@@ -871,6 +857,44 @@ const btnIniciarRota = document.getElementById('btnIniciarRota');
 const btnPararRota = document.getElementById('btnPararRota');
 const btnSalvarRota = document.getElementById('btnSalvarRota');
 const trechosContainer = document.getElementById('trechosContainer');
+
+// ADICIONADO: Desenhos geométricos de alta precisão para criar números esportivos esticados e limpos (sem cortes internos)!
+const desenhosNumerosSVG = {
+'0': 'M15,10 H55 Q65,10 65,22 V118 Q65,130 55,130 H15 Q5,130 5,118 V22 Q5,10 15,10 Z M23,28 V112 H47 V28 Z',
+'1': 'M30,10 H50 V130 H30 Z M22,25 H34 V10 H22 Z',
+'2': 'M10,10 H55 Q65,10 65,25 V55 Q65,65 55,75 L22,112 H65 V130 H5 V115 L40,72 Q46,65 46,55 V30 H20 V45 H5 V10 Z',
+'3': 'M10,10 H55 Q65,10 65,25 V50 Q65,62 52,68 Q65,74 65,88 V115 Q65,130 55,130 H10 V112 H46 V85 H22 V68 H46 V28 H10 Z',
+'4': 'M5,10 H23 V65 H52 V10 H70 V130 H52 V82 H5 Z M52,65 V28 H23 V65 Z',
+'5': 'M5,10 H65 V28 H23 V55 H55 Q65,55 65,70 V112 Q65,130 55,130 H10 V112 H47 V73 H5 V10 Z',
+'6': 'M15,10 H55 Q65,10 65,25 V40 H47 V28 H23 V58 H55 Q65,58 65,72 V112 Q65,130 55,130 H15 Q5,130 5,112 V28 Q5,10 15,10 Z M23,76 V112 H47 V76 Z',
+'7': 'M5,10 H65 V30 L28,130 H8 L43,30 H5 Z',
+'8': 'M15,10 H55 Q65,10 65,25 V52 Q65,63 54,68 Q65,73 65,85 V115 Q65,130 55,130 H15 Q5,130 5,115 V85 Q5,73 16,68 Q5,63 5,25 Q5,10 15,10 Z M23,28 V52 H47 V28 Z M23,84 V112 H47 V84 Z',
+'9': 'M15,10 H55 Q65,10 65,28 V112 Q65,130 55,130 H15 Q5,130 5,115 V98 H23 V112 H47 V82 H15 Q5,82 5,68 V28 Q5,10 15,10 Z M47,28 H23 V64 H47 Z'
+};
+
+// ADICIONADO: Função que renderiza e estica os números de maneira responsiva ocupando todo o espaço vertical
+function renderizarVelocidadeSVG(texto) {
+if (!speedSvgBox) return;
+
+const caracteres = texto.split('');
+const larguraPorChar = 75;
+const espacamento = 8;
+const totalLargura = (caracteres.length * larguraPorChar) + ((caracteres.length - 1) * espacamento);
+
+let caminhosHtml = '';
+caracteres.forEach((char, index) => {
+const d = desenhosNumerosSVG[char] || desenhosNumerosSVG['0'];
+const xOffset = index * (larguraPorChar + espacamento);
+caminhosHtml += `<path class="svg-char" d="${d}" transform="translate(${xOffset}, 0)" />`;
+});
+
+// viewBox ajustado milimetricamente (0 0 totalLargura 140). A altura de 140 estica as proporções perfeitamente!
+speedSvgBox.innerHTML = `
+<svg viewBox="0 0 ${totalLargura} 140" preserveAspectRatio="xMidYMid meet">
+${caminhosHtml}
+</svg>
+`;
+}
 
 // ========== INICIALIZAÇÃO ==========
 if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
@@ -942,7 +966,6 @@ localStorage.setItem('severino_distancia', totalDistance.toString());
 if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
 if (dirVal && bearing !== undefined) dirVal.innerText = getCardinals(bearing);
 
-// Atualiza posição no mapa se rota ativa
 if (rotaAtiva && lat && lon && mapaLeaflet) {
 const novaCoord = [lat, lon];
 coordenadasRota.push(novaCoord);
@@ -1020,14 +1043,11 @@ fatorSuavizacao = 1.0;
 velocidadeSuaveExibida += diferenca * fatorSuavizacao;
 if (Math.abs(velocidadeSuaveExibida) < 0.1) velocidadeSuaveExibida = 0;
 const valorArredondado = Math.round(window.velocidadeAlvoGPS);
-if (speedVal) {
-speedVal.innerText = valorArredondado.toString().padStart(2, '0');
-if (valorArredondado >= 100) {
-speedVal.style.fontSize = "10rem";
-} else {
-speedVal.style.fontSize = "15rem";
-}
-}
+const txtVelocidade = valorArredondado.toString().padStart(2, '0');
+
+// Chama o renderizador geométrico em vez de injetar texto puro de fontes comuns
+renderizarVelocidadeSVG(txtVelocidade);
+
 drawGauge(velocidadeSuaveExibida);
 const tapeDeslocamento = (velocidadeSuaveExibida / 5) * tapeMarkWidth;
 if (tapeTrackDigital) {
@@ -1203,6 +1223,7 @@ setTimeout(() => { mapaLeaflet.invalidateSize(); }, 300);
 } else {
 pagVel.classList.add('oculta');
 pagMapa.classList.remove('oculta');
+tabs[0].classList.remove('unused');
 tabs[0].classList.remove('ativo');
 tabs[1].classList.add('ativo');
 if (!mapaLeaflet) {
@@ -1218,7 +1239,7 @@ function inicializarMapa() {
 mapaLeaflet = L.map('mapaLeaflet', {
 attributionControl: false,
 zoomControl: true
-}).setView([-15.7801, -47.9292], 13); // Brasília como padrão
+}).setView([-15.7801, -47.9292], 13);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 maxZoom: 19,
@@ -1249,7 +1270,6 @@ btnIniciarRota.disabled = true;
 btnPararRota.disabled = false;
 btnSalvarRota.disabled = true;
 
-// Centraliza na posição atual
 if (lastCoord) {
 mapaLeaflet.setView([lastCoord.lat, lastCoord.lon], 16);
 }
@@ -1348,7 +1368,6 @@ polylineAtual = null;
 }
 };
 
-// ========== INICIALIZAÇÃO DO GPS ==========
 if ("geolocation" in navigator) {
 navigator.geolocation.watchPosition(updateGPS, handleGPSError, {
 enableHighAccuracy: true,
