@@ -159,50 +159,27 @@ justify-content: center;
 width: 94% !important; 
 height: 100% !important; 
 flex: 1;
-background: rgba(0, 0, 0, 0.6);
+background: #000000 !important;
 border: 1.5px solid #ffffff;
 border-radius: 16px;
 box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1), 0 8px 25px rgba(0, 0, 0, 0.5);
 margin-top: 2px;
 margin-bottom: 6px;
-padding: 0;
-transition: background 0.3s, border-color 0.3s;
+padding: 0 !important;
 overflow: hidden;
 position: relative;
 }
-.speed-number {
-font-family: var(--font-ui);
-font-weight: 600;
-font-size: 15rem; 
-color: #00ff88;
-line-height: 1.0;
-letter-spacing: -4px;
-transition: color 0.3s, font-size 0.1s ease;
-display: flex !important;
-align-items: center !important;
-justify-content: center !important;
-text-align: center !important;
-position: absolute !important; 
-top: 44% !important;
-left: 50% !important;
-transform: translate(-50%, -50%) !important; 
+.speed-svg-display {
 width: 100% !important;
-height: auto !important;
-margin: 0 auto !important;
+height: 100% !important;
+display: block;
 }
-.speed-unit {
-font-family: var(--font-digital);
-font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-letter-spacing: 6px;
-color: rgba(255, 255, 255, 0.4);
-text-transform: uppercase;
-font-weight: 700;
-position: absolute;
-bottom: 8px;
-text-align: center;
-width: 100%;
-z-index: 5;
-pointer-events: none;
+.speed-number-text {
+font-family: var(--font-digital) !important;
+font-weight: 500 !important; /* Espessura fina e elegante das linhas */
+fill: #00ff88;
+letter-spacing: -3px;
+transition: fill 0.3s;
 }
 #panel-analog {
 display: flex;
@@ -222,7 +199,7 @@ justify-content: center;
 position: relative;
 width: 100%;
 height: 100%;
-margin-bottom: 50px; /* Garante área livre para a fita horizontal não sobrepor o círculo */
+margin-bottom: 50px;
 }
 canvas {
 display: block;
@@ -235,10 +212,10 @@ border-radius: 50%;
 .escondido {
 display: none !important;
 }
-/* ========== BARRA DE ROLAGEM (FITA) RECALIBRADA E OTIMIZADA ========== */
+/* ========== BARRA DE ROLAGEM (FITA) ========== */
 .speed-tape-container {
 width: 100%;
-height: 52px; /* Reduzido levemente para melhor aproveitamento vertical */
+height: 52px;
 background: linear-gradient(180deg, #f4f4f4 0%, #ffffff 20%, #ffffff 80%, #e0e0e0 100%);
 border-top: 2px solid #ccc;
 border-bottom: 2px solid #aaa;
@@ -252,7 +229,6 @@ margin-top: auto;
 z-index: 3;
 transition: background 0.3s, border-color 0.3s;
 }
-/* Trava de segurança para que a fita do painel analógico nunca empurre o canvas para fora */
 #tape-analog {
 position: absolute;
 bottom: 10px;
@@ -282,7 +258,6 @@ position: absolute;
 height: 100%;
 align-items: center;
 left: 50%;
-/* Ajustado dinamicamente para a nova largura de bloco (60px / 2 = 30px) garantindo o zero no centro */
 margin-left: -30px; 
 transform: translateX(0px);
 will-change: transform;
@@ -293,14 +268,14 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-width: 60px; /* Largura reduzida para compactar e caber em todas as telas sem quebras */
+width: 60px;
 height: 100%;
 flex-shrink: 0;
 position: relative;
 }
 .tape-number {
 font-family: var(--font-ui);
-font-size: 1.15rem; /* Ajustado proporcionalmente à nova largura */
+font-size: 1.15rem;
 color: #222;
 font-weight: 700;
 text-shadow: 0 1px 2px rgba(255,255,255,0.9), 0 -1px 0 rgba(0,0,0,0.3);
@@ -495,11 +470,8 @@ background: rgba(255,255,255,0.85);
 border-color: #444444;
 box-shadow: inset 0 0 15px rgba(0,0,0,0.1), 0 8px 25px rgba(0,0,0,0.2);
 }
-body.light-mode .speed-number {
-color: #007744;
-}
-body.light-mode .speed-unit {
-color: rgba(0,0,0,0.5);
+body.light-mode .speed-number-text {
+fill: #007744 !important;
 }
 body.light-mode .card {
 background: rgba(0,0,0,0.03);
@@ -565,8 +537,10 @@ height: 44vh;
 <div class="speed-stage" id="speedStage">
 <div id="panel-digital">
 <div class="speed-number-container">
-<div class="speed-number" id="speed-val">00</div>
-<div class="speed-unit">km/h</div>
+  <!-- CORREÇÃO CONCLUÍDA: Sem km/h embaixo e viewBox encurtado para forçar o preenchimento total vertical e horizontal -->
+  <svg class="speed-svg-display" viewBox="0 0 100 55" preserveAspectRatio="none">
+    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="52" class="speed-number-text" id="speed-val">00</text>
+  </svg>
 </div>
 <div class="speed-tape-container" id="tape-digital">
 <div class="tape-pointer"></div>
@@ -630,7 +604,7 @@ const topClock = document.getElementById('topClock');
 const themeToggleBtn = document.getElementById('themeToggleBtn');
 const tapeTrackDigital = document.getElementById('tape-track-digital');
 const tapeTrackAnalog = document.getElementById('tape-track-analog');
-const tapeMarkWidth = 60; // Reduzido de 80 para 60 para otimização de espaço
+const tapeMarkWidth = 60; 
 
 if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
 
@@ -746,16 +720,15 @@ velocidadeSuaveExibida += diferenca * fatorSuavizacao;
 if (Math.abs(velocidadeSuaveExibida) < 0.1) velocidadeSuaveExibida = 0;
 const valorArredondado = Math.round(window.velocidadeAlvoGPS);
 if (speedVal) {
-speedVal.innerText = valorArredondado.toString().padStart(2, '0');
+speedVal.textContent = valorArredondado.toString().padStart(2, '0');
 if (valorArredondado >= 100) {
-speedVal.style.fontSize = "10rem";
+speedVal.setAttribute("font-size", "42");
 } else {
-speedVal.style.fontSize = "15rem";
+speedVal.setAttribute("font-size", "52");
 }
 }
 drawGauge(velocidadeSuaveExibida);
 
-// Mantido cálculo exato de 5 em 5 km/h com base na nova largura de bloco (60px)
 const tapeDeslocamento = (velocidadeSuaveExibida / 5) * tapeMarkWidth;
 if (tapeTrackDigital) {
 tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
