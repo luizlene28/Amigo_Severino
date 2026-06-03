@@ -82,9 +82,8 @@
         <div id="map"></div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        
         // DB Expandido e Otimizado - Amapá Máximo e Pará Intacto
         const DB = {
     "AP": { 
@@ -116,16 +115,13 @@
             "Colônia do Matapi (Porto Grande)", "Cupixi (Porto Grande)", "Vila Nova Novo (Porto Grande)", "Assentamento Perimetral (Porto Grande)",
             "Água Fria (Pedra Branca)", "Vila do Incra (Pedra Branca)", "Serra do Navio Velha (Serra do Navio)", "Colônia Água Branca (Serra do Navio)"
         ] 
-    };
-        
+    },
     "PA": { 
         n: "Pará", 
         lat: -1.45, 
         lon: -48.48, 
         cities: ["Abaetetuba","Abel Figueiredo","Acará","Afuá","Água Azul do Norte","Alenquer","Almeirim","Altamira","Anajás","Ananindeua","Anapu","Augusto Corrêa","Aurora do Pará","Aveiro","Bagre","Baião","Bannach","Barcarena","Belém","Belterra","Benevides","Bom Jesus do Tocantins","Bonito","Bragança","Brasil Novo","Brejo Grande do Araguaia","Breu Branco","Breves","Bujaru","Cachoeira do Arari","Cachoeira do Piriá","Cametá","Canaã dos Carajás","Capanema","Capitão Poço","Castanhal","Chaves","Colares","Conceição do Araguaia","Concórdia do Pará","Cumaru do Norte","Curionópolis","Curralinho","Curuá","Curuça","Dom Eliseu","Eldorado do Carajás","Faro","Floresta do Araguaia","Garrafão do Norte","Goianésia do Pará","Gurupá","Igarapé-Açu","Igarapé-Miri","Inhangapi","Ipixuna do Pará","Irituia","Itaituba","Itupiranga","Jacareacanga","Jacundá","Juruti","Limoeiro do Ajuru","Mãe do Rio","Magalhães Barata","Marabá","Maracanã","Marapanim","Marituba","Medicilândia","Melgaço","Mocajuba","Moju","Mojuí dos Campos","Monte Alegre","Muaná","Nova Esperança do Piriá","Novo Progresso","Novo Repartimento","Óbidos","Oriximiná","Ourilândia do Norte","Pacajá","Paragominas","Parauapebas","Pau D'Arco","Placas","Ponta de Pedras","Portel","Porto de Moz","Prainha","Primavera","Redenção","Rio Maria","Rondon do Pará","Rurópolis","Salinópolis","Salvaterra","Santa Bárbara do Pará","Santa Cruz do Arari","Santa Izabel do Pará","Santa Maria das Barreiras","Santa Maria do Pará","Santana do Araguaia","Santarém","Santarém Novo","Santo Antônio do Tauá","São Caetano de Odivelas","São Domingos do Araguaia","São Domingos do Capim","São Félix do Xingu","São Francisco do Pará","São Geraldo do Araguaia","São João da Ponta","São João de Pirabas","São João do Araguaia","São Miguel do Guamá","São Sebastião da Boa Vista","Sapucaia","Senador José Porfírio","Soure","Tailândia","Terra Alta","Terra Santa","Tomé-Açu","Tracuateua","Trairão","Tucumã","Tucuruí","Ulianópolis","Uruará","Vigia","Viseu","Vitória do Xingu","Xinguara","Alter do Chão","Algodoal","Almoço","Americano","Araras","Apeú","Assentamento Palmares","Boca do Acre","Cairari","Carajás","Castelo dos Sonhos","Colares","Curuai","Icoaraci","Igarapé-Açu","Ilha de Mosqueiro","Joana Peres","Miritituba","Monte Dourado","Murucupi","Outeiro","Paragominas Novo","Porto Trombetas","Quatro Bocas","Região do Salto","São Francisco do Mainardi","Taboleiro","Vila do Conde","Vila dos Cabanos","Vila do Trinta","Vila Mandi","Vila Permanente","Vila Socorro"] 
     }
-};
-       "PA": { n: "Pará", lat: -1.45, lon: -48.48, cities: ["Abaetetuba","Abel Figueiredo","Acará","Afuá","Água Azul do Norte","Alenquer","Almeirim","Altamira","Anajás","Ananindeua","Anapu","Augusto Corrêa","Aurora do Pará","Aveiro","Bagre","Baião","Bannach","Barcarena","Belém","Belterra","Benevides","Bom Jesus do Tocantins","Bonito","Bragança","Brasil Novo","Brejo Grande do Araguaia","Breu Branco","Breves","Bujaru","Cachoeira do Arari","Cachoeira do Piriá","Cametá","Canaã dos Carajás","Capanema","Capitão Poço","Castanhal","Chaves","Colares","Conceição do Araguaia","Concórdia do Pará","Cumaru do Norte","Curionópolis","Curralinho","Curuá","Curuça","Dom Eliseu","Eldorado do Carajás","Faro","Floresta do Araguaia","Garrafão do Norte","Goianésia do Pará","Gurupá","Igarapé-Açu","Igarapé-Miri","Inhangapi","Ipixuna do Pará","Irituia","Itaituba","Itupiranga","Jacareacanga","Jacundá","Juruti","Limoeiro do Ajuru","Mãe do Rio","Magalhães Barata","Marabá","Maracanã","Marapanim","Marituba","Medicilândia","Melgaço","Mocajuba","Moju","Mojuí dos Campos","Monte Alegre","Muaná","Nova Esperança do Piriá","Novo Progresso","Novo Repartimento","Óbidos","Oriximiná","Ourilândia do Norte","Pacajá","Paragominas","Parauapebas","Pau D'Arco","Placas","Ponta de Pedras","Portel","Porto de Moz","Prainha","Primavera","Redenção","Rio Maria","Rondon do Pará","Rurópolis","Salinópolis","Salvaterra","Santa Bárbara do Pará","Santa Cruz do Arari","Santa Izabel do Pará","Santa Maria das Barreiras","Santa Maria do Pará","Santana do Araguaia","Santarém","Santarém Novo","Santo Antônio do Tauá","São Caetano de Odivelas","São Domingos do Araguaia","São Domingos do Capim","São Félix do Xingu","São Francisco do Pará","São Geraldo do Araguaia","São João da Ponta","São João de Pirabas","São João do Araguaia","São Miguel do Guamá","São Sebastião da Boa Vista","Sapucaia","Senador José Porfírio","Soure","Tailândia","Terra Alta","Terra Santa","Tomé-Açu","Tracuateua","Trairão","Tucumã","Tucuruí","Ulianópolis","Uruará","Vigia","Viseu","Vitória do Xingu","Xinguara","Alter do Chão","Algodoal","Almoço","Americano","Araras","Apeú","Assentamento Palmares","Boca do Acre","Cairari","Carajás","Castelo dos Sonhos","Colares","Curuai","Icoaraci","Igarapé-Açu","Ilha de Mosqueiro","Joana Peres","Miritituba","Monte Dourado","Murucupi","Outeiro","Paragominas Novo","Porto Trombetas","Quatro Bocas","Região do Salto","São Francisco do Mainardi","Taboleiro","Vila do Conde","Vila dos Cabanos","Vila do Trinta","Vila Mandi","Vila Permanente","Vila Socorro"] }
 };
 
         let map, route, distKm = 0;
@@ -194,14 +190,13 @@
         }
 
         function calcularSimples(os, ds) {
-            // Cálculo de distância em linha reta (Haversine) caso falte internet
             const lat1 = DB[os].lat; const lon1 = DB[os].lon;
             const lat2 = DB[ds].lat; const lon2 = DB[ds].lon;
             const R = 6371;
             const dLat = (lat2-lat1)*Math.PI/180;
             const dLon = (lon2-lon1)*Math.PI/180;
             const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-            distKm = (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))) * 1.2; // +20% para simular curvas
+            distKm = (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))) * 1.2;
             plot([[lat1, lon1], [lat2, lon2]]);
         }
 
