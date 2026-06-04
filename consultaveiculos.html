@@ -574,14 +574,11 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="spinner-3d"></div>
     </div>
 
-    <!-- App Container -->
     <div class="app-container">
-        <!-- Header 3D -->
         <header class="header-3d">
             <div class="header-content">
                 <div class="logo-3d">🚗</div>
@@ -590,7 +587,6 @@
             </div>
         </header>
 
-        <!-- Form Card -->
         <div class="card-3d">
             <div class="select-group">
                 <label class="select-label">Tipo de Veículo</label>
@@ -635,10 +631,8 @@
             </button>
         </div>
 
-        <!-- Resultado -->
         <div id="resultadoContainer"></div>
 
-        <!-- Tabs e Listas -->
         <div class="card-3d">
             <div class="tabs-container">
                 <button class="tab-button active" data-tab="favoritos">⭐ Favoritos</button>
@@ -649,7 +643,7 @@
         </div>
     </div>
 
- <script>
+    <script>
         // Configurações
         const CONFIG = {
             API_BASE: 'https://parallelum.com.br/fipe/api/v1',
@@ -1072,7 +1066,6 @@
             playSound('click');
             const data = window.currentResult;
             
-            // Texto formatado para redes sociais / WhatsApp (Com os asteriscos de negrito)
             const messageWhats = `🚗 *SeverinoCar-LC - Consulta FIPE*\n\n` +
                                  `*${data.Modelo}*\n` +
                                  `• *Marca:* ${data.Marca}\n` +
@@ -1081,7 +1074,6 @@
                                  `• *Mês Ref.:* ${data.MesReferencia}\n` +
                                  `• *Código FIPE:* ${data.CodigoFipe}`;
 
-            // Texto limpo sem caracteres especiais (Perfeito para corpo de E-mail)
             const messageEmail = `SeverinoCar-LC - Consulta FIPE\n\n` +
                                  `Modelo: ${data.Modelo}\n` +
                                  `Marca: ${data.Marca}\n` +
@@ -1093,7 +1085,6 @@
             abrirMenuAlternativoCompartilhar(messageWhats, messageEmail);
         }
 
-        // Menu adaptado 100% focado em Cópia Inteligente para WhatsApp e E-mail (Sem quebras)
         function abrirMenuAlternativoCompartilhar(textoWhats, textoEmail) {
             const antigo = document.getElementById('modalCompartilhar');
             if (antigo) antigo.remove();
@@ -1123,13 +1114,10 @@
                     Selecione para onde deseja enviar. O aplicativo copiará os dados formatados para você colar!
                 </p>
                 <div style="display: flex; flex-direction: column; gap: 12px;">
-                    
-                    <!-- Botão de cópia focado no WhatsApp -->
                     <button class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); border: none; font-size: 15px;" id="btnCopiarWhats">
                         📋 Copiar Dados para o WhatsApp
                     </button>
 
-                    <!-- Novo Botão de cópia focado em E-mail -->
                     <button class="btn-3d" style="background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); border: none; font-size: 15px;" id="btnCopiarEmail">
                         ✉️ Copiar Dados para o E-mail
                     </button>
@@ -1146,12 +1134,10 @@
                 modal.style.transform = 'translateX(-50%) translateY(0)';
             }, 50);
 
-            // Ação WhatsApp
             document.getElementById('btnCopiarWhats').addEventListener('click', () => {
                 realizarCopiaSegura(textoWhats, 'WhatsApp');
             });
 
-            // Ação E-mail
             document.getElementById('btnCopiarEmail').addEventListener('click', () => {
                 realizarCopiaSegura(textoEmail, 'E-mail');
             });
@@ -1165,7 +1151,6 @@
             }
         }
 
-        // Sistema híbrido de cópia robusta atualizado com mensagem dinâmica
         function realizarCopiaSegura(texto, tipoDestino) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(texto).then(() => {
@@ -1176,10 +1161,6 @@
             } else {
                 executarCopiaFallbackFinal(texto, tipoDestino);
             }
-        }
-
-        function执行CopiaFallbackFinal(texto, tipoDestino) { // Mantido compatibilidade de assinatura
-            executarCopiaFallbackFinal(texto, tipoDestino);
         }
 
         function executarCopiaFallbackFinal(texto, tipoDestino) {
@@ -1284,7 +1265,6 @@
         window.removerFavorito = removerFavorito;
         window.reconsultarFavorito = reconsultarFavorito;
         window.fecharModalCompartilhar = fecharModalCompartilhar;
-     
 </script>
 </body>
 </html>
