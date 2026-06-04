@@ -955,7 +955,7 @@
             setTimeout(() => {
                 toast.style.animation = 'slideUp 0.3s ease-in';
                 setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            }, 2500);
         }
 
         // Storage Functions
@@ -1072,19 +1072,29 @@
             playSound('click');
             const data = window.currentResult;
             
-            const message = `🚗 *SeverinoCar-LC - Consulta FIPE*\n\n` +
-                           `*${data.Modelo}*\n` +
-                           `• *Marca:* ${data.Marca}\n` +
-                           `• *Valor:* ${data.Valor}\n` +
-                           `• *Combustível:* ${data.Combustivel}\n` +
-                           `• *Mês Ref.:* ${data.MesReferencia}\n` +
-                           `• *Código FIPE:* ${data.CodigoFipe}`;
+            // Texto formatado para redes sociais / WhatsApp (Com os asteriscos de negrito)
+            const messageWhats = `🚗 *SeverinoCar-LC - Consulta FIPE*\n\n` +
+                                 `*${data.Modelo}*\n` +
+                                 `• *Marca:* ${data.Marca}\n` +
+                                 `• *Valor:* ${data.Valor}\n` +
+                                 `• *Combustível:* ${data.Combustivel}\n` +
+                                 `• *Mês Ref.:* ${data.MesReferencia}\n` +
+                                 `• *Código FIPE:* ${data.CodigoFipe}`;
+
+            // Texto limpo sem caracteres especiais (Perfeito para corpo de E-mail)
+            const messageEmail = `SeverinoCar-LC - Consulta FIPE\n\n` +
+                                 `Modelo: ${data.Modelo}\n` +
+                                 `Marca: ${data.Marca}\n` +
+                                 `Valor: ${data.Valor}\n` +
+                                 `Combustível: ${data.Combustivel}\n` +
+                                 `Mês de Referência: ${data.MesReferencia}\n` +
+                                 `Código FIPE: ${data.CodigoFipe}`;
             
-            abrirMenuAlternativoCompartilhar(message);
+            abrirMenuAlternativoCompartilhar(messageWhats, messageEmail);
         }
 
-        // Menu 100% focado em cópia sem links arriscados para travar a WebView do APK
-        function abrirMenuAlternativoCompartilhar(textoPuro) {
+        // Menu adaptado 100% focado em Cópia Inteligente para WhatsApp e E-mail (Sem quebras)
+        function abrirMenuAlternativoCompartilhar(textoWhats, textoEmail) {
             const antigo = document.getElementById('modalCompartilhar');
             if (antigo) antigo.remove();
 
@@ -1110,12 +1120,18 @@
             modal.innerHTML = `
                 <h3 style="margin-bottom: 8px; text-align: center; font-size: 18px; color: #fff;">Compartilhar Resultado</h3>
                 <p style="font-size: 13px; text-align: center; color: var(--text-secondary); margin-bottom: 20px; padding: 0 10px;">
-                    Para evitar erros no aplicativo, copie os dados formatados abaixo e cole diretamente na conversa do seu contato!
+                    Selecione para onde deseja enviar. O aplicativo copiará os dados formatados para você colar!
                 </p>
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     
-                    <button class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); border: none; font-size: 15px;" id="btnCopiarDadosFipe">
+                    <!-- Botão de cópia focado no WhatsApp -->
+                    <button class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); border: none; font-size: 15px;" id="btnCopiarWhats">
                         📋 Copiar Dados para o WhatsApp
+                    </button>
+
+                    <!-- Novo Botão de cópia focado em E-mail -->
+                    <button class="btn-3d" style="background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); border: none; font-size: 15px;" id="btnCopiarEmail">
+                        ✉️ Copiar Dados para o E-mail
                     </button>
 
                     <button class="btn-small" style="margin-top: 8px; background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 12px; font-weight: bold; font-size: 14px;" onclick="fecharModalCompartilhar()">
@@ -1130,9 +1146,14 @@
                 modal.style.transform = 'translateX(-50%) translateY(0)';
             }, 50);
 
-            // Evento direto para copiar sem risco de gerar tela branca
-            document.getElementById('btnCopiarDadosFipe').addEventListener('click', () => {
-                realizarCopiaSegura(textoPuro);
+            // Ação WhatsApp
+            document.getElementById('btnCopiarWhats').addEventListener('click', () => {
+                realizarCopiaSegura(textoWhats, 'WhatsApp');
+            });
+
+            // Ação E-mail
+            document.getElementById('btnCopiarEmail').addEventListener('click', () => {
+                realizarCopiaSegura(textoEmail, 'E-mail');
             });
         }
 
@@ -1144,40 +1165,48 @@
             }
         }
 
-        // Sistema híbrido ultra estável de cópia para qualquer tipo de Android/WebView
-        function realizarCopiaSegura(texto) {
+        // Sistema híbrido de cópia robusta atualizado com mensagem dinâmica
+        function realizarCopiaSegura(texto, tipoDestino) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(texto).then(() => {
-                    notificarSucessoCopia();
+                    notificarSucessoCopia(tipoDestino);
                 }).catch(() => {
-                    executarCopiaFallbackFinal(texto);
+                    executarCopiaFallbackFinal(texto, tipoDestino);
                 });
             } else {
-                executarCopiaFallbackFinal(texto);
+                executarCopiaFallbackFinal(texto, tipoDestino);
             }
         }
 
-        function executarCopiaFallbackFinal(texto) {
+        function执行CopiaFallbackFinal(texto, tipoDestino) { // Mantido compatibilidade de assinatura
+            executarCopiaFallbackFinal(texto, tipoDestino);
+        }
+
+        function executarCopiaFallbackFinal(texto, tipoDestino) {
             const textarea = document.createElement('textarea');
             textarea.value = texto;
             textarea.style.position = 'fixed'; 
             textarea.style.opacity = '0';
             document.body.appendChild(textarea);
             textarea.select();
-            textarea.setSelectionRange(0, 99999); // Suporte para mobile antigo
+            textarea.setSelectionRange(0, 99999);
             try {
                 document.execCommand('copy');
-                notificarSucessoCopia();
+                notificarSucessoCopia(tipoDestino);
             } catch (err) {
                 showError('Erro ao copiar dados. Por favor, tente novamente.');
             }
             document.body.removeChild(textarea);
         }
 
-        function notificarSucessoCopia() {
+        function notificarSucessoCopia(tipoDestino) {
             playSound('success');
             fecharModalCompartilhar();
-            showError('Dados Copiados! Agora abra seu WhatsApp e cole na conversa.');
+            if (tipoDestino === 'WhatsApp') {
+                showError('Dados Copiados! Agora abra seu WhatsApp e cole na conversa.');
+            } else {
+                showError('Dados Copiados! Agora abra seu E-mail e cole no corpo da mensagem.');
+            }
         }
 
         async function reconsultarFavorito(codigoFipe) {
@@ -1255,6 +1284,7 @@
         window.removerFavorito = removerFavorito;
         window.reconsultarFavorito = reconsultarFavorito;
         window.fecharModalCompartilhar = fecharModalCompartilhar;
+     
 </script>
 </body>
 </html>
