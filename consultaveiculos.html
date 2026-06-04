@@ -1075,31 +1075,106 @@
         }
 
         function compartilharResultado() {
-            if (!window.currentResult) return;
-            
-            playSound('click');
-            const data = window.currentResult;
-            const message = `🚗 *SeverinoCar-LC - Consulta FIPE*\n\n` +
-                           `*${data.Modelo}*\n` +
-                           `Marca: ${data.Marca}\n` +
-                           `Valor: ${data.Valor}\n` +
-                           `Combustível: ${data.Combustivel}\n` +
-                           `Mês Ref.: ${data.MesReferencia}\n` +
-                           `Código FIPE: ${data.CodigoFipe}`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'SeverinoCar-LC',
-                    text: message
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(message).then(() => {
-                    showError('Copiado para a área de transferência!');
-                }).catch(() => {
-                    showError('Erro ao copiar');
-                });
-            }
-        }
+    if (!window.currentResult) return;
+    
+    playSound('click');
+    const data = window.currentResult;
+    
+    // Texto formatado para o compartilhamento
+    const message = `🚗 *SeverinoCar-LC - Consulta FIPE*\n\n` +
+                   `*${data.Modelo}*\n` +
+                   `• *Marca:* ${data.Marca}\n` +
+                   `• *Valor:* ${data.Valor}\n` +
+                   `• *Combustível:* ${data.Combustivel}\n` +
+                   `• *Mês Ref.:* ${data.MesReferencia}\n` +
+                   `• *Código FIPE:* ${data.CodigoFipe}`;
+    
+    // Encodar o texto para usar em URLs do WhatsApp e E-mail
+    const encodedText = encodeURIComponent(message);
+    
+    // Links diretos de compartilhamento
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
+    const emailUrl = `mailto:?subject=Consulta FIPE - SeverinoCar-LC&body=${encodedText}`;
+
+    // 1. Tenta o compartilhamento Nativo do Celular (Se for HTTPS)
+    if (navigator.share && navigator.canShare) {
+        navigator.share({
+            title: 'SeverinoCar-LC FIPE',
+            text: message
+        })
+        .then(() => playSound('success'))
+        .catch((err) => {
+            console.warn("Compartilhamento nativo cancelado/falhou, abrindo alternativas...", err);
+            abrirMenuAlternativoCompartilhar(whatsappUrl, emailUrl, message);
+        });
+    } else {
+        // 2. Se não suportar o nativo (PCs, HTTP comum), abre o menu com as opções diretas
+        abrirMenuAlternativoCompartilhar(whatsappUrl, emailUrl, message);
+    }
+}
+
+// Função de apoio para criar e mostrar o menu de opções na tela
+function abrirMenuAlternativoCompartilhar(whatsUrl, mailUrl, textoPuro) {
+    // Remove se já existir um aberto anterior
+    const antigo = document.getElementById('modalCompartilhar');
+    if (antigo) antigo.remove();
+
+    // Cria o container do mini menu 3D
+    const modal = document.createElement('div');
+    modal.id = 'modalCompartilhar';
+    modal.style.cssText = `
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(100%);
+        width: 100%;
+        max-width: 480px;
+        background: var(--gradient-card);
+        border-top: 3px solid var(--primary);
+        border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        padding: 24px;
+        z-index: 10001;
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(20px);
+    `;
+
+    modal.innerHTML = `
+        <h3 style="margin-bottom: 16px; text-align: center; font-size: 18px;">Compartilhar via:</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="${whatsUrl}" target="_blank" class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(37,211,102,0.3);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
+                💬 WhatsApp
+            </a>
+            <a href="${mailUrl}" class="btn-3d" style="background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(234,67,53,0.3);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
+                ✉️ E-mail
+            </a>
+            <button class="btn-3d btn-share" id="btnCopiarTextoRapido">
+                📋 Copiar Texto Completo
+            </button>
+            <button class="btn-small" style="margin-top: 8px; background: rgba(255,255,255,0.05);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
+                Fechar
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Gatilho para a animação de subida suave (Slide up)
+    setTimeout(() => {
+        modal.style.transform = 'translateX(-50%) translateY(0)';
+    }, 50);
+
+    // Lógica do botão copiar dentro do menu alternativo
+    document.getElementById('btnCopiarTextoRapido').addEventListener('click', () => {
+        navigator.clipboard.writeText(textoPuro).then(() => {
+            showError('Copiado para a área de transferência!');
+            playSound('success');
+            modal.style.transform = 'translateX(-50%) translateY(100%)';
+        }).catch(() => {
+            showError('Erro ao copiar texto');
+        });
+    });
+}
 
         function reconsultarFavorito(codigoFipe) {
             // Implementar lógica de reconsulta
