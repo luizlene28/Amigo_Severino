@@ -778,7 +778,6 @@
                 });
             });
 
-            // Suporte a gestos touch
             document.addEventListener('touchstart', function() {}, {passive: true});
         }
 
@@ -918,13 +917,11 @@
                 </div>
             `;
 
-            // Scroll suave até o resultado
             elements.resultadoContainer.scrollIntoView({ 
                 behavior: 'smooth', 
                 block: 'center' 
             });
 
-            // Armazenar dados atuais para uso nos botões
             window.currentResult = data;
         }
 
@@ -937,7 +934,6 @@
         }
 
         function showError(message) {
-            // Implementação simples de toast
             const toast = document.createElement('div');
             toast.style.cssText = `
                 position: fixed;
@@ -965,10 +961,7 @@
         // Storage Functions
         function salvarNoHistorico(data) {
             let historico = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.HISTORICO)) || [];
-            
-            // Evitar duplicatas
             historico = historico.filter(item => item.CodigoFipe !== data.CodigoFipe);
-            
             historico.unshift(data);
             
             if (historico.length > CONFIG.MAX_HISTORICO) {
@@ -984,7 +977,6 @@
             
             playSound('click');
             let favoritos = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.FAVORITOS)) || [];
-            
             const exists = favoritos.some(f => f.CodigoFipe === window.currentResult.CodigoFipe);
             
             if (exists) {
@@ -998,7 +990,6 @@
             playSound('success');
             atualizarListas();
             
-            // Feedback visual
             const btn = document.querySelector('.btn-3d');
             if (btn) {
                 btn.textContent = '✅ Salvo!';
@@ -1081,7 +1072,6 @@
             playSound('click');
             const data = window.currentResult;
             
-            // Texto formatado para o compartilhamento
             const message = `🚗 *SeverinoCar-LC - Consulta FIPE*\n\n` +
                            `*${data.Modelo}*\n` +
                            `• *Marca:* ${data.Marca}\n` +
@@ -1090,14 +1080,12 @@
                            `• *Mês Ref.:* ${data.MesReferencia}\n` +
                            `• *Código FIPE:* ${data.CodigoFipe}`;
             
-            // Encodar o texto para usar em URLs do WhatsApp e E-mail
             const encodedText = encodeURIComponent(message);
             
-            // Links diretos de compartilhamento
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
             const emailUrl = `mailto:?subject=Consulta FIPE - SeverinoCar-LC&body=${encodedText}`;
 
-            // 1. Tenta o compartilhamento Nativo do Celular (Se for HTTPS)
+            // Se rodar em navegador moderno com HTTPS, usa a API nativa
             if (navigator.share && navigator.canShare) {
                 navigator.share({
                     title: 'SeverinoCar-LC FIPE',
@@ -1105,78 +1093,117 @@
                 })
                 .then(() => playSound('success'))
                 .catch((err) => {
-                    console.warn("Compartilhamento nativo cancelado/falhou, abrindo alternativas...", err);
+                    console.warn("Nativo falhou/cancelado, abrindo alternativo.");
                     abrirMenuAlternativoCompartilhar(whatsappUrl, emailUrl, message);
                 });
             } else {
-                // 2. Se não suportar o nativo (PCs, HTTP comum), abre o menu com as opções diretas
+                // Em WebViews/APKs comuns, força direto o menu customizado inteligente
                 abrirMenuAlternativoCompartilhar(whatsappUrl, emailUrl, message);
             }
         }
 
-        // Função de apoio para criar e mostrar o menu de opções na tela
+        // Função corrigida focada em WebViews de APKs Android
         function abrirMenuAlternativoCompartilhar(whatsUrl, mailUrl, textoPuro) {
-    // Remove se já existir um aberto anterior
-    const antigo = document.getElementById('modalCompartilhar');
-    if (antigo) antigo.remove();
+            const antigo = document.getElementById('modalCompartilhar');
+            if (antigo) antigo.remove();
 
-    // Cria o container do mini menu 3D
-    const modal = document.createElement('div');
-    modal.id = 'modalCompartilhar';
-    modal.style.cssText = `
-        position: fixed;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%) translateY(100%);
-        width: 100%;
-        max-width: 480px;
-        background: var(--gradient-card);
-        border-top: 3px solid var(--primary);
-        border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-        padding: 24px;
-        z-index: 10001;
-        box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        backdrop-filter: blur(20px);
-    `;
+            // Gera o link nativo usando o protocolo "whatsapp://" que força a WebView a buscar o aplicativo instalado
+            const textoFormatadoNativo = encodeURIComponent(textoPuro);
+            const whatsappNativoUrl = `whatsapp://send?text=${textoFormatadoNativo}`;
 
-    // CORREÇÃO AQUI: Usando URLs universais com HTTPS estável e target="_blank" para a WebView do APK liberar o redirecionamento
-    modal.innerHTML = `
-        <h3 style="margin-bottom: 16px; text-align: center; font-size: 18px;">Compartilhar via:</h3>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <a href="${whatsUrl}" target="_blank" rel="noopener noreferrer" class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(37,211,102,0.3);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
-                💬 WhatsApp
-            </a>
-            <a href="${mailUrl}" target="_blank" rel="noopener noreferrer" class="btn-3d" style="background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(234,67,53,0.3);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
-                ✉️ E-mail
-            </a>
-            <button class="btn-3d btn-share" id="btnCopiarTextoRapido">
-                📋 Copiar Texto Completo
-            </button>
-            <button class="btn-small" style="margin-top: 8px; background: rgba(255,255,255,0.05);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
-                Fechar
-            </button>
-        </div>
-    `;
+            const modal = document.createElement('div');
+            modal.id = 'modalCompartilhar';
+            modal.style.cssText = `
+                position: fixed;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%) translateY(100%);
+                width: 100%;
+                max-width: 480px;
+                background: var(--gradient-card);
+                border-top: 3px solid var(--primary);
+                border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+                padding: 24px;
+                z-index: 10001;
+                box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                backdrop-filter: blur(20px);
+            `;
 
-    document.body.appendChild(modal);
+            modal.innerHTML = `
+                <h3 style="margin-bottom: 16px; text-align: center; font-size: 18px; color: #fff;">Compartilhar via:</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="${whatsappNativoUrl}" class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); text-align: center; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(37,211,102,0.3);" onclick="fecharModalCompartilhar()">
+                        💬 Abrir no WhatsApp
+                    </a>
+                    
+                    <a href="${whatsUrl}" target="_blank" rel="noopener noreferrer" class="btn-3d" style="background: linear-gradient(135deg, #128C7E 0%, #0a5c51 100%); text-align: center; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(18,140,126,0.2);" onclick="fecharModalCompartilhar()">
+                        🌐 WhatsApp (Link Alternativo)
+                    </a>
 
-    // Gatilho para a animação de subida suave (Slide up)
-    setTimeout(() => {
-        modal.style.transform = 'translateX(-50%) translateY(0)';
-    }, 50);
+                    <a href="${mailUrl}" target="_blank" rel="noopener noreferrer" class="btn-3d" style="background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); text-align: center; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(234,67,53,0.3);" onclick="fecharModalCompartilhar()">
+                        ✉️ Enviar por E-mail
+                    </a>
 
-    // Lógica do botão copiar dentro do menu alternativo
-    document.getElementById('btnCopiarTextoRapido').addEventListener('click', () => {
-        navigator.clipboard.writeText(textoPuro).then(() => {
-            showError('Copiado para a área de transferência!');
+                    <button class="btn-3d btn-share" id="btnCopiarTextoRapido" style="margin-top: 5px;">
+                        📋 Copiar Texto (Garantido)
+                    </button>
+
+                    <button class="btn-small" style="margin-top: 12px; background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 10px;" onclick="fecharModalCompartilhar()">
+                        Fechar
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            setTimeout(() => {
+                modal.style.transform = 'translateX(-50%) translateY(0)';
+            }, 50);
+
+            // Gerenciador de cópia de segurança à prova de falhas em WebViews antigas
+            document.getElementById('btnCopiarTextoRapido').addEventListener('click', () => {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(textoPuro).then(() => {
+                        sucessoAoCopiar();
+                    }).catch(() => {
+                        executarCopiaFallback(textoPuro);
+                    });
+                } else {
+                    executarCopiaFallback(textoPuro);
+                }
+            });
+        }
+
+        function fecharModalCompartilhar() {
+            const modal = document.getElementById('modalCompartilhar');
+            if (modal) {
+                modal.style.transform = 'translateX(-50%) translateY(100%)';
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        function executarCopiaFallback(texto) {
+            const textarea = document.createElement('textarea');
+            textarea.value = texto;
+            textarea.style.position = 'fixed'; 
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                sucessoAoCopiar();
+            } catch (err) {
+                showError('Erro ao copiar dados automaticamente.');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function sucessoAoCopiar() {
+            showError('Copiado! Abra o WhatsApp e cole.');
             playSound('success');
-            modal.style.transform = 'translateX(-50%) translateY(100%)';
-        }).catch(() => {
-            showError('Erro ao copiar texto');
-        });
-    });
-}
+            fecharModalCompartilhar();
+        }
 
         async function reconsultarFavorito(codigoFipe) {
             playSound('click');
@@ -1226,21 +1253,19 @@
 
             } catch (error) {
                 console.error('Erro na reconsulta direta:', error);
-                showError('Não foi possível atualizar este veículo no momento. Tente novamente mais tarde.');
+                showError('Não foi possível atualizar este veículo no momento.');
                 playSound('error');
             } finally {
                 hideLoading();
             }
         }
 
-        // CSS animations adicionais
         const additionalStyles = document.createElement('style');
         additionalStyles.textContent = `
             @keyframes slideDown {
                 from { transform: translate(-50%, -100%); opacity: 0; }
                 to { transform: translate(-50%, 0); opacity: 1; }
             }
-            
             @keyframes slideUp {
                 from { transform: translate(-50%, 0); opacity: 1; }
                 to { transform: translate(-50%, -100%); opacity: 0; }
@@ -1248,14 +1273,13 @@
         `;
         document.head.appendChild(additionalStyles);
 
-        // Iniciar aplicação
         init();
 
-        // Tornar funções globais para onclick
         window.adicionarAosFavoritos = adicionarAosFavoritos;
         window.compartilharResultado = compartilharResultado;
         window.removerFavorito = removerFavorito;
         window.reconsultarFavorito = reconsultarFavorito;
-    </script>
+        window.fecharModalCompartilhar = fecharModalCompartilhar;
+</script>
 </body>
 </html>
