@@ -912,7 +912,7 @@
                         ⭐ Salvar nos Favoritos
                     </button>
                     <button class="btn-3d btn-share" onclick="compartilharResultado()">
-                        📤 Compartilhar
+                        📤 Compartilhar Dados
                     </button>
                 </div>
             `;
@@ -955,7 +955,7 @@
             setTimeout(() => {
                 toast.style.animation = 'slideUp 0.3s ease-in';
                 setTimeout(() => toast.remove(), 300);
-            }, 2000);
+            }, 3000);
         }
 
         // Storage Functions
@@ -1080,36 +1080,13 @@
                            `• *Mês Ref.:* ${data.MesReferencia}\n` +
                            `• *Código FIPE:* ${data.CodigoFipe}`;
             
-            const encodedText = encodeURIComponent(message);
-            
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
-            const emailUrl = `mailto:?subject=Consulta FIPE - SeverinoCar-LC&body=${encodedText}`;
-
-            // Se rodar em navegador moderno com HTTPS, usa a API nativa
-            if (navigator.share && navigator.canShare) {
-                navigator.share({
-                    title: 'SeverinoCar-LC FIPE',
-                    text: message
-                })
-                .then(() => playSound('success'))
-                .catch((err) => {
-                    console.warn("Nativo falhou/cancelado, abrindo alternativo.");
-                    abrirMenuAlternativoCompartilhar(whatsappUrl, emailUrl, message);
-                });
-            } else {
-                // Em WebViews/APKs comuns, força direto o menu customizado inteligente
-                abrirMenuAlternativoCompartilhar(whatsappUrl, emailUrl, message);
-            }
+            abrirMenuAlternativoCompartilhar(message);
         }
 
-        // Função corrigida focada em WebViews de APKs Android
-        function abrirMenuAlternativoCompartilhar(whatsUrl, mailUrl, textoPuro) {
+        // Menu 100% focado em cópia sem links arriscados para travar a WebView do APK
+        function abrirMenuAlternativoCompartilhar(textoPuro) {
             const antigo = document.getElementById('modalCompartilhar');
             if (antigo) antigo.remove();
-
-            // Gera o link nativo usando o protocolo "whatsapp://" que força a WebView a buscar o aplicativo instalado
-            const textoFormatadoNativo = encodeURIComponent(textoPuro);
-            const whatsappNativoUrl = `whatsapp://send?text=${textoFormatadoNativo}`;
 
             const modal = document.createElement('div');
             modal.id = 'modalCompartilhar';
@@ -1131,26 +1108,18 @@
             `;
 
             modal.innerHTML = `
-                <h3 style="margin-bottom: 16px; text-align: center; font-size: 18px; color: #fff;">Compartilhar via:</h3>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <a href="${whatsappNativoUrl}" class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); text-align: center; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(37,211,102,0.3);" onclick="fecharModalCompartilhar()">
-                        💬 Abrir no WhatsApp
-                    </a>
+                <h3 style="margin-bottom: 8px; text-align: center; font-size: 18px; color: #fff;">Compartilhar Resultado</h3>
+                <p style="font-size: 13px; text-align: center; color: var(--text-secondary); margin-bottom: 20px; padding: 0 10px;">
+                    Para evitar erros no aplicativo, copie os dados formatados abaixo e cole diretamente na conversa do seu contato!
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
                     
-                    <a href="${whatsUrl}" target="_blank" rel="noopener noreferrer" class="btn-3d" style="background: linear-gradient(135deg, #128C7E 0%, #0a5c51 100%); text-align: center; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(18,140,126,0.2);" onclick="fecharModalCompartilhar()">
-                        🌐 WhatsApp (Link Alternativo)
-                    </a>
-
-                    <a href="${mailUrl}" target="_blank" rel="noopener noreferrer" class="btn-3d" style="background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); text-align: center; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(234,67,53,0.3);" onclick="fecharModalCompartilhar()">
-                        ✉️ Enviar por E-mail
-                    </a>
-
-                    <button class="btn-3d btn-share" id="btnCopiarTextoRapido" style="margin-top: 5px;">
-                        📋 Copiar Texto (Garantido)
+                    <button class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); border: none; font-size: 15px;" id="btnCopiarDadosFipe">
+                        📋 Copiar Dados para o WhatsApp
                     </button>
 
-                    <button class="btn-small" style="margin-top: 12px; background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 10px;" onclick="fecharModalCompartilhar()">
-                        Fechar
+                    <button class="btn-small" style="margin-top: 8px; background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 12px; font-weight: bold; font-size: 14px;" onclick="fecharModalCompartilhar()">
+                        Cancelar
                     </button>
                 </div>
             `;
@@ -1161,17 +1130,9 @@
                 modal.style.transform = 'translateX(-50%) translateY(0)';
             }, 50);
 
-            // Gerenciador de cópia de segurança à prova de falhas em WebViews antigas
-            document.getElementById('btnCopiarTextoRapido').addEventListener('click', () => {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(textoPuro).then(() => {
-                        sucessoAoCopiar();
-                    }).catch(() => {
-                        executarCopiaFallback(textoPuro);
-                    });
-                } else {
-                    executarCopiaFallback(textoPuro);
-                }
+            // Evento direto para copiar sem risco de gerar tela branca
+            document.getElementById('btnCopiarDadosFipe').addEventListener('click', () => {
+                realizarCopiaSegura(textoPuro);
             });
         }
 
@@ -1183,26 +1144,40 @@
             }
         }
 
-        function executarCopiaFallback(texto) {
+        // Sistema híbrido ultra estável de cópia para qualquer tipo de Android/WebView
+        function realizarCopiaSegura(texto) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(texto).then(() => {
+                    notificarSucessoCopia();
+                }).catch(() => {
+                    executarCopiaFallbackFinal(texto);
+                });
+            } else {
+                executarCopiaFallbackFinal(texto);
+            }
+        }
+
+        function executarCopiaFallbackFinal(texto) {
             const textarea = document.createElement('textarea');
             textarea.value = texto;
             textarea.style.position = 'fixed'; 
             textarea.style.opacity = '0';
             document.body.appendChild(textarea);
             textarea.select();
+            textarea.setSelectionRange(0, 99999); // Suporte para mobile antigo
             try {
                 document.execCommand('copy');
-                sucessoAoCopiar();
+                notificarSucessoCopia();
             } catch (err) {
-                showError('Erro ao copiar dados automaticamente.');
+                showError('Erro ao copiar dados. Por favor, tente novamente.');
             }
             document.body.removeChild(textarea);
         }
 
-        function sucessoAoCopiar() {
-            showError('Copiado! Abra o WhatsApp e cole.');
+        function notificarSucessoCopia() {
             playSound('success');
             fecharModalCompartilhar();
+            showError('Dados Copiados! Agora abra seu WhatsApp e cole na conversa.');
         }
 
         async function reconsultarFavorito(codigoFipe) {
