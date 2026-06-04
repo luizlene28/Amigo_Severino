@@ -1116,66 +1116,67 @@
 
         // Função de apoio para criar e mostrar o menu de opções na tela
         function abrirMenuAlternativoCompartilhar(whatsUrl, mailUrl, textoPuro) {
-            // Remove se já existir um aberto anterior
-            const antigo = document.getElementById('modalCompartilhar');
-            if (antigo) antigo.remove();
+    // Remove se já existir um aberto anterior
+    const antigo = document.getElementById('modalCompartilhar');
+    if (antigo) antigo.remove();
 
-            // Cria o container do mini menu 3D
-            const modal = document.createElement('div');
-            modal.id = 'modalCompartilhar';
-            modal.style.cssText = `
-                position: fixed;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%) translateY(100%);
-                width: 100%;
-                max-width: 480px;
-                background: var(--gradient-card);
-                border-top: 3px solid var(--primary);
-                border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-                padding: 24px;
-                z-index: 10001;
-                box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                backdrop-filter: blur(20px);
-            `;
+    // Cria o container do mini menu 3D
+    const modal = document.createElement('div');
+    modal.id = 'modalCompartilhar';
+    modal.style.cssText = `
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(100%);
+        width: 100%;
+        max-width: 480px;
+        background: var(--gradient-card);
+        border-top: 3px solid var(--primary);
+        border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        padding: 24px;
+        z-index: 10001;
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(20px);
+    `;
 
-            modal.innerHTML = `
-                <h3 style="margin-bottom: 16px; text-align: center; font-size: 18px;">Compartilhar via:</h3>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <a href="${whatsUrl}" target="_blank" class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(37,211,102,0.3);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
-                        💬 WhatsApp
-                    </a>
-                    <a href="${mailUrl}" class="btn-3d" style="background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(234,67,53,0.3);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
-                        ✉️ E-mail
-                    </a>
-                    <button class="btn-3d btn-share" id="btnCopiarTextoRapido">
-                        📋 Copiar Texto Completo
-                    </button>
-                    <button class="btn-small" style="margin-top: 8px; background: rgba(255,255,255,0.05);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
-                        Fechar
-                    </button>
-                </div>
-            `;
+    // CORREÇÃO AQUI: Usando URLs universais com HTTPS estável e target="_blank" para a WebView do APK liberar o redirecionamento
+    modal.innerHTML = `
+        <h3 style="margin-bottom: 16px; text-align: center; font-size: 18px;">Compartilhar via:</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="${whatsUrl}" target="_blank" rel="noopener noreferrer" class="btn-3d" style="background: linear-gradient(135deg, #25D366 0%, #075E54 100%); text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(37,211,102,0.3);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
+                💬 WhatsApp
+            </a>
+            <a href="${mailUrl}" target="_blank" rel="noopener noreferrer" class="btn-3d" style="background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(234,67,53,0.3);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
+                ✉️ E-mail
+            </a>
+            <button class="btn-3d btn-share" id="btnCopiarTextoRapido">
+                📋 Copiar Texto Completo
+            </button>
+            <button class="btn-small" style="margin-top: 8px; background: rgba(255,255,255,0.05);" onclick="document.getElementById('modalCompartilhar').style.transform = 'translateX(-50%) translateY(100%)'">
+                Fechar
+            </button>
+        </div>
+    `;
 
-            document.body.appendChild(modal);
+    document.body.appendChild(modal);
 
-            // Gatilho para a animação de subida suave (Slide up)
-            setTimeout(() => {
-                modal.style.transform = 'translateX(-50%) translateY(0)';
-            }, 50);
+    // Gatilho para a animação de subida suave (Slide up)
+    setTimeout(() => {
+        modal.style.transform = 'translateX(-50%) translateY(0)';
+    }, 50);
 
-            // Lógica do botão copiar dentro do menu alternativo
-            document.getElementById('btnCopiarTextoRapido').addEventListener('click', () => {
-                navigator.clipboard.writeText(textoPuro).then(() => {
-                    showError('Copiado para a área de transferência!');
-                    playSound('success');
-                    modal.style.transform = 'translateX(-50%) translateY(100%)';
-                }).catch(() => {
-                    showError('Erro ao copiar texto');
-                });
-            });
-        }
+    // Lógica do botão copiar dentro do menu alternativo
+    document.getElementById('btnCopiarTextoRapido').addEventListener('click', () => {
+        navigator.clipboard.writeText(textoPuro).then(() => {
+            showError('Copiado para a área de transferência!');
+            playSound('success');
+            modal.style.transform = 'translateX(-50%) translateY(100%)';
+        }).catch(() => {
+            showError('Erro ao copiar texto');
+        });
+    });
+}
 
         async function reconsultarFavorito(codigoFipe) {
             playSound('click');
