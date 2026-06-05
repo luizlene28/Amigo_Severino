@@ -863,7 +863,6 @@
 
             filtrados.sort((a, b) => a.versiculo - b.versiculo);
 
-            // Tratamento rigoroso de caracteres especiais para o clique funcionar perfeitamente
             container.innerHTML = filtrados.map(v => {
                 const textoLimpo = v.texto.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, " ").replace(/\r/g, "");
                 return `
@@ -944,17 +943,23 @@
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
 
-       // ============ FUNÇÃO DE IA DE VOZ INTELIGENTE E SEM ALERTAS ============
+        // ============ FUNÇÃO DE IA DE VOZ - PLANO B (DIRECIONA PARA O CHROME SE FOR APK) ============
         let audioPrevio = null;
 
         window.falarVersiculo = (texto, botao) => {
-            // Verifica se o navegador bloqueou o sistema de voz silenciosamente
-            if (!window.speechSynthesis) {
-                console.log("Leitura de voz indisponível neste navegador.");
+            // Detecta com precisão se o site está rodando preso na janela "muda" do Kodular
+            const esWebview = navigator.userAgent.includes("wv") || (navigator.userAgent.includes("Android") && !navigator.userAgent.includes("Chrome/"));
+
+            if (esWebview) {
+                const urlAtual = window.location.href;
+                // Executa a Intent Android para forçar o sistema a abrir o link diretamente no navegador Chrome de fora do app
+                window.open("intent://" + urlAtual.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end", "_blank");
                 return;
             }
 
-            // Se clicar no mesmo botão que já está falando, cancela e para tudo
+            // SE ESTIVER NO NAVEGADOR NORMAL DO CELULAR
+            if (!window.speechSynthesis) return;
+
             if (window.speechSynthesis.speaking && audioPrevio === botao) {
                 window.speechSynthesis.cancel();
                 botao.textContent = "🔊";
@@ -962,7 +967,6 @@
                 return;
             }
 
-            // Se outro versículo estava sendo lido, interrompe para começar o novo
             if (window.speechSynthesis.speaking) {
                 window.speechSynthesis.cancel();
                 if (audioPrevio) audioPrevio.textContent = "🔊";
@@ -972,29 +976,23 @@
             mensagem.lang = 'pt-BR';
             mensagem.rate = 1.0; 
 
-            // Monitora quando a voz realmente começa a sair
             mensagem.onstart = () => {
                 botao.textContent = "🛑";
                 audioPrevio = botao;
             };
 
-            // Monitora quando a leitura acaba sozinha
             mensagem.onend = () => {
                 botao.textContent = "🔊";
                 if (audioPrevio === botao) audioPrevio = null;
             };
 
-            // Trata erros de bloqueio sem travar a tela com alertas
             mensagem.onerror = () => {
                 botao.textContent = "🔊";
                 if (audioPrevio === botao) audioPrevio = null;
                 window.speechSynthesis.cancel();
             };
 
-            // Inicia a reprodução
             window.speechSynthesis.speak(mensagem);
-
-            // Modificação visual preventiva
             botao.textContent = "🛑";
             audioPrevio = botao;
         };
