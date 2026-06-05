@@ -729,18 +729,20 @@
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
 
-        // ============ FUNÇÃO DE IA DE VOZ - PLANO B CORRIGIDO PARA KODULAR ============
+        // ============ FUNÇÃO DE IA DE VOZ - PLANO B FINAL (CLIQUE SIMULADO) ============
         let audioPrevio = null;
 
         window.falarVersiculo = (texto, botao) => {
-            // Detecta com precisão se está rodando dentro do aplicativo do Kodular
             const esWebview = navigator.userAgent.includes("wv") || (navigator.userAgent.includes("Android") && !navigator.userAgent.includes("Chrome/"));
 
-            // SE ESTIVER NO APK DO KODULAR: Força a abertura no Chrome usando link de redirecionamento nativo e _system
+            // SE ESTIVER NO APK: Cria um link "real" e clica nele automaticamente
             if (esWebview) {
-                const urlAtual = window.location.href;
-                const linkExterno = "https://www.google.com/url?q=" + encodeURIComponent(urlAtual);
-                window.open(linkExterno, "_system");
+                const link = document.createElement('a');
+                link.href = window.location.href; // Aponta para a mesma página
+                link.target = '_blank'; // Força nova aba/navegador externo
+                document.body.appendChild(link);
+                link.click(); // Simula o toque do dedo do usuário
+                document.body.removeChild(link);
                 return;
             }
 
