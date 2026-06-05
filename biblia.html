@@ -31,11 +31,7 @@
         }
 
         body {
-            background: var(--bg-deep);
-            background-image:
-                radial-gradient(ellipse at 50% 0%, rgba(226, 176, 74, 0.06) 0%, transparent 55%),
-                radial-gradient(ellipse at 20% 80%, rgba(91, 140, 201, 0.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(226, 176, 74, 0.04) 0%, transparent 50%);
+            background: #1C1C1C; /* Cor escura , estática e super leve */
             font-family: var(--font-main);
             color: var(--text);
             padding-bottom: 40px;
@@ -277,13 +273,13 @@
                 transform: rotateX(-90deg) translateZ(19px);
             }
             .grade-livros {
-                grid-template-columns: repeat(3, 1fr) !important;
+                grid-template-columns: repeat(4, 1fr) !important; /* Aumentado para 4 colunas no mobile por causa do nome curto */
                 gap: 6px !important;
             }
             .botao-livro {
-                padding: 10px 3px !important;
-                font-size: 0.7rem !important;
-                border-radius: 10px !important;
+                padding: 10px 2px !important;
+                font-size: 0.75rem !important;
+                border-radius: 8px !important;
             }
             .testamento-titulo {
                 font-size: 0.95rem !important;
@@ -308,13 +304,13 @@
         }
         @media (min-width: 601px) and (max-width: 1024px) {
             .grade-livros {
-                grid-template-columns: repeat(4, 1fr) !important;
+                grid-template-columns: repeat(6, 1fr) !important;
             }
         }
         @media (min-width: 1025px) {
             .grade-livros {
-                grid-template-columns: repeat(6, 1fr) !important;
-                gap: 10px !important;
+                grid-template-columns: repeat(9, 1fr) !important; /* Mais colunas no PC já que está abreviado */
+                gap: 8px !important;
             }
             .container {
                 max-width: 920px;
@@ -349,23 +345,21 @@
         /* ============ GRADE DE LIVROS ============ */
         .grade-livros {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(7, 1fr);
             gap: 8px;
             margin-bottom: 22px;
         }
         .botao-livro {
-            background: var(--blue-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: #141f32;
             border: 1px solid var(--border-glass);
             color: #d5cebc;
-            padding: 13px 6px;
+            padding: 11px 4px;
             border-radius: var(--radius-sm);
-            font-size: 0.73rem;
-            font-weight: 600;
+            font-size: 0.8rem;
+            font-weight: 700;
             text-align: center;
             cursor: pointer;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35),
                 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
@@ -444,7 +438,7 @@
             transition: all 0.4s ease;
         }
         .livro-destaque h2 {
-            font-size: 1.35rem;
+            font-size: 1.5rem; /* Aumentado um pouco */
             font-weight: 700;
             letter-spacing: 0.5px;
             color: var(--text-bright);
@@ -456,7 +450,7 @@
             background: rgba(0, 0, 0, 0.35);
             padding: 8px 18px;
             border-radius: var(--radius-xl);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             letter-spacing: 0.6px;
             border: 1px solid rgba(226, 176, 74, 0.3);
         }
@@ -527,7 +521,7 @@
             flex: 1;
             margin: 0 6px;
             box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.5);
-            font-size: 0.85rem;
+            font-size: 0.95rem; /* Fonte do seletor aumentada */
             font-weight: 600;
             cursor: pointer;
             font-family: var(--font-main);
@@ -547,18 +541,18 @@
                 0 0 18px rgba(226, 176, 74, 0.3);
         }
 
-        /* ============ VERSÍCULOS ============ */
+        /* ============ VERSÍCULOS (FONTE MAIS AUMENTADA) ============ */
         .verso {
             background: rgba(16, 24, 38, 0.65);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            margin: 10px 0;
-            padding: 18px 20px;
+            margin: 14px 0;
+            padding: 22px 24px;
             border-radius: var(--radius-sm);
             border-left: 4px solid var(--gold);
-            line-height: 1.7;
-            font-size: 0.95rem;
-            letter-spacing: 0.2px;
+            line-height: 1.9;            /* Linha um pouco mais espaçada para a fonte maior */
+            font-size: 1.35rem;          /* TAMANHO DA LETRA AUMENTADO */
+            letter-spacing: 0.3px;
             box-shadow: 0 5px 18px rgba(0, 0, 0, 0.35),
                 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
             transition: all 0.3s ease;
@@ -587,8 +581,8 @@
         }
         .verso b {
             color: #fad46b;
-            margin-right: 10px;
-            font-size: 1.05rem;
+            margin-right: 12px;
+            font-size: 1.45rem;          /* Número do versículo aumentado */
             font-weight: 700;
             text-shadow: 0 0 12px rgba(250, 212, 107, 0.4);
             letter-spacing: 0.5px;
@@ -604,7 +598,7 @@
             padding: 40px 20px;
             color: #8a9bb5;
             font-style: italic;
-            font-size: 1rem;
+            font-size: 1.1rem;
             letter-spacing: 0.5px;
             animation: pulsarTexto 2s ease-in-out infinite;
         }
@@ -669,12 +663,10 @@
 </head>
 <body>
 
-    <!-- Partículas de fundo -->
     <div class="particulas-bg" id="particulasBg" aria-hidden="true"></div>
 
     <header>
         <div class="header-left">
-            <!-- Cubo 3D -->
             <div class="cubo-3d-wrapper" title="Clique para girar o cubo" onclick="this.querySelector('.cubo-3d').style.animationPlayState='running'; setTimeout(()=>{this.querySelector('.cubo-3d').style.animationPlayState='';},3000);">
                 <div class="cubo-3d">
                     <div class="face-cubo face-frente">📖</div>
@@ -691,127 +683,104 @@
     </header>
 
     <div class="container">
-        <!-- Seção de livros do Antigo Testamento -->
         <div class="testamento-titulo">📜 ANTIGO TESTAMENTO</div>
         <div class="grade-livros" id="botoesVT"></div>
 
-        <!-- Seção de livros do Novo Testamento -->
         <div class="testamento-titulo">✝️ NOVO TESTAMENTO</div>
         <div class="grade-livros" id="botoesNT"></div>
 
-        <!-- Destaque do livro atual -->
         <div class="livro-destaque">
             <h2 id="nomeLivroAtual">Gênesis</h2>
             <span id="infoCapitulo">Cap. 1</span>
         </div>
 
-        <!-- Barra de navegação de capítulos -->
         <div class="barra-capitulo">
             <button id="btnAnterior" class="btn-nav ripple" onclick="mudarCapitulo(-1)">◀</button>
             <select id="selectCapituloTopo" onchange="aoMudarCapituloTopo()"></select>
             <button id="btnProximo" class="btn-nav ripple" onclick="mudarCapitulo(1)">▶</button>
         </div>
 
-        <!-- Conteúdo dos versículos -->
         <div id="conteudo">
             <div class="loading">Carregando a Palavra de Deus...</div>
         </div>
     </div>
 
-    <script>
+   <script>
         "use strict";
 
-        // ============ GERAR PARTÍCULAS DE FUNDO ============
-        (function gerarParticulas() {
-            const container = document.getElementById('particulasBg');
-            const numParticulas = 35;
-            for (let i = 0; i < numParticulas; i++) {
-                const p = document.createElement('div');
-                p.classList.add('particula');
-                const size = Math.random() * 3.5 + 1.5;
-                p.style.width = size + 'px';
-                p.style.height = size + 'px';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDuration = (Math.random() * 18 + 10) + 's';
-                p.style.animationDelay = (Math.random() * 15) + 's';
-                p.style.setProperty('--brilho', Math.random() * 0.5 + 0.3);
-                container.appendChild(p);
-            }
-        })();
-
-        // ============ LÓGICA DA BÍBLIA (MANTIDA) ============
+        // ============ LÓGICA DA BÍBLIA (Nomes dos botões abreviados) ============
         let BIBLIA_DADOS = null;
         let parteCarregada = 0;
         let livroAtual = 'gn';
         let capituloAtual = 1;
 
         const LIVROS_API = {
-            'gn': { nome: "Gênesis", capitulos: 50, testament: "VT" },
-            'ex': { nome: "Êxodo", capitulos: 40, testament: "VT" },
-            'lv': { nome: "Levítico", capitulos: 27, testament: "VT" },
-            'nm': { nome: "Números", capitulos: 36, testament: "VT" },
-            'dt': { nome: "Deuteronômio", capitulos: 34, testament: "VT" },
-            'js': { nome: "Josué", capitulos: 24, testament: "VT" },
-            'jz': { nome: "Juízes", capitulos: 21, testament: "VT" },
-            'rt': { nome: "Rute", capitulos: 4, testament: "VT" },
-            '1sm': { nome: "1 Samuel", capitulos: 31, testament: "VT" },
-            '2sm': { nome: "2 Samuel", capitulos: 24, testament: "VT" },
-            '1rs': { nome: "1 Reis", capitulos: 22, testament: "VT" },
-            '2rs': { nome: "2 Reis", capitulos: 25, testament: "VT" },
-            '1cr': { nome: "1 Crônicas", capitulos: 29, testament: "VT" },
-            '2cr': { nome: "2 Crônicas", capitulos: 36, testament: "VT" },
-            'ed': { nome: "Esdras", capitulos: 10, testament: "VT" },
-            'ne': { nome: "Neemias", capitulos: 13, testament: "VT" },
-            'et': { nome: "Ester", capitulos: 10, testament: "VT" },
-            'jó': { nome: "Jó", capitulos: 42, testament: "VT" },
-            'sl': { nome: "Salmos", capitulos: 150, testament: "VT" },
-            'pv': { nome: "Provérbios", capitulos: 31, testament: "VT" },
-            'ec': { nome: "Eclesiastes", capitulos: 12, testament: "VT" },
-            'ct': { nome: "Cânticos", capitulos: 8, testament: "VT" },
-            'is': { nome: "Isaías", capitulos: 66, testament: "VT" },
-            'jr': { nome: "Jeremias", capitulos: 52, testament: "VT" },
-            'lm': { nome: "Lamentações", capitulos: 5, testament: "VT" },
-            'ez': { nome: "Ezequiel", capitulos: 48, testament: "VT" },
-            'dn': { nome: "Daniel", capitulos: 12, testament: "VT" },
-            'os': { nome: "Oseias", capitulos: 14, testament: "VT" },
-            'jl': { nome: "Joel", capitulos: 3, testament: "VT" },
-            'am': { nome: "Amós", capitulos: 9, testament: "VT" },
-            'ob': { nome: "Obadias", capitulos: 1, testament: "VT" },
-            'jn': { nome: "Jonas", capitulos: 4, testament: "VT" },
-            'mq': { nome: "Miqueias", capitulos: 7, testament: "VT" },
-            'na': { nome: "Naum", capitulos: 3, testament: "VT" },
-            'hc': { nome: "Habacuque", capitulos: 3, testament: "VT" },
-            'sf': { nome: "Sofonias", capitulos: 3, testament: "VT" },
-            'ag': { nome: "Ageu", capitulos: 2, testament: "VT" },
-            'zc': { nome: "Zacarias", capitulos: 14, testament: "VT" },
-            'ml': { nome: "Malaquias", capitulos: 4, testament: "VT" },
-            'mt': { nome: "Mateus", capitulos: 28, testament: "NT" },
-            'mc': { nome: "Marcos", capitulos: 16, testament: "NT" },
-            'lc': { nome: "Lucas", capitulos: 24, testament: "NT" },
-            'jo': { nome: "João", capitulos: 21, testament: "NT" },
-            'at': { nome: "Atos", capitulos: 28, testament: "NT" },
-            'rm': { nome: "Romanos", capitulos: 16, testament: "NT" },
-            '1co': { nome: "1 Coríntios", capitulos: 16, testament: "NT" },
-            '2co': { nome: "2 Coríntios", capitulos: 13, testament: "NT" },
-            'gl': { nome: "Gálatas", capitulos: 6, testament: "NT" },
-            'ef': { nome: "Efésios", capitulos: 6, testament: "NT" },
-            'fp': { nome: "Filipenses", capitulos: 4, testament: "NT" },
-            'cl': { nome: "Colossenses", capitulos: 4, testament: "NT" },
-            '1ts': { nome: "1 Tessalonicenses", capitulos: 5, testament: "NT" },
-            '2ts': { nome: "2 Tessalonicenses", capitulos: 3, testament: "NT" },
-            '1tm': { nome: "1 Timóteo", capitulos: 6, testament: "NT" },
-            '2tm': { nome: "2 Timóteo", capitulos: 4, testament: "NT" },
-            'tt': { nome: "Tito", capitulos: 3, testament: "NT" },
-            'fm': { nome: "Filemom", capitulos: 1, testament: "NT" },
-            'hb': { nome: "Hebreus", capitulos: 13, testament: "NT" },
-            'tg': { nome: "Tiago", capitulos: 5, testament: "NT" },
-            '1pe': { nome: "1 Pedro", capitulos: 5, testament: "NT" },
-            '2pe': { nome: "2 Pedro", capitulos: 3, testament: "NT" },
-            '1jo': { nome: "1 João", capitulos: 5, testament: "NT" },
-            '2jo': { nome: "2 João", capitulos: 1, testament: "NT" },
-            '3jo': { nome: "3 João", capitulos: 1, testament: "NT" },
-            'jd': { nome: "Judas", capitulos: 1, testament: "NT" },
-            'ap': { nome: "Apocalipse", capitulos: 22, testament: "NT" }
+            'gn': { nome: "Gênesis", abrev: "GENE", capitulos: 50, testament: "VT" },
+            'ex': { nome: "Êxodo", abrev: "EXOD", capitulos: 40, testament: "VT" },
+            'lv': { nome: "Levítico", abrev: "LEVI", capitulos: 27, testament: "VT" },
+            'nm': { nome: "Números", abrev: "NUME", capitulos: 36, testament: "VT" },
+            'dt': { nome: "Deuteronômio", abrev: "DEUT", capitulos: 34, testament: "VT" },
+            'js': { nome: "Josué", abrev: "JOSU", capitulos: 24, testament: "VT" },
+            'jz': { nome: "Juízes", abrev: "JUIZ", capitulos: 21, testament: "VT" },
+            'rt': { nome: "Rute", abrev: "RUTE", capitulos: 4, testament: "VT" },
+            '1sm': { nome: "1 Samuel", abrev: "1SAM", capitulos: 31, testament: "VT" },
+            '2sm': { nome: "2 Samuel", abrev: "2SAM", capitulos: 24, testament: "VT" },
+            '1rs': { nome: "1 Reis", abrev: "1REI", capitulos: 22, testament: "VT" },
+            '2rs': { nome: "2 Reis", abrev: "2REI", capitulos: 25, testament: "VT" },
+            '1cr': { nome: "1 Crônicas", abrev: "1CRO", capitulos: 29, testament: "VT" },
+            '2cr': { nome: "2 Crônicas", abrev: "2CRO", capitulos: 36, testament: "VT" },
+            'ed': { nome: "Esdras", abrev: "ESDR", capitulos: 10, testament: "VT" },
+            'ne': { nome: "Neemias", abrev: "NEEM", capitulos: 13, testament: "VT" },
+            'et': { nome: "Ester", abrev: "ESTE", capitulos: 10, testament: "VT" },
+            'jó': { nome: "Jó", abrev: "JÓ  ", capitulos: 42, testament: "VT" },
+            'sl': { nome: "Salmos", abrev: "SALM", capitulos: 150, testament: "VT" },
+            'pv': { nome: "Provérbios", abrev: "PROV", capitulos: 31, testament: "VT" },
+            'ec': { nome: "Eclesiastes", abrev: "ECLE", capitulos: 12, testament: "VT" },
+            'ct': { nome: "Cânticos", abrev: "CANT", capitulos: 8, testament: "VT" },
+            'is': { nome: "Isaías", abrev: "ISAI", capitulos: 66, testament: "VT" },
+            'jr': { nome: "Jeremias", abrev: "JERE", capitulos: 52, testament: "VT" },
+            'lm': { nome: "Lamentações", abrev: "LAME", capitulos: 5, testament: "VT" },
+            'ez': { nome: "Ezequiel", abrev: "EZEQ", capitulos: 48, testament: "VT" },
+            'dn': { nome: "Daniel", abrev: "DANI", capitulos: 12, testament: "VT" },
+            'os': { nome: "Oseias", abrev: "OSEI", capitulos: 14, testament: "VT" },
+            'jl': { nome: "Joel", abrev: "JOEL", capitulos: 3, testament: "VT" },
+            'am': { nome: "Amós", abrev: "AMÓS", capitulos: 9, testament: "VT" },
+            'ob': { nome: "Obadias", abrev: "OBAD", capitulos: 1, testament: "VT" },
+            'jn': { nome: "Jonas", abrev: "JONA", capitulos: 4, testament: "VT" },
+            'mq': { nome: "Miqueias", abrev: "MIQU", capitulos: 7, testament: "VT" },
+            'na': { nome: "Naum", abrev: "NAUM", capitulos: 3, testament: "VT" },
+            'hc': { nome: "Habacuque", abrev: "HABA", capitulos: 3, testament: "VT" },
+            'sf': { nome: "Sofonias", abrev: "SOFO", capitulos: 3, testament: "VT" },
+            'ag': { nome: "Ageu", abrev: "AGEU", capitulos: 2, testament: "VT" },
+            'zc': { nome: "Zacarias", abrev: "ZACA", capitulos: 14, testament: "VT" },
+            'ml': { nome: "Malaquias", abrev: "MALA", capitulos: 4, testament: "VT" },
+            'mt': { nome: "Mateus", abrev: "MATE", capitulos: 28, testament: "NT" },
+            'mc': { nome: "Marcos", abrev: "MARC", capitulos: 16, testament: "NT" },
+            'lc': { nome: "Lucas", abrev: "LUCA", capitulos: 24, testament: "NT" },
+            'jo': { nome: "João", abrev: "JOÃO", capitulos: 21, testament: "NT" },
+            'at': { nome: "Atos", abrev: "ATOS", capitulos: 28, testament: "NT" },
+            'rm': { nome: "Romanos", abrev: "ROMA", capitulos: 16, testament: "NT" },
+            '1co': { nome: "1 Coríntios", abrev: "1COR", capitulos: 16, testament: "NT" },
+            '2co': { nome: "2 Coríntios", abrev: "2COR", capitulos: 13, testament: "NT" },
+            'gl': { nome: "Gálatas", abrev: "GALA", capitulos: 6, testament: "NT" },
+            'ef': { nome: "Efésios", abrev: "EFES", capitulos: 6, testament: "NT" },
+            'fp': { nome: "Filipenses", abrev: "FILI", capitulos: 4, testament: "NT" },
+            'cl': { nome: "Colossenses", abrev: "COLO", capitulos: 4, testament: "NT" },
+            '1ts': { nome: "1 Tessalonicenses", abrev: "1TES", capitulos: 5, testament: "NT" },
+            '2ts': { nome: "2 Tessalonicenses", abrev: "2TES", capitulos: 3, testament: "NT" },
+            '1tm': { nome: "1 Timóteo", abrev: "1TIM", capitulos: 6, testament: "NT" },
+            '2tm': { nome: "2 Timóteo", abrev: "2TIM", capitulos: 4, testament: "NT" },
+            'tt': { nome: "Tito", abrev: "TITO", capitulos: 3, testament: "NT" },
+            'fm': { nome: "Filemom", abrev: "FILE", capitulos: 1, testament: "NT" },
+            'hb': { nome: "Hebreus", abrev: "HEBR", capitulos: 13, testament: "NT" },
+            'tg': { nome: "Tiago", abrev: "TIAG", capitulos: 5, testament: "NT" },
+            '1pe': { nome: "1 Pedro", abrev: "1PED", capitulos: 5, testament: "NT" },
+            '2pe': { nome: "2 Pedro", abrev: "2PED", capitulos: 3, testament: "NT" },
+            '1jo': { nome: "1 João", abrev: "1JOA", capitulos: 5, testament: "NT" },
+            '2jo': { nome: "2 João", abrev: "2JOA", capitulos: 1, testament: "NT" },
+            '3jo': { nome: "3 João", abrev: "3JOA", capitulos: 1, testament: "NT" },
+            'jd': { nome: "Judas", abrev: "JUDA", capitulos: 1, testament: "NT" },
+            'ap': { nome: "Apocalipse", abrev: "APOC", capitulos: 22, testament: "NT" }
         };
 
         const DISTRIBUICAO_PARTES = {
@@ -827,72 +796,14 @@
         };
 
         const LIVRO_PARA_NOME_JSON = {
-            'gn': 'Gn',
-            'ex': 'Ex',
-            'lv': 'Lv',
-            'nm': 'Nm',
-            'dt': 'Dt',
-            'js': 'Js',
-            'jz': 'Jz',
-            'rt': 'Rt',
-            '1sm': '1Sm',
-            '2sm': '2Sm',
-            '1rs': '1Rs',
-            '2rs': '2Rs',
-            '1cr': '1Cr',
-            '2cr': '2Cr',
-            'ed': 'Ed',
-            'ne': 'Ne',
-            'et': 'Et',
-            'jó': 'Jó',
-            'sl': 'Sl',
-            'pv': 'Pv',
-            'ec': 'Ec',
-            'ct': 'Ct',
-            'is': 'Is',
-            'jr': 'Jr',
-            'lm': 'Lm',
-            'ez': 'Ez',
-            'dn': 'Dn',
-            'os': 'Os',
-            'jl': 'Jl',
-            'am': 'Am',
-            'ob': 'Ob',
-            'jn': 'Jn',
-            'mq': 'Mq',
-            'na': 'Na',
-            'hc': 'Hc',
-            'sf': 'Sf',
-            'ag': 'Ag',
-            'zc': 'Zc',
-            'ml': 'Ml',
-            'mt': 'Mt',
-            'mc': 'Mc',
-            'lc': 'Lc',
-            'jo': 'Jo',
-            'at': 'At',
-            'rm': 'Rm',
-            '1co': '1Co',
-            '2co': '2Co',
-            'gl': 'Gl',
-            'ef': 'Ef',
-            'fp': 'Fp',
-            'cl': 'Cl',
-            '1ts': '1Ts',
-            '2ts': '2Ts',
-            '1tm': '1Tm',
-            '2tm': '2Tm',
-            'tt': 'Tt',
-            'fm': 'Fm',
-            'hb': 'Hb',
-            'tg': 'Tg',
-            '1pe': '1Pe',
-            '2pe': '2Pe',
-            '1jo': '1Jo',
-            '2jo': '2Jo',
-            '3jo': '3Jo',
-            'jd': 'Jd',
-            'ap': 'Ap'
+            'gn': 'Gn', 'ex': 'Ex', 'lv': 'Lv', 'nm': 'Nm', 'dt': 'Dt', 'js': 'Js', 'jz': 'Jz', 'rt': 'Rt', '1sm': '1Sm',
+            '2sm': '2Sm', '1rs': '1Rs', '2rs': '2Rs', '1cr': '1Cr', '2cr': '2Cr', 'ed': 'Ed', 'ne': 'Ne', 'et': 'Et',
+            'jó': 'Jó', 'sl': 'Sl', 'pv': 'Pv', 'ec': 'Ec', 'ct': 'Ct', 'is': 'Is', 'jr': 'Jr', 'lm': 'Lm', 'ez': 'Ez',
+            'dn': 'Dn', 'os': 'Os', 'jl': 'Jl', 'am': 'Am', 'ob': 'Ob', 'jn': 'Jn', 'mq': 'Mq', 'na': 'Na', 'hc': 'Hc',
+            'sf': 'Sf', 'ag': 'Ag', 'zc': 'Zc', 'ml': 'Ml', 'mt': 'Mt', 'mc': 'Mc', 'lc': 'Lc', 'jo': 'Jo', 'at': 'At',
+            'rm': 'Rm', '1co': '1Co', '2co': '2Co', 'gl': 'Gl', 'ef': 'Ef', 'fp': 'Fp', 'cl': 'Cl', '1ts': '1Ts',
+            '2ts': '2Ts', '1tm': '1Tm', '2tm': '2Tm', 'tt': 'Tt', 'fm': 'Fm', 'hb': 'Hb', 'tg': 'Tg', '1pe': '1Pe',
+            '2pe': '2Pe', '1jo': '1Jo', '2jo': '2Jo', '3jo': '3Jo', 'jd': 'Jd', 'ap': 'Ap'
         };
 
         const LIVRO_PARA_PARTE = {};
@@ -952,9 +863,19 @@
 
             filtrados.sort((a, b) => a.versiculo - b.versiculo);
 
-            container.innerHTML = filtrados.map(v => `
-                <div class="verso"><span><b>${v.versiculo}.</b> ${v.texto}</span></div>
-            `).join('');
+            // Tratamento rigoroso de caracteres especiais para o clique funcionar perfeitamente
+            container.innerHTML = filtrados.map(v => {
+                const textoLimpo = v.texto.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, " ").replace(/\r/g, "");
+                return `
+                    <div class="verso" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;">
+                        <span><b>${v.versiculo}.</b> ${v.texto}</span>
+                        <button class="btn-nav ripple" 
+                                style="width: 38px; height: 38px; font-size: 1rem; margin-top: 2px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;" 
+                                onclick="falarVersiculo('${textoLimpo}', this)" 
+                                title="Ouvir versículo">🔊</button>
+                    </div>
+                `;
+            }).join('');
 
             document.getElementById('nomeLivroAtual').textContent = LIVROS_API[livroAtual].nome;
             document.getElementById('infoCapitulo').textContent = `Cap. ${capituloAtual}`;
@@ -967,12 +888,18 @@
         }
 
         window.mudarCapitulo = (dir) => {
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
             capituloAtual += dir;
             document.getElementById('selectCapituloTopo').value = capituloAtual;
             renderizarVersiculos();
         };
 
         window.aoMudarCapituloTopo = () => {
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
             capituloAtual = parseInt(document.getElementById('selectCapituloTopo').value);
             renderizarVersiculos();
         };
@@ -996,9 +923,13 @@
             Object.keys(LIVROS_API).forEach(key => {
                 const btn = document.createElement('div');
                 btn.className = 'botao-livro ripple';
-                btn.textContent = LIVROS_API[key].nome;
+                btn.textContent = LIVROS_API[key].abrev;
+                btn.title = LIVROS_API[key].nome;
                 btn.dataset.id = key;
                 btn.onclick = async () => {
+                    if (window.speechSynthesis) {
+                        window.speechSynthesis.cancel();
+                    }
                     livroAtual = key;
                     capituloAtual = 1;
                     montarSelect();
@@ -1013,7 +944,62 @@
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
 
+       // ============ FUNÇÃO DE IA DE VOZ INTELIGENTE E SEM ALERTAS ============
+        let audioPrevio = null;
+
+        window.falarVersiculo = (texto, botao) => {
+            // Verifica se o navegador bloqueou o sistema de voz silenciosamente
+            if (!window.speechSynthesis) {
+                console.log("Leitura de voz indisponível neste navegador.");
+                return;
+            }
+
+            // Se clicar no mesmo botão que já está falando, cancela e para tudo
+            if (window.speechSynthesis.speaking && audioPrevio === botao) {
+                window.speechSynthesis.cancel();
+                botao.textContent = "🔊";
+                audioPrevio = null;
+                return;
+            }
+
+            // Se outro versículo estava sendo lido, interrompe para começar o novo
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                if (audioPrevio) audioPrevio.textContent = "🔊";
+            }
+
+            const mensagem = new SpeechSynthesisUtterance(texto);
+            mensagem.lang = 'pt-BR';
+            mensagem.rate = 1.0; 
+
+            // Monitora quando a voz realmente começa a sair
+            mensagem.onstart = () => {
+                botao.textContent = "🛑";
+                audioPrevio = botao;
+            };
+
+            // Monitora quando a leitura acaba sozinha
+            mensagem.onend = () => {
+                botao.textContent = "🔊";
+                if (audioPrevio === botao) audioPrevio = null;
+            };
+
+            // Trata erros de bloqueio sem travar a tela com alertas
+            mensagem.onerror = () => {
+                botao.textContent = "🔊";
+                if (audioPrevio === botao) audioPrevio = null;
+                window.speechSynthesis.cancel();
+            };
+
+            // Inicia a reprodução
+            window.speechSynthesis.speak(mensagem);
+
+            // Modificação visual preventiva
+            botao.textContent = "🛑";
+            audioPrevio = botao;
+        };
+
         window.onload = inicializar;
-    </script>
+</script>
 </body>
 </html>
