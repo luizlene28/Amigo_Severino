@@ -943,21 +943,23 @@
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
 
-        // ============ FUNÇÃO DE IA DE VOZ - PLANO B (DIRECIONA PARA O CHROME SE FOR APK) ============
+       // ============ FUNÇÃO DE IA DE VOZ - PLANO B (REDIRECIONAMENTO SEGURO) ============
         let audioPrevio = null;
 
         window.falarVersiculo = (texto, botao) => {
-            // Detecta com precisão se o site está rodando preso na janela "muda" do Kodular
+            // Detecta se o site está rodando preso na WebView limitada do Kodular
             const esWebview = navigator.userAgent.includes("wv") || (navigator.userAgent.includes("Android") && !navigator.userAgent.includes("Chrome/"));
 
+            // SE ESTIVER NO APK DO KODULAR: Abre o link pelo navegador padrão de forma limpa
             if (esWebview) {
                 const urlAtual = window.location.href;
-                // Executa a Intent Android para forçar o sistema a abrir o link diretamente no navegador Chrome de fora do app
-                window.open("intent://" + urlAtual.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end", "_blank");
+                
+                // Abre o link normal no navegador externo sem usar "intent://", evitando o erro no Kodular
+                window.open(urlAtual, "_blank");
                 return;
             }
 
-            // SE ESTIVER NO NAVEGADOR NORMAL DO CELULAR
+            // SE ESTIVER NO NAVEGADOR NORMAL DO CELULAR: Roda o áudio direto na página
             if (!window.speechSynthesis) return;
 
             if (window.speechSynthesis.speaking && audioPrevio === botao) {
@@ -985,6 +987,17 @@
                 botao.textContent = "🔊";
                 if (audioPrevio === botao) audioPrevio = null;
             };
+
+            mensagem.onerror = () => {
+                botao.textContent = "🔊";
+                if (audioPrevio === botao) audioPrevio = null;
+                window.speechSynthesis.cancel();
+            };
+
+            window.speechSynthesis.speak(mensagem);
+            botao.textContent = "🛑";
+            audioPrevio = botao;
+        };
 
             mensagem.onerror = () => {
                 botao.textContent = "🔊";
