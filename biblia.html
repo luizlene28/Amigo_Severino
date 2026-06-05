@@ -31,7 +31,7 @@
         }
 
         body {
-            background: #1C1C1C; /* Cor escura , estática e super leve */
+            background: #1C1C1C; /* Mantida sua cor escura, estática e super leve */
             font-family: var(--font-main);
             color: var(--text);
             padding-bottom: 40px;
@@ -61,26 +61,12 @@
             filter: blur(1px);
         }
         @keyframes flutuar {
-            0% {
-                transform: translateY(105vh) scale(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            30% {
-                opacity: 0.3;
-            }
-            60% {
-                opacity: 0.15;
-            }
-            90% {
-                opacity: 0.35;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1.2);
-                opacity: 0;
-            }
+            0% { transform: translateY(105vh) scale(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            30% { opacity: 0.3; }
+            60% { opacity: 0.15; }
+            90% { opacity: 0.35; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
         /* ============ HEADER COM CUBO 3D ============ */
@@ -97,8 +83,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6),
-                0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
             gap: 14px;
             flex-wrap: wrap;
         }
@@ -141,12 +126,8 @@
             transform: rotateX(-25deg) rotateY(35deg) scale(0.9);
         }
         @keyframes girarCubo {
-            0% {
-                transform: rotateX(-20deg) rotateY(0deg);
-            }
-            100% {
-                transform: rotateX(-20deg) rotateY(360deg);
-            }
+            0% { transform: rotateX(-20deg) rotateY(0deg); }
+            100% { transform: rotateX(-20deg) rotateY(360deg); }
         }
         .face-cubo {
             position: absolute;
@@ -160,37 +141,18 @@
             font-size: 1.5rem;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            box-shadow: 0 0 18px rgba(226, 176, 74, 0.35) inset,
-                0 4px 15px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 18px rgba(226, 176, 74, 0.35) inset, 0 4px 15px rgba(0, 0, 0, 0.4);
             font-weight: bold;
             color: #f5d78c;
             text-shadow: 0 0 10px rgba(245, 215, 140, 0.6);
             transition: all 0.3s ease;
         }
-        .face-frente {
-            background: rgba(30, 45, 70, 0.7);
-            transform: translateZ(25px);
-        }
-        .face-tras {
-            background: rgba(25, 38, 58, 0.7);
-            transform: rotateY(180deg) translateZ(25px);
-        }
-        .face-direita {
-            background: rgba(28, 42, 65, 0.7);
-            transform: rotateY(90deg) translateZ(25px);
-        }
-        .face-esquerda {
-            background: rgba(32, 48, 72, 0.7);
-            transform: rotateY(-90deg) translateZ(25px);
-        }
-        .face-topo {
-            background: rgba(35, 52, 78, 0.75);
-            transform: rotateX(90deg) translateZ(25px);
-        }
-        .face-base {
-            background: rgba(22, 34, 52, 0.7);
-            transform: rotateX(-90deg) translateZ(25px);
-        }
+        .face-frente { background: rgba(30, 45, 70, 0.7); transform: translateZ(25px); }
+        .face-tras { background: rgba(25, 38, 58, 0.7); transform: rotateY(180deg) translateZ(25px); }
+        .face-direita { background: rgba(28, 42, 65, 0.7); transform: rotateY(90deg) translateZ(25px); }
+        .face-esquerda { background: rgba(32, 48, 72, 0.7); transform: rotateY(-90deg) translateZ(25px); }
+        .face-topo { background: rgba(35, 52, 78, 0.75); transform: rotateX(90deg) translateZ(25px); }
+        .face-base { background: rgba(22, 34, 52, 0.7); transform: rotateX(-90deg) translateZ(25px); }
 
         .status-indicator {
             font-size: 0.7rem;
@@ -203,26 +165,10 @@
             border-radius: var(--radius-xl);
             color: #a8d8a8;
             border: 1px solid rgba(80, 180, 80, 0.3);
-            box-shadow: 0 0 12px rgba(80, 180, 80, 0.15) inset,
-                0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 12px rgba(80, 180, 80, 0.15) inset, 0 4px 12px rgba(0, 0, 0, 0.3);
             flex-shrink: 0;
             white-space: nowrap;
             transition: all 0.4s ease;
-        }
-        .status-indicator.carregando {
-            color: #f5d78c;
-            border-color: rgba(226, 176, 74, 0.4);
-            box-shadow: 0 0 16px rgba(226, 176, 74, 0.2) inset;
-            animation: pulsarStatus 1.2s ease-in-out infinite;
-        }
-        @keyframes pulsarStatus {
-            0%,
-            100% {
-                box-shadow: 0 0 10px rgba(226, 176, 74, 0.1) inset;
-            }
-            50% {
-                box-shadow: 0 0 22px rgba(226, 176, 74, 0.35) inset;
-            }
         }
 
         .container {
@@ -235,86 +181,31 @@
 
         /* ============ RESPONSIVO ============ */
         @media (max-width: 600px) {
-            .container {
-                padding: 10px 8px;
-            }
-            header {
-                padding: 14px 10px;
-                gap: 8px;
-            }
-            header .header-title {
-                font-size: 1rem;
-            }
-            .cubo-3d-wrapper {
-                width: 38px;
-                height: 38px;
-            }
-            .face-cubo {
-                width: 38px;
-                height: 38px;
-                font-size: 1.1rem;
-            }
-            .face-frente {
-                transform: translateZ(19px);
-            }
-            .face-tras {
-                transform: rotateY(180deg) translateZ(19px);
-            }
-            .face-direita {
-                transform: rotateY(90deg) translateZ(19px);
-            }
-            .face-esquerda {
-                transform: rotateY(-90deg) translateZ(19px);
-            }
-            .face-topo {
-                transform: rotateX(90deg) translateZ(19px);
-            }
-            .face-base {
-                transform: rotateX(-90deg) translateZ(19px);
-            }
-            .grade-livros {
-                grid-template-columns: repeat(4, 1fr) !important; /* Aumentado para 4 colunas no mobile por causa do nome curto */
-                gap: 6px !important;
-            }
-            .botao-livro {
-                padding: 10px 2px !important;
-                font-size: 0.75rem !important;
-                border-radius: 8px !important;
-            }
-            .testamento-titulo {
-                font-size: 0.95rem !important;
-            }
-            .livro-destaque {
-                padding: 14px !important;
-                border-radius: 12px !important;
-            }
-            .verso {
-                padding: 14px !important;
-                border-radius: 10px !important;
-            }
-            .barra-capitulo select {
-                font-size: 0.8rem !important;
-                padding: 8px !important;
-            }
-            .btn-nav {
-                width: 38px !important;
-                height: 38px !important;
-                font-size: 1rem !important;
-            }
+            .container { padding: 10px 8px; }
+            header { padding: 14px 10px; gap: 8px; }
+            header .header-title { font-size: 1rem; }
+            .cubo-3d-wrapper { width: 38px; height: 38px; }
+            .face-cubo { width: 38px; height: 38px; font-size: 1.1rem; }
+            .face-frente { transform: translateZ(19px); }
+            .face-tras { transform: rotateY(180deg) translateZ(19px); }
+            .face-direita { transform: rotateY(90deg) translateZ(19px); }
+            .face-esquerda { transform: rotateY(-90deg) translateZ(19px); }
+            .face-topo { transform: rotateX(90deg) translateZ(19px); }
+            .face-base { transform: rotateX(-90deg) translateZ(19px); }
+            .grade-livros { grid-template-columns: repeat(4, 1fr) !important; gap: 6px !important; }
+            .botao-livro { padding: 10px 2px !important; font-size: 0.75rem !important; border-radius: 8px !important; }
+            .testamento-titulo { font-size: 0.95rem !important; }
+            .livro-destaque { padding: 14px !important; border-radius: 12px !important; }
+            .verso { padding: 14px !important; border-radius: 10px !important; }
+            .barra-capitulo select { font-size: 0.8rem !important; padding: 8px !important; }
+            .btn-nav { width: 38px !important; height: 38px !important; font-size: 1rem !important; }
         }
         @media (min-width: 601px) and (max-width: 1024px) {
-            .grade-livros {
-                grid-template-columns: repeat(6, 1fr) !important;
-            }
+            .grade-livros { grid-template-columns: repeat(6, 1fr) !important; }
         }
         @media (min-width: 1025px) {
-            .grade-livros {
-                grid-template-columns: repeat(9, 1fr) !important; /* Mais colunas no PC já que está abreviado */
-                gap: 8px !important;
-            }
-            .container {
-                max-width: 920px;
-            }
+            .grade-livros { grid-template-columns: repeat(9, 1fr) !important; gap: 8px !important; }
+            .container { max-width: 920px; }
         }
 
         /* ============ TÍTULOS DE TESTAMENTO ============ */
@@ -360,8 +251,7 @@
             text-align: center;
             cursor: pointer;
             letter-spacing: 0.5px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35),
-                0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
             position: relative;
@@ -378,15 +268,11 @@
             opacity: 0;
             transition: opacity 0.4s ease;
         }
-        .botao-livro:hover::before {
-            opacity: 1;
-        }
+        .botao-livro:hover::before { opacity: 1; }
         .botao-livro:hover {
             background: rgba(40, 65, 100, 0.6);
             transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 215, 120, 0.2) inset,
-                0 0 20px rgba(226, 176, 74, 0.12);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 120, 0.2) inset, 0 0 20px rgba(226, 176, 74, 0.12);
             color: #fff;
             border-color: rgba(226, 176, 74, 0.35);
         }
@@ -400,21 +286,14 @@
             color: #fffef5;
             font-weight: 700;
             border-color: #f5d78c;
-            box-shadow: 0 0 30px rgba(226, 176, 74, 0.55),
-                0 8px 22px rgba(0, 0, 0, 0.5),
-                0 0 0 2px rgba(255, 215, 120, 0.3) inset;
+            box-shadow: 0 0 30px rgba(226, 176, 74, 0.55), 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 215, 120, 0.3) inset;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
             animation: brilharSelecionado 2s ease-in-out infinite;
             z-index: 2;
         }
         @keyframes brilharSelecionado {
-            0%,
-            100% {
-                box-shadow: 0 0 30px rgba(226, 176, 74, 0.55), 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 215, 120, 0.3) inset;
-            }
-            50% {
-                box-shadow: 0 0 45px rgba(245, 200, 70, 0.75), 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(255, 230, 150, 0.45) inset;
-            }
+            0%, 100% { box-shadow: 0 0 30px rgba(226, 176, 74, 0.55), 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 215, 120, 0.3) inset; }
+            50% { box-shadow: 0 0 45px rgba(245, 200, 70, 0.75), 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(255, 230, 150, 0.45) inset; }
         }
 
         /* ============ DESTAQUE DO LIVRO ============ */
@@ -431,14 +310,12 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
-            box-shadow: var(--shadow-gold),
-                0 10px 30px rgba(0, 0, 0, 0.45),
-                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            box-shadow: var(--shadow-gold), 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
             border: 1px solid rgba(226, 176, 74, 0.25);
             transition: all 0.4s ease;
         }
         .livro-destaque h2 {
-            font-size: 1.5rem; /* Aumentado um pouco */
+            font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: 0.5px;
             color: var(--text-bright);
@@ -467,8 +344,7 @@
             padding: 6px 6px;
             margin-bottom: 22px;
             border: 1.5px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
             gap: 6px;
         }
         .btn-nav {
@@ -482,8 +358,7 @@
             border-radius: 50%;
             font-size: 1.15rem;
             cursor: pointer;
-            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
             font-weight: bold;
             display: flex;
@@ -495,21 +370,12 @@
         .btn-nav:hover:not(:disabled) {
             background: rgba(55, 80, 120, 0.8);
             transform: scale(1.08);
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(226, 176, 74, 0.25);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 20px rgba(226, 176, 74, 0.25);
             border-color: rgba(226, 176, 74, 0.5);
             color: #fff;
         }
-        .btn-nav:active:not(:disabled) {
-            transform: scale(0.9);
-            transition: all 0.08s ease;
-        }
-        .btn-nav:disabled {
-            opacity: 0.25;
-            cursor: not-allowed;
-            box-shadow: none;
-            filter: grayscale(0.6);
-        }
+        .btn-nav:active:not(:disabled) { transform: scale(0.9); transition: all 0.08s ease; }
+        .btn-nav:disabled { opacity: 0.25; cursor: not-allowed; box-shadow: none; filter: grayscale(0.6); }
         .barra-capitulo select {
             background: rgba(10, 16, 26, 0.8);
             backdrop-filter: blur(6px);
@@ -521,7 +387,7 @@
             flex: 1;
             margin: 0 6px;
             box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.5);
-            font-size: 0.95rem; /* Fonte do seletor aumentada */
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             font-family: var(--font-main);
@@ -534,12 +400,6 @@
             padding-right: 32px;
             transition: all 0.3s ease;
         }
-        .barra-capitulo select:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.5),
-                0 0 18px rgba(226, 176, 74, 0.3);
-        }
 
         /* ============ VERSÍCULOS (FONTE MAIS AUMENTADA) ============ */
         .verso {
@@ -550,11 +410,10 @@
             padding: 22px 24px;
             border-radius: var(--radius-sm);
             border-left: 4px solid var(--gold);
-            line-height: 1.9;            /* Linha um pouco mais espaçada para a fonte maior */
-            font-size: 1.35rem;          /* TAMANHO DA LETRA AUMENTADO */
+            line-height: 1.9;
+            font-size: 1.35rem;
             letter-spacing: 0.3px;
-            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.35),
-                0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.04);
             position: relative;
@@ -573,16 +432,14 @@
         .verso:hover {
             border-left-color: #f5d78c;
             border-left-width: 5px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5),
-                0 0 22px rgba(226, 176, 74, 0.18),
-                0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 22px rgba(226, 176, 74, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
             transform: translateX(3px);
             background: rgba(20, 30, 48, 0.75);
         }
         .verso b {
             color: #fad46b;
             margin-right: 12px;
-            font-size: 1.45rem;          /* Número do versículo aumentado */
+            font-size: 1.45rem;
             font-weight: 700;
             text-shadow: 0 0 12px rgba(250, 212, 107, 0.4);
             letter-spacing: 0.5px;
@@ -602,63 +459,22 @@
             letter-spacing: 0.5px;
             animation: pulsarTexto 2s ease-in-out infinite;
         }
-        @keyframes pulsarTexto {
-            0%,
-            100% {
-                opacity: 0.5;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.9;
-                transform: scale(1.03);
-            }
-        }
-
-        #conteudo {
-            margin-top: 6px;
-        }
+        #conteudo { margin-top: 6px; }
 
         /* Scrollbar personalizada */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(226, 176, 74, 0.25);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(226, 176, 74, 0.45);
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(226, 176, 74, 0.25); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(226, 176, 74, 0.45); }
 
         /* Efeito de onda no clique (ripple) */
-        .ripple {
-            position: relative;
-            overflow: hidden;
-        }
+        .ripple { position: relative; overflow: hidden; }
         .ripple::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            padding-top: 100%;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(0);
-            opacity: 1;
-            pointer-events: none;
-            top: 50%;
-            left: 50%;
-            margin-top: -50%;
-            margin-left: -50%;
-            transition: transform 0.5s ease, opacity 0.7s ease;
+            content: ''; position: absolute; width: 100%; padding-top: 100%; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2); transform: scale(0); opacity: 1; pointer-events: none;
+            top: 50%; left: 50%; margin-top: -50%; margin-left: -50%; transition: transform 0.5s ease, opacity 0.7s ease;
         }
-        .ripple:active::after {
-            transform: scale(3);
-            opacity: 0;
-            transition: 0s;
-        }
+        .ripple:active::after { transform: scale(3); opacity: 0; transition: 0s; }
     </style>
 </head>
 <body>
@@ -784,15 +600,9 @@
         };
 
         const DISTRIBUICAO_PARTES = {
-            1: ['gn', 'ex', 'lv', 'nm', 'dt', 'js', 'jz', 'rt', '1sm', '2sm', '1rs', '2rs', '1cr', '2cr', 'ed', 'ne', 'et',
-                'jó'
-            ],
-            2: ['sl', 'pv', 'ec', 'ct', 'is', 'jr', 'lm', 'ez', 'dn', 'os', 'jl', 'am', 'ob', 'jn', 'mq', 'na', 'hc', 'sf',
-                'ag', 'zc', 'ml'
-            ],
-            3: ['mt', 'mc', 'lc', 'jo', 'at', 'rm', '1co', '2co', 'gl', 'ef', 'fp', 'cl', '1ts', '2ts', '1tm', '2tm', 'tt',
-                'fm', 'hb', 'tg', '1pe', '2pe', '1jo', '2jo', '3jo', 'jd', 'ap'
-            ]
+            1: ['gn', 'ex', 'lv', 'nm', 'dt', 'js', 'jz', 'rt', '1sm', '2sm', '1rs', '2rs', '1cr', '2cr', 'ed', 'ne', 'et', 'jó'],
+            2: ['sl', 'pv', 'ec', 'ct', 'is', 'jr', 'lm', 'ez', 'dn', 'os', 'jl', 'am', 'ob', 'jn', 'mq', 'na', 'hc', 'sf', 'ag', 'zc', 'ml'],
+            3: ['mt', 'mc', 'lc', 'jo', 'at', 'rm', '1co', '2co', 'gl', 'ef', 'fp', 'cl', '1ts', '2ts', '1tm', '2tm', 'tt', 'fm', 'hb', 'tg', '1pe', '2pe', '1jo', '2jo', '3jo', 'jd', 'ap']
         };
 
         const LIVRO_PARA_NOME_JSON = {
@@ -808,14 +618,10 @@
 
         const LIVRO_PARA_PARTE = {};
         Object.entries(DISTRIBUICAO_PARTES).forEach(([parte, livros]) => {
-            livros.forEach(livro => {
-                LIVRO_PARA_PARTE[livro] = parseInt(parte);
-            });
+            livros.forEach(livro => { LIVRO_PARA_PARTE[livro] = parseInt(parte); });
         });
 
-        function obterParteDoLivro(livro) {
-            return LIVRO_PARA_PARTE[livro] || 1;
-        }
+        function obterParteDoLivro(livro) { return LIVRO_PARA_PARTE[livro] || 1; }
 
         async function buscarDadosDaBiblia() {
             const status = document.getElementById('statusApi');
@@ -831,9 +637,7 @@
                 status.textContent = "⏳ Carregando...";
                 status.classList.add('carregando');
                 const resp = await fetch(`biblia_parte${parteNecessaria}.json`);
-
                 if (!resp.ok) throw new Error(`Erro ao carregar`);
-
                 BIBLIA_DADOS = await resp.json();
                 parteCarregada = parteNecessaria;
                 status.textContent = "📚 Bíblia Pronta";
@@ -851,16 +655,12 @@
             if (!BIBLIA_DADOS) return;
 
             const nomeNoJSON = LIVRO_PARA_NOME_JSON[livroAtual] || livroAtual;
-
-            const filtrados = BIBLIA_DADOS.filter(i =>
-                i.livro === nomeNoJSON && i.capitulo == capituloAtual
-            );
+            const filtrados = BIBLIA_DADOS.filter(i => i.livro === nomeNoJSON && i.capitulo == capituloAtual);
 
             if (filtrados.length === 0) {
                 container.innerHTML = `<div class="loading">Capítulo não encontrado.</div>`;
                 return;
             }
-
             filtrados.sort((a, b) => a.versiculo - b.versiculo);
 
             container.innerHTML = filtrados.map(v => {
@@ -878,27 +678,20 @@
 
             document.getElementById('nomeLivroAtual').textContent = LIVROS_API[livroAtual].nome;
             document.getElementById('infoCapitulo').textContent = `Cap. ${capituloAtual}`;
-
             document.getElementById('btnAnterior').disabled = capituloAtual <= 1;
-            document.getElementById('btnProximo').disabled = capituloAtual >= LIVROS_API[livroAtual]
-                .capitulos;
-            document.querySelectorAll('.botao-livro').forEach(b => b.classList.toggle('selecionado', b.dataset
-                .id === livroAtual));
+            document.getElementById('btnProximo').disabled = capituloAtual >= LIVROS_API[livroAtual].capitulos;
+            document.querySelectorAll('.botao-livro').forEach(b => b.classList.toggle('selecionado', b.dataset.id === livroAtual));
         }
 
         window.mudarCapitulo = (dir) => {
-            if (window.speechSynthesis) {
-                window.speechSynthesis.cancel();
-            }
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
             capituloAtual += dir;
             document.getElementById('selectCapituloTopo').value = capituloAtual;
             renderizarVersiculos();
         };
 
         window.aoMudarCapituloTopo = () => {
-            if (window.speechSynthesis) {
-                window.speechSynthesis.cancel();
-            }
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
             capituloAtual = parseInt(document.getElementById('selectCapituloTopo').value);
             renderizarVersiculos();
         };
@@ -908,9 +701,7 @@
             sel.innerHTML = "";
             for (let i = 1; i <= LIVROS_API[livroAtual].capitulos; i++) {
                 const o = document.createElement('option');
-                o.value = i;
-                o.textContent = `Cap. ${i}`;
-                sel.appendChild(o);
+                o.value = i; o.textContent = `Cap. ${i}`; sel.appendChild(o);
             }
             sel.value = capituloAtual;
         }
@@ -926,14 +717,9 @@
                 btn.title = LIVROS_API[key].nome;
                 btn.dataset.id = key;
                 btn.onclick = async () => {
-                    if (window.speechSynthesis) {
-                        window.speechSynthesis.cancel();
-                    }
-                    livroAtual = key;
-                    capituloAtual = 1;
-                    montarSelect();
-                    document.getElementById('conteudo').innerHTML =
-                        '<div class="loading">Carregando...</div>';
+                    if (window.speechSynthesis) window.speechSynthesis.cancel();
+                    livroAtual = key; capituloAtual = 1; montarSelect();
+                    document.getElementById('conteudo').innerHTML = '<div class="loading">Carregando...</div>';
                     if (await buscarDadosDaBiblia()) renderizarVersiculos();
                 };
                 (LIVROS_API[key].testament === "VT" ? vt : nt).appendChild(btn);
@@ -943,23 +729,20 @@
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
 
-       // ============ FUNÇÃO DE IA DE VOZ - PLANO B (REDIRECIONAMENTO SEGURO) ============
+        // ============ FUNÇÃO DE IA DE VOZ - PLANO B CORRIGIDO E SEGURO ============
         let audioPrevio = null;
 
         window.falarVersiculo = (texto, botao) => {
-            // Detecta se o site está rodando preso na WebView limitada do Kodular
+            // Detecta com precisão se está rodando dentro do aplicativo do Kodular
             const esWebview = navigator.userAgent.includes("wv") || (navigator.userAgent.includes("Android") && !navigator.userAgent.includes("Chrome/"));
 
-            // SE ESTIVER NO APK DO KODULAR: Abre o link pelo navegador padrão de forma limpa
+            // SE ESTIVER NO APK: Joga para o navegador padrão de forma direta e limpa
             if (esWebview) {
-                const urlAtual = window.location.href;
-                
-                // Abre o link normal no navegador externo sem usar "intent://", evitando o erro no Kodular
-                window.open(urlAtual, "_blank");
+                window.open(window.location.href, "_blank");
                 return;
             }
 
-            // SE ESTIVER NO NAVEGADOR NORMAL DO CELULAR: Roda o áudio direto na página
+            // SE ESTIVER NO NAVEGADOR NORMAL DO CELULAR
             if (!window.speechSynthesis) return;
 
             if (window.speechSynthesis.speaking && audioPrevio === botao) {
@@ -978,32 +761,9 @@
             mensagem.lang = 'pt-BR';
             mensagem.rate = 1.0; 
 
-            mensagem.onstart = () => {
-                botao.textContent = "🛑";
-                audioPrevio = botao;
-            };
-
-            mensagem.onend = () => {
-                botao.textContent = "🔊";
-                if (audioPrevio === botao) audioPrevio = null;
-            };
-
-            mensagem.onerror = () => {
-                botao.textContent = "🔊";
-                if (audioPrevio === botao) audioPrevio = null;
-                window.speechSynthesis.cancel();
-            };
-
-            window.speechSynthesis.speak(mensagem);
-            botao.textContent = "🛑";
-            audioPrevio = botao;
-        };
-
-            mensagem.onerror = () => {
-                botao.textContent = "🔊";
-                if (audioPrevio === botao) audioPrevio = null;
-                window.speechSynthesis.cancel();
-            };
+            mensagem.onstart = () => { botao.textContent = "🛑"; audioPrevio = botao; };
+            mensagem.onend = () => { botao.textContent = "🔊"; if (audioPrevio === botao) audioPrevio = null; };
+            mensagem.onerror = () => { botao.textContent = "🔊"; if (audioPrevio === botao) audioPrevio = null; window.speechSynthesis.cancel(); };
 
             window.speechSynthesis.speak(mensagem);
             botao.textContent = "🛑";
