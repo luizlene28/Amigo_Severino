@@ -729,16 +729,18 @@
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
 
-        // ============ FUNÇÃO DE IA DE VOZ - PLANO B CORRIGIDO E SEGURO ============
+        // ============ FUNÇÃO DE IA DE VOZ - PLANO B CORRIGIDO PARA KODULAR ============
         let audioPrevio = null;
 
         window.falarVersiculo = (texto, botao) => {
             // Detecta com precisão se está rodando dentro do aplicativo do Kodular
             const esWebview = navigator.userAgent.includes("wv") || (navigator.userAgent.includes("Android") && !navigator.userAgent.includes("Chrome/"));
 
-            // SE ESTIVER NO APK: Joga para o navegador padrão de forma direta e limpa
+            // SE ESTIVER NO APK DO KODULAR: Força a abertura no Chrome usando link de redirecionamento nativo e _system
             if (esWebview) {
-                window.open(window.location.href, "_blank");
+                const urlAtual = window.location.href;
+                const linkExterno = "https://www.google.com/url?q=" + encodeURIComponent(urlAtual);
+                window.open(linkExterno, "_system");
                 return;
             }
 
