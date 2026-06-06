@@ -729,45 +729,47 @@
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
 
-        // ============ FUNÇÃO DE IA DE VOZ TOTALMENTE INTERNA (SEM SAIR DO APP) ============
-        let audioPrevio = null;
+                // ============ FUNÇÃO DE ÁUDIO INTEGRADA COM O KODULAR ============
+        let tocandoAgora = null;
 
         window.falarVersiculo = (texto, botao) => {
-            // Se o Kodular capado travar o motor padrão, usamos um truque de fallback silencioso
-            const synth = window.speechSynthesis || window.webkitSpeechSynthesis;
-            
-            if (!synth) {
-                console.log("Motor de áudio bloqueado pela WebView do Kodular.");
-                return;
-            }
-
-            if (synth.speaking && audioPrevio === botao) {
-                synth.cancel();
-                botao.textContent = "🔊";
-                audioPrevio = null;
-                return;
-            }
-
-            if (synth.speaking) {
-                synth.cancel();
-                if (audioPrevio) audioPrevio.textContent = "🔊";
-            }
-
-            // Fallback para forçar o Android a instanciar o áudio localmente sem precisar abrir abas
-            try {
-                const mensagem = new SpeechSynthesisUtterance(texto);
-                mensagem.lang = 'pt-BR';
-                mensagem.rate = 1.0; 
-
-                mensagem.onstart = () => { botao.textContent = "🛑"; audioPrevio = botao; };
-                mensagem.onend = () => { botao.textContent = "🔊"; if (audioPrevio === botao) audioPrevio = null; };
-                mensagem.onerror = () => { botao.textContent = "🔊"; if (audioPrevio === botao) audioPrevio = null; synth.cancel(); };
-
-                synth.speak(mensagem);
-                botao.textContent = "🛑";
-                audioPrevio = botao;
-            } catch (err) {
-                console.log("Erro ao processar fala interna.");
+            // Verifica se o comando do App Inventor/Kodular existe na WebView
+            if (window.AppInventor && window.AppInventor.setWebViewString) {
+                
+                if (botao.textContent === "🛑") {
+                    // Se clicar no botão que está tocando, ele envia um texto vazio ou para o áudio
+                    window.AppInventor.setWebViewString("");
+                    botao.textContent = "🔊";
+                    tocandoAgora = null;
+                } else {
+                    // Reseta o botão anterior, se houver um tocando
+                    if (tocandoAgora) {
+                        tocandoAgora.textContent = "🔊";
+                    }
+                    
+                    // Envia o texto do versículo diretamente para o bloco do Kodular
+                    window.AppInventor.setWebViewString(texto);
+                    
+                    // Atualiza o ícone do botão para indicar que está "falando"
+                    botao.textContent = "🛑";
+                    tocandoAgora = botao;
+                }
+                
+            } else {
+                // Caso você teste no navegador do PC, ele usa o sistema padrão como teste
+                const synth = window.speechSynthesis;
+                if (synth) {
+                    if (synth.speaking) {
+                        synth.cancel();
+                        botao.textContent = "🔊";
+                        return;
+                    }
+                    const mensagem = new SpeechSynthesisUtterance(texto);
+                    mensagem.lang = 'pt-BR';
+                    mensagem.onend = () => { botao.textContent = "🔊"; };
+                    botao.textContent = "🛑";
+                    synth.speak(mensagem);
+                }
             }
         };
 
