@@ -729,7 +729,7 @@
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
        
-        // ============ FUNÇÃO DE ÁUDIO INTEGRADA COM O KODULAR (CORRIGIDA) ============
+        // ============ FUNÇÃO DE ÁUDIO INTEGRADA COM TENTATIVA DE VOZ MASCULINA ============
         let tocandoAgora = null;
 
         window.falarVersiculo = (texto, botao) => {
@@ -744,10 +744,8 @@
                         tocandoAgora.textContent = "🔊";
                     }
                     
-                    // Força uma limpeza rápida na WebViewString para o Kodular detectar a mudança
                     window.AppInventor.setWebViewString("");
                     
-                    // Envia o texto real logo em seguida
                     setTimeout(() => {
                         window.AppInventor.setWebViewString(texto);
                     }, 50);
@@ -757,6 +755,7 @@
                 }
                 
             } else {
+                // FALLBACK COM FORÇA DE VOZ MASCULINA
                 const synth = window.speechSynthesis;
                 if (synth) {
                     if (synth.speaking) {
@@ -766,6 +765,18 @@
                     }
                     const mensagem = new SpeechSynthesisUtterance(texto);
                     mensagem.lang = 'pt-BR';
+                    
+                    // Procura na biblioteca do navegador do celular se há alguma voz masculina padrão do Google
+                    const vozes = synth.getVoices();
+                    const vozMasculina = vozes.find(v => 
+                        v.lang.includes('pt') && 
+                        (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('man') || v.name.toLowerCase().includes('google'))
+                    );
+                    
+                    if (vozMasculina) {
+                        mensagem.voice = vozMasculina;
+                    }
+
                     mensagem.onend = () => { botao.textContent = "🔊"; };
                     botao.textContent = "🛑";
                     synth.speak(mensagem);
