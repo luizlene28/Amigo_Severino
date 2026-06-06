@@ -729,61 +729,66 @@
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
        
-        // ============ FUNÇÃO DE ÁUDIO INTEGRADA COM TENTATIVA DE VOZ MASCULINA ============
-        let tocandoAgora = null;
+       // ============ FUNÇÃO DE ÁUDIO 100% GRATUITA E LIVRE (SEM CARTÃO) ============
+        let audioAtual = null;
 
         window.falarVersiculo = (texto, botao) => {
-            if (window.AppInventor && window.AppInventor.setWebViewString) {
+            // Se o usuário clicar no botão que já está tocando, ele pausa o áudio
+            if (audioAtual && !audioAtual.paused && botao.textContent === "🛑") {
+                audioAtual.pause();
+                botao.textContent = "🔊";
+                return;
+            }
+
+            // Se já tiver outro áudio tocando em outro versículo, para ele antes
+            if (audioAtual) {
+                audioAtual.pause();
+                document.querySelectorAll('.verso button').forEach(b => b.textContent = "🔊");
+            }
+
+            botao.textContent = "⏳"; // Ícone de carregando
+
+            // Cria a URL da API livre do Google (puxando o idioma português do Brasil)
+            const urlAudio = "https://translate.google.com/translate_tts?ie=UTF-8&tl=pt-BR&client=tw-ob&q=" + encodeURIComponent(texto);
+
+            audioAtual = new Audio(urlAudio);
+
+            // Quando o áudio começar a tocar de verdade
+            audioAtual.onplay = () => {
+                botao.textContent = "🛑";
+            };
+
+            // Quando o áudio terminar de falar o versículo inteiro sozinho
+            audioAtual.onended = () => {
+                botao.textContent = "🔊";
+                audioAtual = null;
+            };
+
+            // REDE DE SEGURANÇA: Se a API falhar ou o usuário estiver sem internet, usa o plano B (O Kodular)
+            audioAtual.onerror = () => {
+                console.log("API Livre indisponível. Acionando voz nativa do celular...");
                 
-                if (botao.textContent === "🛑") {
+                if (window.AppInventor && window.AppInventor.setWebViewString) {
                     window.AppInventor.setWebViewString("");
-                    botao.textContent = "🔊";
-                    tocandoAgora = null;
-                } else {
-                    if (tocandoAgora) {
-                        tocandoAgora.textContent = "🔊";
-                    }
-                    
-                    window.AppInventor.setWebViewString("");
-                    
                     setTimeout(() => {
                         window.AppInventor.setWebViewString(texto);
                     }, 50);
-                    
                     botao.textContent = "🛑";
-                    tocandoAgora = botao;
+                    
+                    // Como o Kodular vai falar, usamos a nossa lógica para resetar o botão depois
+                    // usando o bloco AfterSpeaking que você já configurou!
+                    window.tocandoAgora = botao; 
+                } else {
+                    botao.textContent = "🔊";
                 }
-                
-            } else {
-                // FALLBACK COM FORÇA DE VOZ MASCULINA
-                const synth = window.speechSynthesis;
-                if (synth) {
-                    if (synth.speaking) {
-                        synth.cancel();
-                        botao.textContent = "🔊";
-                        return;
-                    }
-                    const mensagem = new SpeechSynthesisUtterance(texto);
-                    mensagem.lang = 'pt-BR';
-                    
-                    // Procura na biblioteca do navegador do celular se há alguma voz masculina padrão do Google
-                    const vozes = synth.getVoices();
-                    const vozMasculina = vozes.find(v => 
-                        v.lang.includes('pt') && 
-                        (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('man') || v.name.toLowerCase().includes('google'))
-                    );
-                    
-                    if (vozMasculina) {
-                        mensagem.voice = vozMasculina;
-                    }
+            };
 
-                    mensagem.onend = () => { botao.textContent = "🔊"; };
-                    botao.textContent = "🛑";
-                    synth.speak(mensagem);
-                }
-            }
-        };
-                
+            // Dá o play no áudio
+            audioAtual.play().catch(() => {
+                // Se o navegador bloquear o play automático inicial, dispara o erro para ir pro plano B
+                audioAtual.onerror();
+            });
+        };     
         window.onload = inicializar;
 </script>
     
