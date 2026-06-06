@@ -728,8 +728,7 @@
             montarSelect();
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
-
-                // ============ FUNÇÃO DE ÁUDIO INTEGRADA COM O KODULAR ============
+        // ============ FUNÇÃO DE ÁUDIO INTEGRADA COM O KODULAR ============
         let tocandoAgora = null;
 
         window.falarVersiculo = (texto, botao) => {
@@ -772,7 +771,7 @@
                 }
             }
         };
-
+                
         window.onload = inicializar;
 </script>
     
