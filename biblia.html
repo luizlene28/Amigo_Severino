@@ -728,34 +728,35 @@
             montarSelect();
             buscarDadosDaBiblia().then(ok => { if (ok) renderizarVersiculos(); });
         }
-        // ============ FUNÇÃO DE ÁUDIO INTEGRADA COM O KODULAR ============
+       
+        // ============ FUNÇÃO DE ÁUDIO INTEGRADA COM O KODULAR (CORRIGIDA) ============
         let tocandoAgora = null;
 
         window.falarVersiculo = (texto, botao) => {
-            // Verifica se o comando do App Inventor/Kodular existe na WebView
             if (window.AppInventor && window.AppInventor.setWebViewString) {
                 
                 if (botao.textContent === "🛑") {
-                    // Se clicar no botão que está tocando, ele envia um texto vazio ou para o áudio
                     window.AppInventor.setWebViewString("");
                     botao.textContent = "🔊";
                     tocandoAgora = null;
                 } else {
-                    // Reseta o botão anterior, se houver um tocando
                     if (tocandoAgora) {
                         tocandoAgora.textContent = "🔊";
                     }
                     
-                    // Envia o texto do versículo diretamente para o bloco do Kodular
-                    window.AppInventor.setWebViewString(texto);
+                    // Força uma limpeza rápida na WebViewString para o Kodular detectar a mudança
+                    window.AppInventor.setWebViewString("");
                     
-                    // Atualiza o ícone do botão para indicar que está "falando"
+                    // Envia o texto real logo em seguida
+                    setTimeout(() => {
+                        window.AppInventor.setWebViewString(texto);
+                    }, 50);
+                    
                     botao.textContent = "🛑";
                     tocandoAgora = botao;
                 }
                 
             } else {
-                // Caso você teste no navegador do PC, ele usa o sistema padrão como teste
                 const synth = window.speechSynthesis;
                 if (synth) {
                     if (synth.speaking) {
