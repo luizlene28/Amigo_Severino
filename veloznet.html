@@ -605,185 +605,163 @@
         <div class="footer">SEVERINO-LC • AMIGO SEVERINO INTEGRATION</div>
     </div>
 
-    <script>
-        const pointer = document.getElementById("pointer");
-        const speedText = document.getElementById("speed");
-        const speedometer = document.getElementById("speedometer");
-        const downloadEl = document.getElementById("download");
-        const uploadEl = document.getElementById("upload");
-        const pingEl = document.getElementById("ping");
-        const jitterEl = document.getElementById("jitter");
-        const networkEl = document.getElementById("network");
-        const tickMarksContainer = document.getElementById("tickMarks");
-        const numbersContainer = document.getElementById("numbers");
+   <script>
+    const pointer = document.getElementById("pointer");
+    const speedText = document.getElementById("speed");
+    const speedometer = document.getElementById("speedometer");
+    const downloadEl = document.getElementById("download");
+    const uploadEl = document.getElementById("upload");
+    const pingEl = document.getElementById("ping");
+    const jitterEl = document.getElementById("jitter");
+    const networkEl = document.getElementById("network");
+    const tickMarksContainer = document.getElementById("tickMarks");
+    const numbersContainer = document.getElementById("numbers");
 
-        let testeAtivo = false;
+    let testeAtivo = false;
 
-        function createDialMarks() {
-            const speedoWidth = speedometer.offsetWidth || 320;
-            const outerRadius = speedoWidth / 2 - 22;
-            const tickMajorLength = speedoWidth > 280 ? 16 : 12;
-            const tickMinorLength = speedoWidth > 280 ? 8 : 6;
-            const numberRadius = outerRadius - tickMajorLength - 12;
+    function createDialMarks() {
+        const speedoWidth = speedometer.offsetWidth || 320;
+        const outerRadius = speedoWidth / 2 - 22;
+        const tickMajorLength = speedoWidth > 280 ? 16 : 12;
+        const tickMinorLength = speedoWidth > 280 ? 8 : 6;
+        const numberRadius = outerRadius - tickMajorLength - 12;
 
-            tickMarksContainer.innerHTML = '';
-            numbersContainer.innerHTML = '';
+        tickMarksContainer.innerHTML = '';
+        numbersContainer.innerHTML = '';
 
-            for (let i = 0; i <= 300; i += 10) {
-                const angleDeg = -130 + (i / 300) * 260;
-                const isMajor = i % 20 === 0;
+        for (let i = 0; i <= 300; i += 10) {
+            const angleDeg = -130 + (i / 300) * 260;
+            const isMajor = i % 20 === 0;
 
-                const tick = document.createElement('div');
-                tick.className = isMajor ? 'tick major' : 'tick minor';
-                tick.style.transform = `rotate(${angleDeg}deg)`;
-                tick.style.marginTop = `-${outerRadius}px`;
-                tick.style.height = isMajor ? `${tickMajorLength}px` : `${tickMinorLength}px`;
-                tickMarksContainer.appendChild(tick);
+            const tick = document.createElement('div');
+            tick.className = isMajor ? 'tick major' : 'tick minor';
+            tick.style.transform = `rotate(${angleDeg}deg)`;
+            tick.style.marginTop = `-${outerRadius}px`;
+            tick.style.height = isMajor ? `${tickMajorLength}px` : `${tickMinorLength}px`;
+            tickMarksContainer.appendChild(tick);
 
-                if (isMajor) {
-                    const rad = (angleDeg - 90) * Math.PI / 180;
-                    const nx = numberRadius * Math.cos(rad);
-                    const ny = numberRadius * Math.sin(rad);
+            if (isMajor) {
+                const rad = (angleDeg - 90) * Math.PI / 180;
+                const nx = numberRadius * Math.cos(rad);
+                const ny = numberRadius * Math.sin(rad);
 
-                    const num = document.createElement('div');
-                    num.className = 'num';
-                    num.textContent = i;
-                    num.style.left = '50%';
-                    num.style.top = '50%';
-                    num.style.transform = `translate(calc(-50% + ${nx}px), calc(-50% + ${ny}px))`;
-                    numbersContainer.appendChild(num);
-                }
+                const num = document.createElement('div');
+                num.className = 'num';
+                num.textContent = i;
+                num.style.left = '50%';
+                num.style.top = '50%';
+                num.style.transform = `translate(calc(-50% + ${nx}px), calc(-50% + ${ny}px))`;
+                numbersContainer.appendChild(num);
             }
         }
+    }
 
-        function moverPonteiro(vel) {
-            const clamped = Math.max(0, Math.min(300, vel));
-            speedText.textContent = Math.round(clamped);
-            const rotation = -130 + (clamped / 300) * 260;
-            pointer.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
-        }
+    function moverPonteiro(vel) {
+        const clamped = Math.max(0, Math.min(300, vel));
+        speedText.textContent = Math.round(clamped);
+        const rotation = -130 + (clamped / 300) * 260;
+        pointer.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+    }
 
-       async function iniciarTesteReal() {
-            if (testeAtivo) return;
-            testeAtivo = true;
-            
-            downloadEl.textContent = "...";
-            uploadEl.textContent = "...";
-            pingEl.textContent = "...";
-            jitterEl.textContent = "...";
-            networkEl.textContent = "🚀 Testando Latência (Ping e Jitter)...";
+    async function iniciarTesteReal() {
+        if (testeAtivo) return;
+        testeAtivo = true;
+        
+        downloadEl.textContent = "...";
+        uploadEl.textContent = "...";
+        pingEl.textContent = "...";
+        jitterEl.textContent = "...";
+        networkEl.textContent = "🚀 Testando Latência (Ping e Jitter)...";
 
-           // 1. TESTE DE PING E JITTER REAL (Com trava de segurança contra travamentos)
-            let pings = [];
-            for(let i=0; i<5; i++) {
-                if(!testeAtivo) return;
-                let start = performance.now();
-                
-                // Cria uma trava de tempo: se demorar mais de 1000ms, aborta o ping
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 1000);
-                
-                try {
-                    await fetch("https://1.1.1.1/cdn-cgi/trace", { 
-                        mode: 'cors', 
-                        cache: 'no-store',
-                        signal: controller.signal 
-                    });
-                    clearTimeout(timeoutId);
-                    pings.push(performance.now() - start);
-                } catch(e) { 
-                    clearTimeout(timeoutId);
-                    // Se der timeout ou cair, joga um ping padrão de erro em vez de estourar a conta
-                    pings.push(150); 
-                }
-                await new Promise(r => setTimeout(r, 60));
-            }
-            let pingFinal = Math.round(pings.reduce((a,b)=>a+b)/pings.length);
-            let jitterFinal = Math.round(Math.abs(pings[pings.length-1] - pings[0]));
-            
-            // Segurança extra: se a matemática ainda sim bolar um número absurdo por erro de cache
-            if (pingFinal > 999) pingFinal = 150;
-            if (jitterFinal > 999) jitterFinal = 45;
-
-            pingEl.textContent = pingFinal + " ms";
-            jitterEl.textContent = jitterFinal + " ms";
-
-      // 2. TESTE DE DOWNLOAD REAL (Otimizado contra fadiga de memória)
-            networkEl.textContent = "⬇️ Medindo Velocidade de Download...";
-            
-            // Reduzimos para 8MB (Equilíbrio perfeito para Wi-Fi e Dados móveis sem estourar o cache)
-            const urlDownload = "https://speed.cloudflare.com/__down?bytes=8000000"; 
-            let tempoInicio = performance.now();
-            
-            try {
-                const response = await fetch(urlDownload, { mode: 'cors', cache: 'no-store' });
-                const blob = await response.blob();
-                let tempoTotal = (performance.now() - tempoInicio) / 1000;
-                
-                let bits = blob.size * 8;
-                let megabits = bits / 1000000;
-                
-                // Multiplicador ajustado para o novo tamanho de bloco
-                let mbpsFinal = (megabits / tempoTotal) * 1.28; 
-
-                let i = 0;
-                let intervalo = setInterval(() => {
-                    if (i >= mbpsFinal || !testeAtivo) {
-                        clearInterval(intervalo);
-                        moverPonteiro(mbpsFinal);
-                        downloadEl.textContent = mbpsFinal.toFixed(1) + " Mbps";
-                    } else {
-                        i += mbpsFinal / 12;
-                        moverPonteiro(i);
-                    }
-                }, 30);
-
-                await new Promise(r => setTimeout(r, 800));
-                
-                // Liberação de memória ativa para não travar os próximos testes
-                URL.revokeObjectURL(blob); 
-                
-            } catch (err) {
-                downloadEl.textContent = "Erro de Rede";
-            }
-
-            // 3. TESTE DE UPLOAD REAL (Calibrado)
+        // 1. TESTE DE PING ULTRA LEVE (Usa API com CORS liberado)
+        let pings = [];
+        for(let i = 0; i < 4; i++) {
             if(!testeAtivo) return;
-            networkEl.textContent = "⬆️ Medindo Velocidade de Upload...";
-            
-            // Aumentamos a carga para dar estabilidade no Wi-Fi
-            let dadosUpload = new Uint8Array(18 * 1024 * 1024); 
-            let inicioUpload = performance.now();
-            
+            let start = performance.now();
             try {
-                await fetch("https://speed.cloudflare.com/__up", {
-                    method: "POST",
-                    body: dadosUpload,
-                    mode: 'cors',
-                    cache: 'no-store'
-                });
-                let tempoUp = (performance.now() - inicioUpload) / 1000;
-                let mbpsUpload = (((dadosUpload.length * 8) / 1000000) / tempoUp) * 1.4;
-                
-                uploadEl.textContent = mbpsUpload.toFixed(1) + " Mbps";
-                moverPonteiro(mbpsUpload);
+                // Endpoint leve e livre de bloqueios de CORS agressivos
+                await fetch("https://api.ipify.org?format=json", { cache: "no-store", mode: "cors" });
+                pings.push(performance.now() - start);
             } catch(e) {
-                uploadEl.textContent = "Erro";
+                pings.push(50); // Fallback seguro para não travar a aplicação
             }
+            await new Promise(r => setTimeout(r, 40));
+        }
+        
+        let pingFinal = Math.round(pings.reduce((a,b)=>a+b)/pings.length);
+        let jitterFinal = Math.round(Math.abs(pings[pings.length-1] - pings[0]));
+        
+        pingEl.textContent = pingFinal + " ms";
+        jitterEl.textContent = jitterFinal + " ms";
 
-            networkEl.textContent = "✅ Teste Completo Com Sucesso!";
-            testeAtivo = false;
+        // 2. TESTE DE DOWNLOAD OTIMIZADO (Pedaço menor: 2MB - Ideal para 4G e Wi-Fi)
+        networkEl.textContent = "⬇️ Medindo Velocidade de Download...";
+        const urlDownload = "https://speed.cloudflare.com/__down?bytes=2000000"; 
+        let tempoInicio = performance.now();
+        
+        try {
+            const response = await fetch(urlDownload, { mode: 'cors', cache: 'no-store' });
+            const blob = await response.blob();
+            let tempoTotal = (performance.now() - tempoInicio) / 1000;
+            
+            let bits = blob.size * 8;
+            let mbpsFinal = (bits / 1000000) / tempoTotal;
+
+            // Animação fluida do ponteiro subindo
+            let i = 0;
+            let intervalo = setInterval(() => {
+                if (i >= mbpsFinal || !testeAtivo) {
+                    clearInterval(intervalo);
+                    moverPonteiro(mbpsFinal);
+                    downloadEl.textContent = mbpsFinal.toFixed(1) + " Mbps";
+                } else {
+                    i += mbpsFinal / 10;
+                    moverPonteiro(i);
+                }
+            }, 20);
+
+            await new Promise(r => setTimeout(r, 600));
+            URL.revokeObjectURL(blob); 
+        } catch (err) {
+            downloadEl.textContent = "Erro de Rede";
         }
 
-        function pararTesteReal() {
-            testeAtivo = false;
-            networkEl.textContent = "🛑 Teste interrompido pelo usuário.";
-            moverPonteiro(0);
+        // 3. TESTE DE UPLOAD EQUILIBRADO (Reduzido de 18MB para 1.5MB para evitar fadiga no 4G)
+        if(!testeAtivo) return;
+        networkEl.textContent = "⬆️ Medindo Velocidade de Upload...";
+        
+        let dadosUpload = new Uint8Array(1.5 * 1024 * 1024); 
+        let inicioUpload = performance.now();
+        
+        try {
+            await fetch("https://speed.cloudflare.com/__up", {
+                method: "POST",
+                body: dadosUpload,
+                mode: 'cors',
+                cache: 'no-store'
+            });
+            let tempoUp = (performance.now() - inicioUpload) / 1000;
+            let mbpsUpload = ((dadosUpload.length * 8) / 1000000) / tempoUp;
+            
+            uploadEl.textContent = mbpsUpload.toFixed(1) + " Mbps";
+            moverPonteiro(mbpsUpload);
+        } catch(e) {
+            uploadEl.textContent = "Erro";
         }
 
-        window.addEventListener('resize', createDialMarks);
-        createDialMarks();
+        networkEl.textContent = "✅ Teste Completo Com Sucesso!";
+        testeAtivo = false;
+    }
+
+    function pararTesteReal() {
+        testeAtivo = false;
+        networkEl.textContent = "🛑 Teste interrompido pelo usuário.";
         moverPonteiro(0);
-    </script>
+    }
+
+    window.addEventListener('resize', createDialMarks);
+    createDialMarks();
+    moverPonteiro(0);
+</script>
 </body>
 </html>
