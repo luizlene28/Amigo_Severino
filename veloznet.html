@@ -605,7 +605,7 @@
         <div class="footer">SEVERINO-LC • AMIGO SEVERINO INTEGRATION</div>
     </div>
 
-   <script>
+  <script>
     const pointer = document.getElementById("pointer");
     const speedText = document.getElementById("speed");
     const speedometer = document.getElementById("speedometer");
@@ -663,6 +663,17 @@
         pointer.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
     }
 
+    // Função auxiliar para testar velocidade com tamanho dinâmico
+    async function testarDownloadInstante(tamanhoBytes) {
+        const url = `https://speed.cloudflare.com/__down?bytes=${tamanhoBytes}`;
+        const start = performance.now();
+        const response = await fetch(url, { mode: 'cors', cache: 'no-store' });
+        const blob = await response.blob();
+        const duration = (performance.now() - start) / 1000;
+        const mbps = ((blob.size * 8) / 1000000) / duration;
+        return { mbps, duration, blob };
+    }
+
     async function iniciarTesteReal() {
         if (testeAtivo) return;
         testeAtivo = true;
@@ -671,66 +682,75 @@
         uploadEl.textContent = "...";
         pingEl.textContent = "...";
         jitterEl.textContent = "...";
-        networkEl.textContent = "🚀 Testando Latência (Ping e Jitter)...";
+        networkEl.textContent = "🚀 Testando Latência (Ping/Jitter)...";
 
-        // 1. TESTE DE PING ULTRA LEVE (Usa API com CORS liberado)
+        // 1. TESTE DE PING (Usando um endpoint HTTP ultra rápido e sem travar CORS)
         let pings = [];
         for(let i = 0; i < 4; i++) {
             if(!testeAtivo) return;
             let start = performance.now();
             try {
-                // Endpoint leve e livre de bloqueios de CORS agressivos
-                await fetch("https://api.ipify.org?format=json", { cache: "no-store", mode: "cors" });
+                await fetch("https://id.cloudflare.com/cdn-cgi/trace", { mode: "no-cors", cache: "no-store" });
                 pings.push(performance.now() - start);
             } catch(e) {
-                pings.push(50); // Fallback seguro para não travar a aplicação
+                pings.push(45); 
             }
-            await new Promise(r => setTimeout(r, 40));
+            await new Promise(r => setTimeout(r, 30));
         }
         
         let pingFinal = Math.round(pings.reduce((a,b)=>a+b)/pings.length);
         let jitterFinal = Math.round(Math.abs(pings[pings.length-1] - pings[0]));
-        
         pingEl.textContent = pingFinal + " ms";
         jitterEl.textContent = jitterFinal + " ms";
 
-        // 2. TESTE DE DOWNLOAD OTIMIZADO (Pedaço menor: 2MB - Ideal para 4G e Wi-Fi)
-        networkEl.textContent = "⬇️ Medindo Velocidade de Download...";
-        const urlDownload = "https://speed.cloudflare.com/__down?bytes=2000000"; 
-        let tempoInicio = performance.now();
-        
+        // 2. TESTE DE DOWNLOAD INTELIGENTE (DINÂMICO)
+        networkEl.textContent = "⬇️ Analisando tipo de conexão...";
         try {
-            const response = await fetch(urlDownload, { mode: 'cors', cache: 'no-store' });
-            const blob = await response.blob();
-            let tempoTotal = (performance.now() - tempoInicio) / 1000;
-            
-            let bits = blob.size * 8;
-            let mbpsFinal = (bits / 1000000) / tempoTotal;
+            // Passo 1: Faz um mini teste rápido de 1MB para sentir a velocidade da rede
+            let preTeste = await testarDownloadInstante(1000000);
+            let tamanhoFinal = 4000000; // Padrão 4MB para redes normais/4G
 
-            // Animação fluida do ponteiro subindo
-            let i = 0;
-            let intervalo = setInterval(() => {
-                if (i >= mbpsFinal || !testeAtivo) {
-                    clearInterval(intervalo);
+            // Passo 2: Se a rede voar acima de 40 Mbps (Sinal de Wi-Fi potente), joga o peso para 15MB
+            if (preTeste.mbps > 40) {
+                networkEl.textContent = "⬇️ Wi-Fi detectado. Medindo banda larga...";
+                tamanhoFinal = 15000000; // 15MB para dar tempo de o Wi-Fi esticar o ponteiro
+            } else {
+                networkEl.textContent = "⬇️ Rede estável detectada. Medindo...";
+            }
+
+            // Teste definitivo com o tamanho corrigido
+            let testeReal = await testarDownloadInstante(tamanhoFinal);
+            let mbpsFinal = testeReal.mbps;
+
+            // Animação gradual para o ponteiro não dar um pulo seco
+            let atual = preTeste.mbps;
+            let animacao = setInterval(() => {
+                if (atual >= mbpsFinal || !testeAtivo) {
+                    clearInterval(animacao);
                     moverPonteiro(mbpsFinal);
                     downloadEl.textContent = mbpsFinal.toFixed(1) + " Mbps";
                 } else {
-                    i += mbpsFinal / 10;
-                    moverPonteiro(i);
+                    atual += (mbpsFinal - atual) / 6;
+                    moverPonteiro(atual);
                 }
-            }, 20);
+            }, 30);
 
-            await new Promise(r => setTimeout(r, 600));
-            URL.revokeObjectURL(blob); 
+            await new Promise(r => setTimeout(r, 1000));
+            URL.revokeObjectURL(testeReal.blob);
+            URL.revokeObjectURL(preTeste.blob);
         } catch (err) {
-            downloadEl.textContent = "Erro de Rede";
+            downloadEl.textContent = "Erro Wi-Fi/4G";
         }
 
-        // 3. TESTE DE UPLOAD EQUILIBRADO (Reduzido de 18MB para 1.5MB para evitar fadiga no 4G)
+        // 3. TESTE DE UPLOAD DINÂMICO
         if(!testeAtivo) return;
         networkEl.textContent = "⬆️ Medindo Velocidade de Upload...";
         
-        let dadosUpload = new Uint8Array(1.5 * 1024 * 1024); 
+        // Se o download foi alto, aumenta o bloco de upload também
+        let velocidadeEstimada = parseFloat(downloadEl.textContent) || 20;
+        let tamanhoUpload = velocidadeEstimada > 40 ? 5 * 1024 * 1024 : 1.2 * 1024 * 1024;
+
+        let dadosUpload = new Uint8Array(tamanhoUpload); 
         let inicioUpload = performance.now();
         
         try {
