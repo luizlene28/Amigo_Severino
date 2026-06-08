@@ -771,15 +771,16 @@
       };
       
       window.abrirMapa = function() {
-        velocimetroPausado = true;
-        const iframe = document.getElementById('iframe-mapa');
-        if (!iframe.src) {
-        iframe.src = "mapa.html";
-      }
-        const telaMapa = document.getElementById('tela-mapa');
-        telaMapa.classList.remove('escondido');
-        telaMapa.style.display = 'flex';
-      };
+       velocimetroPausado = true;
+       const iframe = document.getElementById('iframe-mapa');
+    
+       // LINHA CORRIGIDA: Força o mapa a carregar direto toda vez que clica
+       iframe.src = "mapa.html";
+
+       const telaMapa = document.getElementById('tela-mapa');
+       telaMapa.classList.remove('escondido');
+       telaMapa.style.display = 'flex';
+};
       
       window.fecharMapa = function() {
         const telaMapa = document.getElementById('tela-mapa');
