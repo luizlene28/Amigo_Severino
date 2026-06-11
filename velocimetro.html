@@ -588,7 +588,7 @@
       flex: 1;
       position: relative;
       z-index: 1;
-      overflow: hidden; /* Mantém as bordas do mapa limpas durante o giro */
+      overflow: hidden;
     }
 
     #mapa {
@@ -617,24 +617,22 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
-    /* CONTAINER DA SETA: Aplica a compensação de rotação em tempo real */
+    /* CONTAINER DA SETA BLINDADO COM SUPORTE A ROTAÇÃO EM GRAUS */
     .container-seta-waze {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       transition: transform 0.25s ease-out;
       will-change: transform;
     }
 
-    .seta-gps-esportiva {
-      width: 0;
-      height: 0;
-      border-left: 9px solid transparent;
-      border-right: 9px solid transparent;
-      border-bottom: 23px solid #e0243f;
-      filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.6));
+    /* DESIGN DA SETA EM SVG NATIVO PARA NÃO FICAR INVISÍVEL NO KODULAR */
+    .seta-svg-nativa {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.6));
     }
   </style>
 </head>
@@ -857,17 +855,16 @@
         window.velocidadeAlvoGPS = velocidadeKmh > 1.5 ? velocidadeKmh : 0;
         if (window.velocidadeAlvoGPS > 0) {
           totalSomaVelocidades += window.velocidadeAlvoGPS;
-          totalLeituresGps = (totalLeiturasGps || 0) + 1;
-          totalLeiturasGps++;
+          if (!window.totalLeiturasGpsContador) window.totalLeiturasGpsContador = 0;
+          window.totalLeiturasGpsContador++;
           if (avgVal) {
-            avgVal.innerText = (totalSomaVelocidades / totalLeiturasGps).toFixed(1);
+            avgVal.innerText = (totalSomaVelocidades / window.totalLeiturasGpsContador).toFixed(1);
           }
         }
         
-        // CORREÇÃO 2: TRAVA ANTI-FARMÁCIA (IGNORA OSCILAÇÕES COM O CARRO PARADO)
         if (lat && lon) {
+          // FILTRO DA FARMÁCIA TRAVADO: Se o carro parar, congela tudo e não desenha rabiscos
           if (window.velocidadeAlvoGPS < 4.0 && lastCoord !== null) {
-              // Se o carro está parado ou abaixo de 4km/h, mantém o mapa estático e não faz nada
               if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
               return; 
           }
@@ -904,11 +901,16 @@
             if (!marcadorUsuario) {
                 mapaObjeto.setView(novoPonto, 16);
                 
+                // MÁGICA DO INJECTOR SVG NATIVO: Seta automotiva indestrutível e perfeita
                 const iconeSeta = L.divIcon({
                     className: 'div-icone-waze',
-                    html: '<div class="container-seta-waze" id="seta-waze-id"><div class="seta-gps-esportiva"></div></div>',
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 15]
+                    html: `<div class="container-seta-waze" id="seta-waze-id">
+                            <svg class="seta-svg-nativa" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M50,5 L90,85 L50,68 L10,85 Z" fill="#e0243f" stroke="#ffffff" stroke-width="6" stroke-linejoin="round"/>
+                            </svg>
+                           </div>`,
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 18]
                 });
 
                 marcadorUsuario = L.marker(novoPonto, { icon: iconeSeta }).addTo(mapaObjeto);
@@ -917,16 +919,15 @@
                 marcadorUsuario.setLatLng(novoPonto);
             }
 
-            // Move a câmera para o veículo
             mapaObjeto.panTo(novoPonto);
             
-            // Gira o mapa base alinhando a rua para frente
+            // Gira o mapa base alinhando a estrada
             const elementoMapaHtml = document.getElementById('mapa');
             if (elementoMapaHtml) {
                 elementoMapaHtml.style.transform = `rotate(${-rumoAtualVeiculo}deg)`;
             }
 
-            // CORREÇÃO 1: MOTOR DE COMPENSAÇÃO DA SETA (ANULA O GIRO DO MAPA NA SETA)
+            // MOTOR REVERSO DIGITAL DA SETA: Cancela a rotação herdada e trava ela olhando pro teto do celular
             const elementoSetaWaze = document.getElementById('seta-waze-id');
             if (elementoSetaWaze) {
                 elementoSetaWaze.style.transform = `rotate(${rumoAtualVeiculo}deg)`;
@@ -944,7 +945,7 @@
       window.zerarHodometro = function() {
         totalDistance = 0;
         totalSomaVelocidades = 0;
-        totalLeiturasGps = 0;
+        window.totalLeiturasGpsContador = 0;
         historicoCoordenadas = [];
         if (linhaTrajeto) linhaTrajeto.setLatLngs([]);
         localStorage.setItem('severino_distancia', '0');
