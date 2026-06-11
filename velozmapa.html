@@ -844,8 +844,8 @@
         }
         
         if (lat && lon) {
-          // FILTRO DA FARMÁCIA EXTREMO: Carro parado congela o mapa
-          if (window.velocidadeAlvoGPS < 4.0 && lastCoord !== null) {
+          // CORREÇÃO: Permite que o mapa carregue o ponto inicial mesmo com o veículo parado (velocidade < 4)
+          if (window.velocidadeAlvoGPS < 4.0 && lastCoord !== null && marcadorUsuario !== null) {
               if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
               return; 
           }
@@ -879,7 +879,6 @@
                 linhaTrajeto.setLatLngs(historicoCoordenadas);
             }
 
-            // AJUSTE DO MARCADOR: Remove o antigo e força o desenho em CSS Puro na hora
             if (marcadorUsuario) {
                 mapaObjeto.removeLayer(marcadorUsuario);
             }
@@ -893,18 +892,15 @@
 
             marcadorUsuario = L.marker(novoPonto, { icon: iconeSeta }).addTo(mapaObjeto);
 
-            // Trava e centraliza o mapa no veículo imediatamente
             mapaObjeto.panTo(novoPonto);
             buscarEndereco(lat, lon);
             
-            // Giro mecânico da estrada para frente (Efeito Waze)
             const elementoMapaHtml = document.getElementById('mapa');
             if (elementoMapaHtml) {
                 elementoMapaHtml.style.transformOrigin = "center center";
                 elementoMapaHtml.style.transform = `rotate(${-rumoAtualVeiculo}deg)`;
             }
 
-            // Compensação reversa na seta (Fixa apontando pro teto do telefone)
             const elementoSetaWaze = document.getElementById('seta-waze-id');
             if (elementoSetaWaze) {
                 elementoSetaWaze.style.transform = `rotate(${rumoAtualVeiculo}deg)`;
@@ -1160,11 +1156,12 @@
         ctx.fillText(`${Math.round(speed)} km/h`, cx, dY + dH * 0.76);
       }
       
+      // CORREÇÃO: Timeout do watchPosition ampliado para 10000ms (10 segundos)
       if ("geolocation" in navigator) {
         navigator.geolocation.watchPosition(updateGPS, handleGPSError, {
           enableHighAccuracy: true,
           maximumAge: 0,
-          timeout: 4000
+          timeout: 10000
         });
       }
       
@@ -1172,6 +1169,6 @@
       renderizarCicloSuave();
     })();
   </script>
+  
 </body>
-
 </html>
