@@ -827,7 +827,7 @@
           alert(`✅ Sucesso! Rota de ${historicoCoordenadas.length} pontos guardada no Amigo Severino.`);
       };
 
-      // --- ATUALIZADOR PRINCIPAL DO GPS ---
+      // --- ATUALIZADOR PRINCIPAL DO GPS (CHAMADO PELO KODULAR) ---
       window.atualizarVelocidade = function(velocidadeKmh, lat, lon, bearing) {
         if (gpsWarning.style.display !== 'none') gpsWarning.style.display = 'none';
         gpsErrorCount = 0;
@@ -844,12 +844,13 @@
         }
         
         if (lat && lon) {
-          // CORREÇÃO: Permite que o mapa carregue o ponto inicial mesmo com o veículo parado (velocidade < 4)
+          // FILTRO DO CARRO PARADO CORRIGIDO: Permite desenhar a primeira vez parado
           if (window.velocidadeAlvoGPS < 4.0 && lastCoord !== null && marcadorUsuario !== null) {
               if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
               return; 
           }
 
+          // Atualiza o rumo do veículo se o carro estiver se movendo
           if (bearing !== undefined && bearing !== null && window.velocidadeAlvoGPS > 3) {
               rumoAtualVeiculo = parseFloat(bearing);
           }
@@ -868,9 +869,10 @@
           historicoCoordenadas.push(novoPonto);
           
           if (mapaObjeto) {
+            // TRAÇADO DA ROTA (RISCO VERDE): Cria ou atualiza a linha
             if (!linhaTrajeto) {
                 linhaTrajeto = L.polyline(historicoCoordenadas, {
-                    color: '#00ff88',
+                    color: '#00ff88', // Verde limão neon de alta visibilidade
                     weight: 6,
                     opacity: 0.9,
                     lineCap: 'round'
@@ -879,28 +881,32 @@
                 linhaTrajeto.setLatLngs(historicoCoordenadas);
             }
 
+            // ATUALIZADOR DO MARCADOR (SETA ESTILO WAZE)
             if (marcadorUsuario) {
                 mapaObjeto.removeLayer(marcadorUsuario);
             }
 
             const iconeSeta = L.divIcon({
                 className: '', 
-                html: `<div id="seta-waze-id" style="width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 35px solid #e0243f; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.6)); transition: transform 0.25s ease-out; will-change: transform;"></div>`,
+                html: `<div id="seta-waze-id" style="width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 35px solid #e0243f; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.6)); transition: transform 0.2s ease-out; will-change: transform;"></div>`,
                 iconSize: [30, 35],
                 iconAnchor: [15, 17]
             });
 
             marcadorUsuario = L.marker(novoPonto, { icon: iconeSeta }).addTo(mapaObjeto);
 
+            // Centraliza o mapa na posição atual do carro
             mapaObjeto.panTo(novoPonto);
             buscarEndereco(lat, lon);
             
+            // GIRO DINÂMICO DO MAPA (EFEITO ESTRADA SEMPRE PARA FRENTE)
             const elementoMapaHtml = document.getElementById('mapa');
             if (elementoMapaHtml) {
                 elementoMapaHtml.style.transformOrigin = "center center";
                 elementoMapaHtml.style.transform = `rotate(${-rumoAtualVeiculo}deg)`;
             }
 
+            // COMPENSAÇÃO DA SETA: Mantém ela apontando firme para o teto do celular
             const elementoSetaWaze = document.getElementById('seta-waze-id');
             if (elementoSetaWaze) {
                 elementoSetaWaze.style.transform = `rotate(${rumoAtualVeiculo}deg)`;
@@ -1030,6 +1036,17 @@
         return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       }
       
+      // O watchPosition interno fica desativado para o Kodular assumir o comando pelo Location_Sensor
+      /*
+      if ("geolocation" in navigator) {
+        navigator.geolocation.watchPosition(updateGPS, handleGPSError, {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 4000
+        });
+      }
+      */
+      
       function getCardinals(deg) {
         if (deg === null || isNaN(deg)) return "-";
         const sectors = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
@@ -1154,15 +1171,6 @@
         ctx.font = `bold ${Math.floor(dH * 0.52)}px 'Orbitron', monospace`;
         ctx.fillStyle = speedTextColor;
         ctx.fillText(`${Math.round(speed)} km/h`, cx, dY + dH * 0.76);
-      }
-      
-      // CORREÇÃO: Timeout do watchPosition ampliado para 10000ms (10 segundos)
-      if ("geolocation" in navigator) {
-        navigator.geolocation.watchPosition(updateGPS, handleGPSError, {
-          enableHighAccuracy: true,
-          maximumAge: 0,
-          timeout: 10000
-        });
       }
       
       resizeCanvas();
