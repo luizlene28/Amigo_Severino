@@ -698,7 +698,7 @@
       let gpsErrorCount = 0;
       let lastUpdateTime = Date.now();
       window.velocidadeAlvoGPS = 0;
-      let velocidadSuaveExibida = 0;
+      let velocidadeSuaveExibida = 0;
       let totalSomaVelocidades = 0;
       let totalLeiturasGps = 0;
       window.isLightMode = false;
@@ -879,20 +879,15 @@
                 linhaTrajeto.setLatLngs(historicoCoordenadas);
             }
 
+            // MODIFICAÇÃO DEFINITIVA DA SETA GEOMÉTRICA (SEM COMPONENTES EXTERNOS)
             if (!marcadorUsuario) {
                 mapaObjeto.setView(novoPonto, 16);
                 
-                // INJEÇÃO BASE64 ABSOLUTA DA SETA VERMELHA ESPORTIVA
-                const imagemSetaBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAsNSBMOTAsODUgTDUwLDY4IEwxMCw4NSBaIiBmaWxsPSIjZTAyNDNmIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==";
-                
-                // AJUSTE INLINE CRUCIAL: Força estilos embutidos sem depender de CSS externo
                 const iconeSeta = L.divIcon({
-                    className: '', // Limpo para evitar que o Leaflet injete classes fantasmas do cache
-                    html: `<div id="seta-waze-id" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; transition: transform 0.25s ease-out; will-change: transform;">
-                            <img src="${imagemSetaBase64}" style="width: 100%; height: 100%; object-fit: contain;" alt="Seta"/>
-                           </div>`,
-                    iconSize: [44, 44],
-                    iconAnchor: [22, 22]
+                    className: '', 
+                    html: `<div id="seta-waze-id" style="width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 35px solid #e0243f; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.6)); transition: transform 0.25s ease-out; will-change: transform;"></div>`,
+                    iconSize: [30, 35],
+                    iconAnchor: [15, 17]
                 });
 
                 marcadorUsuario = L.marker(novoPonto, { icon: iconeSeta }).addTo(mapaObjeto);
@@ -901,7 +896,7 @@
                 marcadorUsuario.setLatLng(novoPonto);
             }
 
-            // Centralização forçada agressiva
+            // Trava e centraliza o mapa no veículo
             mapaObjeto.panTo(novoPonto);
             
             // Giro mecânico da estrada para frente (Efeito Waze)
@@ -911,7 +906,7 @@
                 elementoMapaHtml.style.transform = `rotate(${-rumoAtualVeiculo}deg)`;
             }
 
-            // Compensação reversa na seta (Fica sempre firme apontando para o teto do celular)
+            // Compensação reversa na seta (Fixa apontando pro teto do telefone)
             const elementoSetaWaze = document.getElementById('seta-waze-id');
             if (elementoSetaWaze) {
                 elementoSetaWaze.style.transform = `rotate(${rumoAtualVeiculo}deg)`;
@@ -986,7 +981,7 @@
         if (tempoSemGps > 1200) {
           window.velocidadeAlvoGPS = Math.max(0, window.velocidadeAlvoGPS - 5);
         }
-        const diferenca = window.velocidadeAlvoGPS - velocidadSuaveExibida;
+        const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
         const absDiferenca = Math.abs(diferenca);
         let fatorSuavizacao = diferenca > 0 ? 0.98 : 0.60;
         if (absDiferenca > 15) {
@@ -994,8 +989,8 @@
         } else if (absDiferenca < 1 && window.velocidadeAlvoGPS === 0) {
           fatorSuavizacao = 1.0;
         }
-        velocidadSuaveExibida += diferenca * fatorSuavizacao;
-        if (Math.abs(velocidadSuaveExibida) < 0.1) velocidadSuaveExibida = 0;
+        velocidadeSuaveExibida += diferenca * fatorSuavizacao;
+        if (Math.abs(velocidadeSuaveExibida) < 0.1) velocidadeSuaveExibida = 0;
         const valorArredondado = Math.round(window.velocidadeAlvoGPS);
         if (speedVal) {
           speedVal.textContent = valorArredondado.toString().padStart(2, '0');
@@ -1005,13 +1000,13 @@
             speedVal.setAttribute("font-size", "52");
           }
         }
-        drawGauge(velocidadSuaveExibida);
+        drawGauge(velocidadeSuaveExibida);
         
-        const tapeDeslocamento = (velocidadSuaveExibida / 5) * tapeMarkWidth;
+        const tapeDeslocamento = (velocidadeSuaveExibida / 5) * tapeMarkWidth;
         if (tapeTrackDigital) tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
         if (tapeTrackAnalog) tapeTrackAnalog.style.transform = `translateX(${-tapeDeslocamento}px)`;
         
-        const pct = Math.min((velocidadSuaveExibida / 200) * 100, 100);
+        const pct = Math.min((velocidadeSuaveExibida / 200) * 100, 100);
         if (pBar) pBar.style.width = pct + "%";
         requestAnimationFrame(renderizarCicloSuave);
       }
