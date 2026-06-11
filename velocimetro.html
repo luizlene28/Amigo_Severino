@@ -617,22 +617,22 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
-    /* CONTAINER DA SETA BLINDADO COM SUPORTE A ROTAÇÃO EM GRAUS */
+    /* CONTAINER DA SETA OTIMIZADO */
     .container-seta-waze {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       transition: transform 0.25s ease-out;
       will-change: transform;
     }
 
-    /* DESIGN DA SETA EM SVG NATIVO PARA NÃO FICAR INVISÍVEL NO KODULAR */
-    .seta-svg-nativa {
+    /* Elemento de imagem nativa do Leaflet */
+    .seta-img-waze-nativa {
       width: 100%;
       height: 100%;
-      filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.6));
+      object-fit: contain;
     }
   </style>
 </head>
@@ -722,7 +722,6 @@
       window.isLightMode = false;
       let rumoAtualVeiculo = 0;
       
-      // Instâncias do Mapa
       let mapaObjeto = null;
       let camadaRuas = null;
       let camadaSatelite = null;
@@ -846,7 +845,7 @@
           alert(`✅ Sucesso! Rota de ${historicoCoordenadas.length} pontos guardada no Amigo Severino.`);
       };
 
-      // --- DISPARADOR INTELIGENTE DO GPS SEVERINO-LC ---
+      // --- ATUALIZADOR PRINCIPAL DO GPS ---
       window.atualizarVelocidade = function(velocidadeKmh, lat, lon, bearing) {
         if (gpsWarning.style.display !== 'none') gpsWarning.style.display = 'none';
         gpsErrorCount = 0;
@@ -863,7 +862,7 @@
         }
         
         if (lat && lon) {
-          // FILTRO DA FARMÁCIA TRAVADO: Se o carro parar, congela tudo e não desenha rabiscos
+          // FILTRO DA FARMÁCIA EXTREMO: Carro parado congela o mapa
           if (window.velocidadeAlvoGPS < 4.0 && lastCoord !== null) {
               if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
               return; 
@@ -901,13 +900,13 @@
             if (!marcadorUsuario) {
                 mapaObjeto.setView(novoPonto, 16);
                 
-                // MÁGICA DO INJECTOR SVG NATIVO: Seta automotiva indestrutível e perfeita
+                // INJEÇÃO BASE64 ABSOLUTA DA SETA: Carrega uma imagem nativa indestrutível no Kodular
+                const imagemSetaBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAsNSBMOTAsODUgTDUwLDY4IEwxMCw4NSBaIiBmaWxsPSIjZTAyNDNmIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==";
+                
                 const iconeSeta = L.divIcon({
                     className: 'div-icone-waze',
                     html: `<div class="container-seta-waze" id="seta-waze-id">
-                            <svg class="seta-svg-nativa" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M50,5 L90,85 L50,68 L10,85 Z" fill="#e0243f" stroke="#ffffff" stroke-width="6" stroke-linejoin="round"/>
-                            </svg>
+                            <img class="seta-img-waze-nativa" src="${imagemSetaBase64}" alt="Seta"/>
                            </div>`,
                     iconSize: [36, 36],
                     iconAnchor: [18, 18]
@@ -921,13 +920,13 @@
 
             mapaObjeto.panTo(novoPonto);
             
-            // Gira o mapa base alinhando a estrada
+            // Giro mecânico da estrada para frente
             const elementoMapaHtml = document.getElementById('mapa');
             if (elementoMapaHtml) {
                 elementoMapaHtml.style.transform = `rotate(${-rumoAtualVeiculo}deg)`;
             }
 
-            // MOTOR REVERSO DIGITAL DA SETA: Cancela a rotação herdada e trava ela olhando pro teto do celular
+            // Compensação reversa na seta (Fica sempre firme para o teto)
             const elementoSetaWaze = document.getElementById('seta-waze-id');
             if (elementoSetaWaze) {
                 elementoSetaWaze.style.transform = `rotate(${rumoAtualVeiculo}deg)`;
