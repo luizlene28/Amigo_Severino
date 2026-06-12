@@ -690,7 +690,7 @@
     
   </div>
 
- <script>
+<script>
     (function() {
       let currentMode = "digital";
       let totalDistance = parseFloat(localStorage.getItem('severino_distancia')) || 0;
@@ -711,6 +711,10 @@
       let marcadorUsuario = null;
       let historicoCoordenadas = []; 
       let linhaTrajeto = null;
+      
+      // Controle inteligente de centralização do mapa
+      let mapaBloqueadoAoCarro = true;
+      let temporizadorRetorno = null;
 
       const speedVal = document.getElementById('speed-val');
       const pBar = document.getElementById('p-bar');
@@ -783,6 +787,19 @@
         }).setView([-15.7801, -47.9292], 4);
         
         L.control.zoom({ position: 'bottomright' }).addTo(mapaObjeto);
+
+        // DETECÇÃO DE ARRASTO MANUAL COM O DEDO
+        mapaObjeto.on('dragstart', function() {
+            mapaBloqueadoAoCarro = false; // Solta o mapa para o usuário explorar
+            clearTimeout(temporizadorRetorno);
+        });
+
+        mapaObjeto.on('dragend', function() {
+            // Após 5 segundos sem mexer, a centralização automática volta
+            temporizadorRetorno = setTimeout(function() {
+                mapaBloqueadoAoCarro = true;
+            }, 5000);
+        });
       }
       
       window.alternarCamadaMapa = function() {
@@ -844,14 +861,21 @@
         }
         
         if (lat && lon) {
-          // FILTRO DO CARRO PARADO CORRIGIDO: Permite desenhar a primeira vez parado
           if (window.velocidadeAlvoGPS < 4.0 && lastCoord !== null && marcadorUsuario !== null) {
               if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
               return; 
           }
 
-          // Atualiza o rumo do veículo se o carro estiver se movendo
-          if (bearing !== undefined && bearing !== null && window.velocidadeAlvoGPS > 3) {
+          // CÁLCULO DE RUMO AUTOMÁTICO (Injetado aqui já que o Kodular envia 0 fixo)
+          if (lastCoord !== null && window.velocidadeAlvoGPS > 3) {
+              let dLon = (lon - lastCoord.lon) * Math.PI / 180;
+              let lat1 = lastCoord.lat * Math.PI / 180;
+              let lat2 = lat * Math.PI / 180;
+              let y = Math.sin(dLon) * Math.cos(lat2);
+              let x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+              let brng = Math.atan2(y, x) * 180 / Math.PI;
+              rumoAtualVeiculo = (brng + 360) % 360; 
+          } else if (bearing !== undefined && bearing !== null && bearing !== 0 && !isNaN(bearing)) {
               rumoAtualVeiculo = parseFloat(bearing);
           }
 
@@ -869,10 +893,10 @@
           historicoCoordenadas.push(novoPonto);
           
           if (mapaObjeto) {
-            // TRAÇADO DA ROTA (RISCO VERDE): Cria ou atualiza a linha
+            // TRAÇADO DA ROTA (RISCO VERDE NEON)
             if (!linhaTrajeto) {
                 linhaTrajeto = L.polyline(historicoCoordenadas, {
-                    color: '#00ff88', // Verde limão neon de alta visibilidade
+                    color: '#00ff88', 
                     weight: 6,
                     opacity: 0.9,
                     lineCap: 'round'
@@ -881,32 +905,34 @@
                 linhaTrajeto.setLatLngs(historicoCoordenadas);
             }
 
-            // ATUALIZADOR DO MARCADOR (SETA ESTILO WAZE)
+            // ATUALIZADOR DO MARCADOR DA SETA (TAMANHO PROPORCIONAL)
             if (marcadorUsuario) {
                 mapaObjeto.removeLayer(marcadorUsuario);
             }
 
             const iconeSeta = L.divIcon({
                 className: '', 
-                html: `<div id="seta-waze-id" style="width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 35px solid #e0243f; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.6)); transition: transform 0.2s ease-out; will-change: transform;"></div>`,
-                iconSize: [30, 35],
-                iconAnchor: [15, 17]
+                html: `<div id="seta-waze-id" style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 24px solid #e0243f; filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.5)); transition: transform 0.2s ease-out; will-change: transform;"></div>`,
+                iconSize: [20, 24],
+                iconAnchor: [10, 12]
             });
 
             marcadorUsuario = L.marker(novoPonto, { icon: iconeSeta }).addTo(mapaObjeto);
 
-            // Centraliza o mapa na posição atual do carro
-            mapaObjeto.panTo(novoPonto);
-            buscarEndereco(lat, lon);
-            
-            // GIRO DINÂMICO DO MAPA (EFEITO ESTRADA SEMPRE PARA FRENTE)
-            const elementoMapaHtml = document.getElementById('mapa');
-            if (elementoMapaHtml) {
-                elementoMapaHtml.style.transformOrigin = "center center";
-                elementoMapaHtml.style.transform = `rotate(${-rumoAtualVeiculo}deg)`;
+            // SÓ CENTRALIZA E GIRA SE O USUÁRIO NÃO ESTIVER EXPLORANDO COM O DEDO
+            if (mapaBloqueadoAoCarro) {
+                mapaObjeto.panTo(novoPonto);
+                
+                const elementoMapaHtml = document.getElementById('mapa');
+                if (elementoMapaHtml) {
+                    elementoMapaHtml.style.transformOrigin = "center center";
+                    elementoMapaHtml.style.transform = `rotate(${-rumoAtualVeiculo}deg)`;
+                }
             }
+            
+            buscarEndereco(lat, lon);
 
-            // COMPENSAÇÃO DA SETA: Mantém ela apontando firme para o teto do celular
+            // Força a seta a apontar sempre reta para a frente do painel do carro
             const elementoSetaWaze = document.getElementById('seta-waze-id');
             if (elementoSetaWaze) {
                 elementoSetaWaze.style.transform = `rotate(${rumoAtualVeiculo}deg)`;
@@ -918,7 +944,7 @@
         }
         
         if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
-        if (dirVal && bearing !== undefined && bearing !== null) dirVal.innerText = getCardinals(bearing);
+        if (dirVal && rumoAtualVeiculo !== undefined) dirVal.innerText = getCardinals(rumoAtualVeiculo);
       };
       
       window.zerarHodometro = function() {
@@ -1035,17 +1061,6 @@
         const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
         return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       }
-      
-      // O watchPosition interno fica desativado para o Kodular assumir o comando pelo Location_Sensor
-      /*
-      if ("geolocation" in navigator) {
-        navigator.geolocation.watchPosition(updateGPS, handleGPSError, {
-          enableHighAccuracy: true,
-          maximumAge: 0,
-          timeout: 4000
-        });
-      }
-      */
       
       function getCardinals(deg) {
         if (deg === null || isNaN(deg)) return "-";
