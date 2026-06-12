@@ -11,7 +11,7 @@
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+  
   <style>
     :root {
       --bg-deep: #06060c;
@@ -24,7 +24,7 @@
       --font-ui: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
       --text-painel: #00ff88;
     }
-
+    
     body.light-mode {
       --bg-deep: #f0f2f5;
       --card-bg: rgba(240, 242, 245, 0.95);
@@ -52,7 +52,7 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
-
+    
     body.light-mode {
       background: #f0f2f5 !important;
     }
@@ -74,7 +74,7 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
       z-index: 10;
     }
-
+    
     body.light-mode .app-header {
       background: rgba(255, 255, 255, 0.9);
       border: 1px solid rgba(0, 0, 0, 0.1);
@@ -97,7 +97,7 @@
       color: rgba(255, 255, 255, 0.6);
       letter-spacing: 0.5px;
     }
-
+    
     body.light-mode .app-logo {
       color: #333333;
     }
@@ -125,7 +125,7 @@
       border: 1px solid rgba(255, 255, 255, 0.06);
       margin-top: 2px;
     }
-
+    
     body.light-mode .digital-clock {
       color: #222222;
       background: #e4e7eb;
@@ -143,7 +143,7 @@
       font-weight: 700;
       text-transform: uppercase;
     }
-
+    
     body.light-mode .app-badge {
       background: rgba(0, 119, 68, 0.1);
       color: #007744;
@@ -183,7 +183,7 @@
       flex-direction: column;
       align-items: center;
     }
-
+    
     body.light-mode .speed-stage {
       background: #ffffff;
       border: 2px solid rgba(0, 0, 0, 0.08);
@@ -220,11 +220,11 @@
       overflow: hidden;
       position: relative;
     }
-
+    
     body.light-mode .speed-number-container {
       background: #f8f9fa !important;
       border: 1.5px solid #cccccc;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
     }
     
     .speed-svg-display {
@@ -427,7 +427,7 @@
       flex-direction: column;
       justify-content: center;
     }
-
+    
     body.light-mode .card {
       background: #ffffff;
       border: 1px solid rgba(0, 0, 0, 0.1);
@@ -442,7 +442,7 @@
       font-family: var(--font-digital);
       letter-spacing: 0.5px;
     }
-
+    
     body.light-mode .card span {
       color: #222222;
     }
@@ -470,7 +470,7 @@
       margin: 4px auto 0;
       padding: 0;
     }
-
+    
     body.light-mode .theme-toggle-btn {
       background: rgba(0, 0, 0, 0.05);
       border: 1px solid rgba(0, 0, 0, 0.15);
@@ -514,26 +514,26 @@
       color: rgba(255, 255, 255, 0.9) !important;
       border: 1px solid rgba(255, 255, 255, 0.12) !important;
     }
-
+    
     body.light-mode .btn-rodape-escuro {
       background: #d4d7dc !important;
       color: #222222 !important;
       border: 1px solid rgba(0, 0, 0, 0.1) !important;
     }
-
+    
     /* ========== DESIGN DO MAPA MOTOR WAZE PROFISSIONAL ========== */
     #tela-mapa {
-      position: absolute; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 100%; 
-      background: #0c0c14; 
-      z-index: 100; 
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0c0c14;
+      z-index: 100;
       display: none;
       flex-direction: column;
     }
-
+    
     #painel-superior-mapa {
       background: rgba(20, 20, 30, 0.95);
       border-bottom: 2px solid rgba(255, 255, 255, 0.1);
@@ -544,7 +544,7 @@
       align-items: center;
       z-index: 10;
     }
-
+    
     #texto-endereco {
       color: #00ff88;
       font-size: 0.85rem;
@@ -554,13 +554,13 @@
       text-overflow: ellipsis;
       max-width: 50%;
     }
-
+    
     .caixa-botoes-topo-mapa {
       display: flex;
       gap: 6px;
       align-items: center;
     }
-
+    
     .btn-salvar {
       background: #f5a623 !important;
       color: #000 !important;
@@ -572,17 +572,17 @@
       cursor: pointer;
       text-transform: uppercase;
     }
-
+    
     .btn-voltar-mapa {
-      padding: 8px 16px; 
-      background: #c91a30; 
-      color: #fff; 
-      border: none; 
-      border-radius: 20px; 
-      font-weight: bold; 
+      padding: 8px 16px;
+      background: #c91a30;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-weight: bold;
       cursor: pointer;
     }
-
+    
     #meu-mapa-container {
       width: 100%;
       flex: 1;
@@ -590,14 +590,14 @@
       z-index: 1;
       overflow: hidden;
     }
-
+    
     #mapa {
       width: 100%;
       height: 100%;
       transition: transform 0.25s ease-out;
       will-change: transform;
     }
-
+    
     .btn-satelite {
       position: absolute;
       top: 15px;
@@ -605,7 +605,7 @@
       z-index: 105;
       background: rgba(20, 20, 30, 0.9);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 10px 12px;
       border-radius: 12px;
       font-size: 0.75rem;
@@ -614,7 +614,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     }
   </style>
 </head>
@@ -684,514 +684,535 @@
       </div>
       <div id="meu-mapa-container">
         <button class="btn-satelite" onclick="alternarCamadaMapa()">🚀 <span id="txt-btn-satelite">Modo Satélite</span></button>
+        
+        <button id="btn-recentralizar" onclick="recentralizarMapaManual()" style="position: absolute; bottom: 30px; left: 20px; z-index: 105; background: #e0243f; color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 12px; border-radius: 50%; width: 48px; height: 48px; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: all 0.2s ease;">🎯</button>
+        
         <div id="mapa"></div>
       </div>
+      
     </div>
     
-  </div>
-
-<script>
-    (function() {
-      let currentMode = "digital";
-      let totalDistance = parseFloat(localStorage.getItem('severino_distancia')) || 0;
-      let lastCoord = null;
-      let gpsErrorCount = 0;
-      let lastUpdateTime = Date.now();
-      window.velocidadeAlvoGPS = 0;
-      let velocidadeSuaveExibida = 0;
-      let totalSomaVelocidades = 0;
-      let totalLeiturasGps = 0;
-      window.isLightMode = false;
-      let rumoAtualVeiculo = 0;
-      
-      let mapaObjeto = null;
-      let camadaRuas = null;
-      let camadaSatelite = null;
-      let mapaEmModoSatelite = false;
-      let marcadorUsuario = null;
-      let historicoCoordenadas = []; 
-      let linhaTrajeto = null;
-      
-      // Controle inteligente de centralização do mapa
-      let mapaBloqueadoAoCarro = true;
-      let temporizadorRetorno = null;
-
-      const speedVal = document.getElementById('speed-val');
-      const pBar = document.getElementById('p-bar');
-      const distVal = document.getElementById('dist-val');
-      const avgVal = document.getElementById('avg-val');
-      const dirVal = document.getElementById('dir-val');
-      const canvas = document.getElementById('gaugeCanvas');
-      const ctx = canvas.getContext('2d');
-      const gpsWarning = document.getElementById('gpsWarning');
-      const panelDigital = document.getElementById('panel-digital');
-      const panelAnalog = document.getElementById('panel-analog');
-      const speedStage = document.getElementById('speedStage');
-      const topClock = document.getElementById('topClock');
-      const themeToggleBtn = document.getElementById('themeToggleBtn');
-      const tapeTrackDigital = document.getElementById('tape-track-digital');
-      const tapeTrackAnalog = document.getElementById('tape-track-analog');
-      const tapeMarkWidth = 60;
-      
-      if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
-      
-      themeToggleBtn.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        window.isLightMode = document.body.classList.contains('light-mode');
-        themeToggleBtn.textContent = window.isLightMode ? '☀️' : '🌙';
-      });
-      
-      function updateClock() {
-        const now = new Date();
-        topClock.innerText = String(now.getHours()).padStart(2, '0') + ':' +
-          String(now.getMinutes()).padStart(2, '0') + ':' +
-          String(now.getSeconds()).padStart(2, '0');
-      }
-      setInterval(updateClock, 1000);
-      updateClock();
-      
-      function generateSpeedTape(trackElement) {
-        if (!trackElement) return;
-        trackElement.innerHTML = '';
-        const maxSpeed = 200;
-        for (let i = 0; i <= maxSpeed; i += 10) {
-          const mark = document.createElement('div');
-          mark.className = 'tape-mark';
-          mark.innerHTML = `<div class="tape-number">${i}</div> <div class="tape-tick"></div>`;
-          trackElement.appendChild(mark);
-          if (i < maxSpeed) {
-            const minorMark = document.createElement('div');
-            minorMark.className = 'tape-mark';
-            minorMark.innerHTML = `<div class="tape-minor-number">${i + 5}</div> <div class="tape-minor-tick"></div>`;
-            trackElement.appendChild(minorMark);
+    <script>
+      (function() {
+        let currentMode = "digital";
+        let totalDistance = parseFloat(localStorage.getItem('severino_distancia')) || 0;
+        let lastCoord = null;
+        let gpsErrorCount = 0;
+        let lastUpdateTime = Date.now();
+        window.velocidadeAlvoGPS = 0;
+        let velocidadeSuaveExibida = 0;
+        let totalSomaVelocidades = 0;
+        let totalLeiturasGps = 0;
+        window.isLightMode = false;
+        let rumoAtualVeiculo = 0;
+        
+        let mapaObjeto = null;
+        let camadaRuas = null;
+        let camadaSatelite = null;
+        let mapaEmModoSatelite = false;
+        let marcadorUsuario = null;
+        let historicoCoordenadas = [];
+        let linhaTrajeto = null;
+        
+        // Controle por botão: O mapa segue o carro por padrão
+        let mapaBloqueadoAoCarro = true;
+        
+        const speedVal = document.getElementById('speed-val');
+        const pBar = document.getElementById('p-bar');
+        const distVal = document.getElementById('dist-val');
+        const avgVal = document.getElementById('avg-val');
+        const dirVal = document.getElementById('dir-val');
+        const canvas = document.getElementById('gaugeCanvas');
+        const ctx = canvas.getContext('2d');
+        const gpsWarning = document.getElementById('gpsWarning');
+        const panelDigital = document.getElementById('panel-digital');
+        const panelAnalog = document.getElementById('panel-analog');
+        const speedStage = document.getElementById('speedStage');
+        const topClock = document.getElementById('topClock');
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const tapeTrackDigital = document.getElementById('tape-track-digital');
+        const tapeTrackAnalog = document.getElementById('tape-track-analog');
+        const tapeMarkWidth = 60;
+        
+        if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
+        
+        themeToggleBtn.addEventListener('click', () => {
+          document.body.classList.toggle('light-mode');
+          window.isLightMode = document.body.classList.contains('light-mode');
+          themeToggleBtn.textContent = window.isLightMode ? '☀️' : '🌙';
+        });
+        
+        function updateClock() {
+          const now = new Date();
+          topClock.innerText = String(now.getHours()).padStart(2, '0') + ':' +
+            String(now.getMinutes()).padStart(2, '0') + ':' +
+            String(now.getSeconds()).padStart(2, '0');
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        function generateSpeedTape(trackElement) {
+          if (!trackElement) return;
+          trackElement.innerHTML = '';
+          const maxSpeed = 200;
+          for (let i = 0; i <= maxSpeed; i += 10) {
+            const mark = document.createElement('div');
+            mark.className = 'tape-mark';
+            mark.innerHTML = `<div class="tape-number">${i}</div> <div class="tape-tick"></div>`;
+            trackElement.appendChild(mark);
+            if (i < maxSpeed) {
+              const minorMark = document.createElement('div');
+              minorMark.className = 'tape-mark';
+              minorMark.innerHTML = `<div class="tape-minor-number">${i + 5}</div> <div class="tape-minor-tick"></div>`;
+              trackElement.appendChild(minorMark);
+            }
           }
         }
-      }
-      generateSpeedTape(tapeTrackDigital);
-      generateSpeedTape(tapeTrackAnalog);
-      
-      function inicializarMapeamentoOriginal() {
-        if (mapaObjeto) return;
-
-        camadaRuas = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19
-        });
-
-        camadaSatelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            maxZoom: 19
-        });
-
-        mapaObjeto = L.map('mapa', { 
-            zoomControl: false,
-            layers: [camadaRuas]
-        }).setView([-15.7801, -47.9292], 4);
+        generateSpeedTape(tapeTrackDigital);
+        generateSpeedTape(tapeTrackAnalog);
         
-        L.control.zoom({ position: 'bottomright' }).addTo(mapaObjeto);
-
-        // DETECÇÃO DE ARRASTO MANUAL COM O DEDO
-        mapaObjeto.on('dragstart', function() {
-            mapaBloqueadoAoCarro = false; // Solta o mapa para o usuário explorar
-            clearTimeout(temporizadorRetorno);
-        });
-
-        mapaObjeto.on('dragend', function() {
-            // Após 5 segundos sem mexer, a centralização automática volta
-            temporizadorRetorno = setTimeout(function() {
-                mapaBloqueadoAoCarro = true;
-            }, 5000);
-        });
-      }
-      
-      window.alternarCamadaMapa = function() {
+        function inicializarMapeamentoOriginal() {
+          if (mapaObjeto) return;
+          
+          camadaRuas = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+          });
+          
+          camadaSatelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19
+          });
+          
+          mapaObjeto = L.map('mapa', {
+            zoomControl: false,
+            layers: [camadaRuas],
+            fadeAnimation: false // Deixa o carregamento mais leve nos celulares
+          });
+          
+          L.control.zoom({ position: 'bottomright' }).addTo(mapaObjeto);
+          
+          // JOGADA DE MESTRE: Se já tem o GPS ativo, vai pra cima do carro
+          if (lastCoord) {
+            mapaObjeto.setView([lastCoord.lat, lastCoord.lon], 16);
+          } else {
+            // Se o GPS ainda está buscando, foca direto na sua cidade/rua padrão com zoom perto (exemplo: 14 ou 15)
+            // Troque o -15.7801 e -47.9292 pelas coordenadas aproximadas do seu bairro!
+            mapaObjeto.setView([-15.7801, -47.9292], 14);
+          }
+          
+          mapaObjeto.on('dragstart', function() {
+            mapaBloqueadoAoCarro = false;
+            const btn = document.getElementById('btn-recentralizar');
+            if (btn) {
+              btn.style.background = '#f5a623';
+              btn.style.transform = 'scale(1.1)';
+            }
+          });
+        }
+        // FUNÇÃO CLICÁVEL DO NOVO BOTÃO 🎯
+        window.recentralizarMapaManual = function() {
+          mapaBloqueadoAoCarro = true;
+          const btn = document.getElementById('btn-recentralizar');
+          if (btn) {
+            btn.style.background = '#e0243f'; // Volta a ser vermelho (travado)
+            btn.style.transform = 'scale(1.0)';
+          }
+          // Voa suavemente para cima da seta sem perder o rumo ou quebrar a linha verde
+          if (lastCoord && mapaObjeto) {
+            mapaObjeto.panTo([lastCoord.lat, lastCoord.lon]);
+          }
+        };
+        
+        window.alternarCamadaMapa = function() {
           if (!mapaObjeto) return;
           if (mapaEmModoSatelite) {
-              mapaObjeto.removeLayer(camadaSatelite);
-              mapaObjeto.addLayer(camadaRuas);
-              document.getElementById('txt-btn-satelite').innerText = "Modo Satélite";
-              mapaEmModoSatelite = false;
+            mapaObjeto.removeLayer(camadaSatelite);
+            mapaObjeto.addLayer(camadaRuas);
+            document.getElementById('txt-btn-satelite').innerText = "Modo Satélite";
+            mapaEmModoSatelite = false;
           } else {
-              mapaObjeto.removeLayer(camadaRuas);
-              mapaObjeto.addLayer(camadaSatelite);
-              document.getElementById('txt-btn-satelite').innerText = "Modo Ruas";
-              mapaEmModoSatelite = true;
+            mapaObjeto.removeLayer(camadaRuas);
+            mapaObjeto.addLayer(camadaSatelite);
+            document.getElementById('txt-btn-satelite').innerText = "Modo Ruas";
+            mapaEmModoSatelite = true;
           }
-      };
-
-      async function buscarEndereco(lat, lon) {
+        };
+        
+        async function buscarEndereco(lat, lon) {
           try {
-              const resposta = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
-              const dados = await resposta.json();
-              if (dados && dados.display_name) {
-                  document.getElementById('texto-endereco').innerText = "📍 " + dados.display_name.split(',').slice(0, 3).join(',');
-              }
+            const resposta = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
+            const dados = await resposta.json();
+            if (dados && dados.display_name) {
+              document.getElementById('texto-endereco').innerText = "📍 " + dados.display_name.split(',').slice(0, 3).join(',');
+            }
           } catch (erro) {
-              document.getElementById('texto-endereco').innerText = "📍 Endereço indisponível";
+            document.getElementById('texto-endereco').innerText = "📍 Endereço indisponível";
           }
-      }
-
-      window.salvarRotaAtual = function() {
+        }
+        
+        window.salvarRotaAtual = function() {
           if (historicoCoordenadas.length < 2) {
-              alert("🚗 Nenhuma movimentação registrada para salvar uma rota ainda!");
-              return;
+            alert("🚗 Nenhuma movimentação registrada para salvar uma rota ainda!");
+            return;
           }
           const dadosDaRota = {
-              data: new Date().toLocaleString('pt-BR'),
-              pontos: historicoCoordenadas
+            data: new Date().toLocaleString('pt-BR'),
+            pontos: historicoCoordenadas
           };
           let rotasSalvas = JSON.parse(localStorage.getItem('severino_rotas_salvas')) || [];
           rotasSalvas.push(dadosDaRota);
           localStorage.setItem('severino_rotas_salvas', JSON.stringify(rotasSalvas));
           alert(`✅ Sucesso! Rota de ${historicoCoordenadas.length} pontos guardada no Amigo Severino.`);
-      };
-
-      // --- ATUALIZADOR PRINCIPAL DO GPS (CHAMADO PELO KODULAR) ---
-      window.atualizarVelocidade = function(velocidadeKmh, lat, lon, bearing) {
-        if (gpsWarning.style.display !== 'none') gpsWarning.style.display = 'none';
-        gpsErrorCount = 0;
-        lastUpdateTime = Date.now();
+        };
         
-        window.velocidadeAlvoGPS = velocidadeKmh > 1.5 ? velocidadeKmh : 0;
-        if (window.velocidadeAlvoGPS > 0) {
-          totalSomaVelocidades += window.velocidadeAlvoGPS;
-          if (!window.totalLeiturasGpsContador) window.totalLeiturasGpsContador = 0;
-          window.totalLeiturasGpsContador++;
-          if (avgVal) {
-            avgVal.innerText = (totalSomaVelocidades / window.totalLeiturasGpsContador).toFixed(1);
+        // --- ATUALIZADOR PRINCIPAL DO GPS (CHAMADO PELO KODULAR) ---
+        window.atualizarVelocidade = function(velocidadeKmh, lat, lon, bearing) {
+          if (gpsWarning.style.display !== 'none') gpsWarning.style.display = 'none';
+          gpsErrorCount = 0;
+          lastUpdateTime = Date.now();
+          
+          window.velocidadeAlvoGPS = velocidadeKmh > 1.5 ? velocidadeKmh : 0;
+          if (window.velocidadeAlvoGPS > 0) {
+            totalSomaVelocidades += window.velocidadeAlvoGPS;
+            if (!window.totalLeiturasGpsContador) window.totalLeiturasGpsContador = 0;
+            window.totalLeiturasGpsContador++;
+            if (avgVal) {
+              avgVal.innerText = (totalSomaVelocidades / window.totalLeiturasGpsContador).toFixed(1);
+            }
           }
-        }
-        
-        if (lat && lon) {
-          if (window.velocidadeAlvoGPS < 4.0 && lastCoord !== null && marcadorUsuario !== null) {
+          
+          if (lat && lon) {
+            if (window.velocidadeAlvoGPS < 4.0 && lastCoord !== null && marcadorUsuario !== null) {
               if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
-              return; 
-          }
-
-          // CÁLCULO DE RUMO AUTOMÁTICO (Injetado aqui já que o Kodular envia 0 fixo)
-          if (lastCoord !== null && window.velocidadeAlvoGPS > 3) {
+              return;
+            }
+            
+            // CÁLCULO DE RUMO AUTOMÁTICO (Injetado para rodar com o 0 fixo do Kodular)
+            if (lastCoord !== null && window.velocidadeAlvoGPS > 3) {
               let dLon = (lon - lastCoord.lon) * Math.PI / 180;
               let lat1 = lastCoord.lat * Math.PI / 180;
               let lat2 = lat * Math.PI / 180;
               let y = Math.sin(dLon) * Math.cos(lat2);
               let x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
               let brng = Math.atan2(y, x) * 180 / Math.PI;
-              rumoAtualVeiculo = (brng + 360) % 360; 
-          } else if (bearing !== undefined && bearing !== null && bearing !== 0 && !isNaN(bearing)) {
+              rumoAtualVeiculo = (brng + 360) % 360;
+            } else if (bearing !== undefined && bearing !== null && bearing !== 0 && !isNaN(bearing)) {
               rumoAtualVeiculo = parseFloat(bearing);
-          }
-
-          const novoPonto = [lat, lon];
-          
-          if (lastCoord && window.velocidadeAlvoGPS > 2.0) {
-            let d = haversine(lastCoord.lat, lastCoord.lon, lat, lon);
-            if (d > 0 && d < 500) {
-              totalDistance += d;
-              localStorage.setItem('severino_distancia', totalDistance.toString());
             }
-          }
-          
-          lastCoord = { lat, lon };
-          historicoCoordenadas.push(novoPonto);
-          
-          if (mapaObjeto) {
-            // TRAÇADO DA ROTA (RISCO VERDE NEON)
-            if (!linhaTrajeto) {
+            
+            const novoPonto = [lat, lon];
+            
+            if (lastCoord && window.velocidadeAlvoGPS > 2.0) {
+              let d = haversine(lastCoord.lat, lastCoord.lon, lat, lon);
+              if (d > 0 && d < 500) {
+                totalDistance += d;
+                localStorage.setItem('severino_distancia', totalDistance.toString());
+              }
+            }
+            
+            lastCoord = { lat, lon };
+            historicoCoordenadas.push(novoPonto);
+            
+            if (mapaObjeto) {
+              // TRAÇADO DA ROTA (RISCO VERDE NEON SE MANTÉM INTACTO)
+              if (!linhaTrajeto) {
                 linhaTrajeto = L.polyline(historicoCoordenadas, {
-                    color: '#00ff88', 
-                    weight: 6,
-                    opacity: 0.9,
-                    lineCap: 'round'
+                  color: '#00ff88',
+                  weight: 6,
+                  opacity: 0.9,
+                  lineCap: 'round'
                 }).addTo(mapaObjeto);
-            } else {
+              } else {
                 linhaTrajeto.setLatLngs(historicoCoordenadas);
-            }
-
-            // ATUALIZADOR DO MARCADOR DA SETA (TAMANHO PROPORCIONAL)
-            if (marcadorUsuario) {
+              }
+              
+              // DESENHO DA SETA REDUZIDA
+              if (marcadorUsuario) {
                 mapaObjeto.removeLayer(marcadorUsuario);
-            }
-
-            const iconeSeta = L.divIcon({
-                className: '', 
+              }
+              
+              const iconeSeta = L.divIcon({
+                className: '',
                 html: `<div id="seta-waze-id" style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 24px solid #e0243f; filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.5)); transition: transform 0.2s ease-out; will-change: transform;"></div>`,
                 iconSize: [20, 24],
                 iconAnchor: [10, 12]
-            });
-
-            marcadorUsuario = L.marker(novoPonto, { icon: iconeSeta }).addTo(mapaObjeto);
-
-            // SÓ CENTRALIZA E GIRA SE O USUÁRIO NÃO ESTIVER EXPLORANDO COM O DEDO
-            if (mapaBloqueadoAoCarro) {
+              });
+              
+              marcadorUsuario = L.marker(novoPonto, { icon: iconeSeta }).addTo(mapaObjeto);
+              
+              // SÓ CENTRALIZA E GIRA O TERRENO SE O MODO AUTO SEGUIR ESTIVER ATIVO
+              if (mapaBloqueadoAoCarro) {
                 mapaObjeto.panTo(novoPonto);
                 
                 const elementoMapaHtml = document.getElementById('mapa');
                 if (elementoMapaHtml) {
-                    elementoMapaHtml.style.transformOrigin = "center center";
-                    elementoMapaHtml.style.transform = `rotate(${-rumoAtualVeiculo}deg)`;
+                  elementoMapaHtml.style.transformOrigin = "center center";
+                  elementoMapaHtml.style.transform = `rotate(${-rumoAtualVeiculo}deg)`;
                 }
-            }
-            
-            buscarEndereco(lat, lon);
-
-            // Força a seta a apontar sempre reta para a frente do painel do carro
-            const elementoSetaWaze = document.getElementById('seta-waze-id');
-            if (elementoSetaWaze) {
+              }
+              
+              buscarEndereco(lat, lon);
+              
+              // Mantém a seta apontando reto pro painel do veículo
+              const elementoSetaWaze = document.getElementById('seta-waze-id');
+              if (elementoSetaWaze) {
                 elementoSetaWaze.style.transform = `rotate(${rumoAtualVeiculo}deg)`;
+              }
             }
+          } else if (window.velocidadeAlvoGPS > 0) {
+            totalDistance += (window.velocidadeAlvoGPS / 3.6);
+            localStorage.setItem('severino_distancia', totalDistance.toString());
           }
-        } else if (window.velocidadeAlvoGPS > 0) {
-          totalDistance += (window.velocidadeAlvoGPS / 3.6);
-          localStorage.setItem('severino_distancia', totalDistance.toString());
-        }
+          
+          if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
+          if (dirVal && rumoAtualVeiculo !== undefined) dirVal.innerText = getCardinals(rumoAtualVeiculo);
+        };
         
-        if (distVal) distVal.innerText = (totalDistance / 1000).toFixed(2) + " km";
-        if (dirVal && rumoAtualVeiculo !== undefined) dirVal.innerText = getCardinals(rumoAtualVeiculo);
-      };
-      
-      window.zerarHodometro = function() {
-        totalDistance = 0;
-        totalSomaVelocidades = 0;
-        window.totalLeiturasGpsContador = 0;
-        historicoCoordenadas = [];
-        if (linhaTrajeto) linhaTrajeto.setLatLngs([]);
-        localStorage.setItem('severino_distancia', '0');
-        if (distVal) distVal.innerText = "0.00 km";
-        if (avgVal) avgVal.innerText = "0.0";
-      };
-      
-      window.switchPanel = function() {
-        if (currentMode === "digital") {
-          panelDigital.classList.add('escondido');
-          panelAnalog.classList.remove('escondido');
-          currentMode = "analog";
-          setTimeout(() => { resizeCanvas(); }, 40);
-        } else {
-          panelDigital.classList.remove('escondido');
-          panelAnalog.classList.add('escondido');
-          currentMode = "digital";
-        }
-      };
-      
-      window.abrirMapa = function() {
-        const telaMapa = document.getElementById('tela-mapa');
-        telaMapa.style.display = 'flex';
+        window.zerarHodometro = function() {
+          totalDistance = 0;
+          totalSomaVelocidades = 0;
+          window.totalLeiturasGpsContador = 0;
+          historicoCoordenadas = [];
+          if (linhaTrajeto) linhaTrajeto.setLatLngs([]);
+          localStorage.setItem('severino_distancia', '0');
+          if (distVal) distVal.innerText = "0.00 km";
+          if (avgVal) avgVal.innerText = "0.0";
+        };
         
-        setTimeout(function() {
+        window.switchPanel = function() {
+          if (currentMode === "digital") {
+            panelDigital.classList.add('escondido');
+            panelAnalog.classList.remove('escondido');
+            currentMode = "analog";
+            setTimeout(() => { resizeCanvas(); }, 40);
+          } else {
+            panelDigital.classList.remove('escondido');
+            panelAnalog.classList.add('escondido');
+            currentMode = "digital";
+          }
+        };
+        
+        window.abrirMapa = function() {
+          const telaMapa = document.getElementById('tela-mapa');
+          telaMapa.style.display = 'flex';
+          
+          // Dá um tempo de 600ms para a tela abrir antes de processar o mapa gráficos pesados
+          setTimeout(function() {
             inicializarMapeamentoOriginal();
             if (mapaObjeto) {
-                mapaObjeto.invalidateSize();
-                if (lastCoord) {
-                    mapaObjeto.setView([lastCoord.lat, lastCoord.lon], 16);
-                }
+              mapaObjeto.invalidateSize();
+              if (lastCoord) {
+                mapaObjeto.setView([lastCoord.lat, lastCoord.lon], 16);
+              }
             }
-        }, 500); 
-      };
-      
-      window.fecharMapa = function() {
-        const telaMapa = document.getElementById('tela-mapa');
-        telaMapa.style.display = 'none';
-        lastUpdateTime = Date.now();
-      };
-      
-      function resizeCanvas() {
-        if (!canvas || !speedStage) return;
-        const rect = canvas.parentNode.getBoundingClientRect();
-        const size = Math.min(rect.width, rect.height) * 0.99;
-        canvas.width = size;
-        canvas.height = size;
-      }
-      window.addEventListener('resize', resizeCanvas);
-      
-      function renderizarCicloSuave() {
-        const agora = Date.now();
-        const tempoSemGps = agora - lastUpdateTime;
-        if (tempoSemGps > 1200) {
-          window.velocidadeAlvoGPS = Math.max(0, window.velocidadeAlvoGPS - 5);
+          }, 600);
+        };
+        
+        window.fecharMapa = function() {
+          const telaMapa = document.getElementById('tela-mapa');
+          telaMapa.style.display = 'none';
+          lastUpdateTime = Date.now();
+        };
+        
+        function resizeCanvas() {
+          if (!canvas || !speedStage) return;
+          const rect = canvas.parentNode.getBoundingClientRect();
+          const size = Math.min(rect.width, rect.height) * 0.99;
+          canvas.width = size;
+          canvas.height = size;
         }
-        const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
-        const absDiferenca = Math.abs(diferenca);
-        let fatorSuavizacao = diferenca > 0 ? 0.98 : 0.60;
-        if (absDiferenca > 15) {
-          fatorSuavizacao = 0.99;
-        } else if (absDiferenca < 1 && window.velocidadeAlvoGPS === 0) {
-          fatorSuavizacao = 1.0;
+        window.addEventListener('resize', resizeCanvas);
+        
+        function renderizarCicloSuave() {
+          const agora = Date.now();
+          const tempoSemGps = agora - lastUpdateTime;
+          if (tempoSemGps > 1200) {
+            window.velocidadeAlvoGPS = Math.max(0, window.velocidadeAlvoGPS - 5);
+          }
+          const diferenca = window.velocidadeAlvoGPS - velocidadeSuaveExibida;
+          const absDiferenca = Math.abs(diferenca);
+          let fatorSuavizacao = diferenca > 0 ? 0.98 : 0.60;
+          if (absDiferenca > 15) {
+            fatorSuavizacao = 0.99;
+          } else if (absDiferenca < 1 && window.velocidadeAlvoGPS === 0) {
+            fatorSuavizacao = 1.0;
+          }
+          velocidadeSuaveExibida += diferenca * fatorSuavizacao;
+          if (Math.abs(velocidadeSuaveExibida) < 0.1) velocidadeSuaveExibida = 0;
+          const valorArredondado = Math.round(window.velocidadeAlvoGPS);
+          if (speedVal) {
+            speedVal.textContent = valorArredondado.toString().padStart(2, '0');
+            if (valorArredondado >= 100) {
+              speedVal.setAttribute("font-size", "42");
+            } else {
+              speedVal.setAttribute("font-size", "52");
+            }
+          }
+          drawGauge(velocidadeSuaveExibida);
+          
+          const tapeDeslocamento = (velocidadeSuaveExibida / 5) * tapeMarkWidth;
+          if (tapeTrackDigital) tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
+          if (tapeTrackAnalog) tapeTrackAnalog.style.transform = `translateX(${-tapeDeslocamento}px)`;
+          
+          const pct = Math.min((velocidadeSuaveExibida / 200) * 100, 100);
+          if (pBar) pBar.style.width = pct + "%";
+          requestAnimationFrame(renderizarCicloSuave);
         }
-        velocidadeSuaveExibida += diferenca * fatorSuavizacao;
-        if (Math.abs(velocidadeSuaveExibida) < 0.1) velocidadeSuaveExibida = 0;
-        const valorArredondado = Math.round(window.velocidadeAlvoGPS);
-        if (speedVal) {
-          speedVal.textContent = valorArredondado.toString().padStart(2, '0');
-          if (valorArredondado >= 100) {
-            speedVal.setAttribute("font-size", "42");
-          } else {
-            speedVal.setAttribute("font-size", "52");
+        
+        function updateGPS(pos) {
+          let rawSpeed = pos.coords.speed || 0;
+          if (rawSpeed < 0) rawSpeed = 0;
+          window.atualizarVelocidade(rawSpeed * 3.6, pos.coords.latitude, pos.coords.longitude, pos.coords.heading);
+        }
+        
+        function handleGPSError(err) {
+          gpsErrorCount++;
+          if (gpsWarning) {
+            gpsWarning.style.display = 'block';
+            gpsWarning.innerText = gpsErrorCount > 3 ? '⚠ Sinal GPS perdido.' : '🔍 Buscando sinal GPS...';
+          }
+          if (Date.now() - lastUpdateTime > 15000) {
+            window.velocidadeAlvoGPS = 0;
           }
         }
-        drawGauge(velocidadeSuaveExibida);
         
-        const tapeDeslocamento = (velocidadeSuaveExibida / 5) * tapeMarkWidth;
-        if (tapeTrackDigital) tapeTrackDigital.style.transform = `translateX(${-tapeDeslocamento}px)`;
-        if (tapeTrackAnalog) tapeTrackAnalog.style.transform = `translateX(${-tapeDeslocamento}px)`;
-        
-        const pct = Math.min((velocidadeSuaveExibida / 200) * 100, 100);
-        if (pBar) pBar.style.width = pct + "%";
-        requestAnimationFrame(renderizarCicloSuave);
-      }
-      
-      function updateGPS(pos) {
-        let rawSpeed = pos.coords.speed || 0;
-        if (rawSpeed < 0) rawSpeed = 0;
-        window.atualizarVelocidade(rawSpeed * 3.6, pos.coords.latitude, pos.coords.longitude, pos.coords.heading);
-      }
-      
-      function handleGPSError(err) {
-        gpsErrorCount++;
-        if (gpsWarning) {
-          gpsWarning.style.display = 'block';
-          gpsWarning.innerText = gpsErrorCount > 3 ? '⚠ Sinal GPS perdido.' : '🔍 Buscando sinal GPS...';
+        function haversine(lat1, lon1, lat2, lon2) {
+          const R = 6371000;
+          const dLat = (lat2 - lat1) * Math.PI / 180;
+          const dLon = (lon2 - lon1) * Math.PI / 180;
+          const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+          return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         }
-        if (Date.now() - lastUpdateTime > 15000) {
-          window.velocidadeAlvoGPS = 0;
+        
+        function getCardinals(deg) {
+          if (deg === null || isNaN(deg)) return "-";
+          const sectors = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+          return sectors[Math.round(deg / 45) % 8];
         }
-      }
-      
-      function haversine(lat1, lon1, lat2, lon2) {
-        const R = 6371000;
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
-        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      }
-      
-      function getCardinals(deg) {
-        if (deg === null || isNaN(deg)) return "-";
-        const sectors = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-        return sectors[Math.round(deg / 45) % 8];
-      }
-      
-      function drawGauge(speed) {
-        if (!canvas || !ctx) return;
-        const w = canvas.width;
-        const w_h = canvas.height;
-        const cx = w / 2;
-        const cy = w_h / 2;
-        const radius = Math.min(w, w_h) * 0.46;
-        const light = window.isLightMode;
         
-        const bgColor = light ? '#ffffff' : '#0a0a12';
-        const outerRingColor = light ? '#cccccc' : '#00ff88';
-        const arcBaseColor = light ? '#e4e7eb' : '#ffffff';
-        const arcProgressStart = '#c91a30';
-        const arcProgressEnd = '#ff3b50';
-        const tickMajorColor = light ? '#222222' : '#ffffff';
-        const tickMinorColor = light ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.4)';
-        const numberColor = light ? '#007744' : '#00ff88';
-        const needleColor = '#ff3b50';
-        const centerDotStroke = light ? '#222222' : '#ffffff';
-        const odoTextColor = light ? '#b37400' : '#f5a623';
-        const speedTextColor = light ? '#007744' : '#00ff88';
-        const infoBoxBg = light ? '#f8f9fa' : 'rgba(0,0,0,0.92)';
-
-        ctx.clearRect(0, 0, w, w_h);
-        ctx.fillStyle = bgColor;
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius + 14, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius + 14, 0, Math.PI * 2);
-        ctx.strokeStyle = outerRingColor;
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
-        
-        const startAngle = Math.PI * 0.78;
-        const endAngleTotal = Math.PI * 2.22;
-        const maxSpeed = 200;
-        const clampedSpeed = Math.min(speed, maxSpeed);
-        const progressAngle = startAngle + (clampedSpeed / maxSpeed) * (endAngleTotal - startAngle);
-        
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius, startAngle, endAngleTotal);
-        ctx.strokeStyle = arcBaseColor;
-        ctx.lineWidth = 12;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-        
-        const arcGrad = ctx.createLinearGradient(0, 0, w, 0);
-        arcGrad.addColorStop(0, arcProgressStart);
-        arcGrad.addColorStop(1, arcProgressEnd);
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius, startAngle, progressAngle);
-        ctx.strokeStyle = arcGrad;
-        ctx.lineWidth = 12;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-        
-        for (let i = 0; i <= maxSpeed; i += 5) {
-          const angle = startAngle + (i / maxSpeed) * (endAngleTotal - startAngle);
-          const isMajor = i % 20 === 0;
-          const tickLength = isMajor ? 14 : 8;
-          const innerRadius = radius - 6;
+        function drawGauge(speed) {
+          if (!canvas || !ctx) return;
+          const w = canvas.width;
+          const w_h = canvas.height;
+          const cx = w / 2;
+          const cy = w_h / 2;
+          const radius = Math.min(w, w_h) * 0.46;
+          const light = window.isLightMode;
+          
+          const bgColor = light ? '#ffffff' : '#0a0a12';
+          const outerRingColor = light ? '#cccccc' : '#00ff88';
+          const arcBaseColor = light ? '#e4e7eb' : '#ffffff';
+          const arcProgressStart = '#c91a30';
+          const arcProgressEnd = '#ff3b50';
+          const tickMajorColor = light ? '#222222' : '#ffffff';
+          const tickMinorColor = light ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.4)';
+          const numberColor = light ? '#007744' : '#00ff88';
+          const needleColor = '#ff3b50';
+          const centerDotStroke = light ? '#222222' : '#ffffff';
+          const odoTextColor = light ? '#b37400' : '#f5a623';
+          const speedTextColor = light ? '#007744' : '#00ff88';
+          const infoBoxBg = light ? '#f8f9fa' : 'rgba(0,0,0,0.92)';
+          
+          ctx.clearRect(0, 0, w, w_h);
+          ctx.fillStyle = bgColor;
           ctx.beginPath();
-          ctx.moveTo(cx + Math.cos(angle) * innerRadius, cy + Math.sin(angle) * innerRadius);
-          ctx.lineTo(cx + Math.cos(angle) * (innerRadius - tickLength), cy + Math.sin(angle) * (innerRadius - tickLength));
-          ctx.strokeStyle = isMajor ? tickMajorColor : tickMinorColor;
-          ctx.lineWidth = isMajor ? 3 : 1;
+          ctx.arc(cx, cy, radius + 14, 0, Math.PI * 2);
+          ctx.fill();
+          
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius + 14, 0, Math.PI * 2);
+          ctx.strokeStyle = outerRingColor;
+          ctx.lineWidth = 2.5;
           ctx.stroke();
+          
+          const startAngle = Math.PI * 0.78;
+          const endAngleTotal = Math.PI * 2.22;
+          const maxSpeed = 200;
+          const clampedSpeed = Math.min(speed, maxSpeed);
+          const progressAngle = startAngle + (clampedSpeed / maxSpeed) * (endAngleTotal - startAngle);
+          
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, startAngle, endAngleTotal);
+          ctx.strokeStyle = arcBaseColor;
+          ctx.lineWidth = 12;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+          
+          const arcGrad = ctx.createLinearGradient(0, 0, w, 0);
+          arcGrad.addColorStop(0, arcProgressStart);
+          arcGrad.addColorStop(1, arcProgressEnd);
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, startAngle, progressAngle);
+          ctx.strokeStyle = arcGrad;
+          ctx.lineWidth = 12;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+          
+          for (let i = 0; i <= maxSpeed; i += 5) {
+            const angle = startAngle + (i / maxSpeed) * (endAngleTotal - startAngle);
+            const isMajor = i % 20 === 0;
+            const tickLength = isMajor ? 14 : 8;
+            const innerRadius = radius - 6;
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(angle) * innerRadius, cy + Math.sin(angle) * innerRadius);
+            ctx.lineTo(cx + Math.cos(angle) * (innerRadius - tickLength), cy + Math.sin(angle) * (innerRadius - tickLength));
+            ctx.strokeStyle = isMajor ? tickMajorColor : tickMinorColor;
+            ctx.lineWidth = isMajor ? 3 : 1;
+            ctx.stroke();
+          }
+          
+          ctx.font = `bold ${Math.floor(radius * 0.13)}px 'Orbitron', sans-serif`;
+          ctx.fillStyle = numberColor;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          for (let i = 0; i <= maxSpeed; i += 20) {
+            const angle = startAngle + (i / maxSpeed) * (endAngleTotal - startAngle);
+            const numX = cx + Math.cos(angle) * (radius - 32);
+            const numY = cy + Math.sin(angle) * (radius - 32);
+            ctx.fillText(i.toString(), numX, numY);
+          }
+          
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(progressAngle + Math.PI / 2);
+          ctx.beginPath();
+          ctx.moveTo(-5, 0);
+          ctx.lineTo(0, -radius + 15);
+          ctx.lineTo(5, 0);
+          ctx.closePath();
+          ctx.fillStyle = needleColor;
+          ctx.fill();
+          ctx.restore();
+          
+          ctx.beginPath();
+          ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+          ctx.fillStyle = bgColor;
+          ctx.fill();
+          ctx.strokeStyle = centerDotStroke;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          
+          const dW = radius * 0.88;
+          const dH = radius * 0.38;
+          const dX = cx - dW / 2;
+          const dY = cy + radius * 0.38;
+          ctx.fillStyle = infoBoxBg;
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(dX, dY, dW, dH, 8);
+          else ctx.rect(dX, dY, dW, dH);
+          ctx.fill();
+          
+          ctx.font = `bold ${Math.floor(dH * 0.36)}px 'Orbitron', monospace`;
+          ctx.fillStyle = odoTextColor;
+          ctx.fillText(`ODO: ${(totalDistance/1000).toFixed(1)} km`, cx, dY + dH * 0.32);
+          ctx.font = `bold ${Math.floor(dH * 0.52)}px 'Orbitron', monospace`;
+          ctx.fillStyle = speedTextColor;
+          ctx.fillText(`${Math.round(speed)} km/h`, cx, dY + dH * 0.76);
         }
         
-        ctx.font = `bold ${Math.floor(radius * 0.13)}px 'Orbitron', sans-serif`;
-        ctx.fillStyle = numberColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        for (let i = 0; i <= maxSpeed; i += 20) {
-          const angle = startAngle + (i / maxSpeed) * (endAngleTotal - startAngle);
-          const numX = cx + Math.cos(angle) * (radius - 32);
-          const numY = cy + Math.sin(angle) * (radius - 32);
-          ctx.fillText(i.toString(), numX, numY);
-        }
-        
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(progressAngle + Math.PI / 2);
-        ctx.beginPath();
-        ctx.moveTo(-5, 0);
-        ctx.lineTo(0, -radius + 15);
-        ctx.lineTo(5, 0);
-        ctx.closePath();
-        ctx.fillStyle = needleColor;
-        ctx.fill();
-        ctx.restore();
-        
-        ctx.beginPath();
-        ctx.arc(cx, cy, 10, 0, Math.PI * 2);
-        ctx.fillStyle = bgColor;
-        ctx.fill();
-        ctx.strokeStyle = centerDotStroke;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        
-        const dW = radius * 0.88;
-        const dH = radius * 0.38;
-        const dX = cx - dW / 2;
-        const dY = cy + radius * 0.38;
-        ctx.fillStyle = infoBoxBg;
-        ctx.beginPath();
-        if (ctx.roundRect) ctx.roundRect(dX, dY, dW, dH, 8);
-        else ctx.rect(dX, dY, dW, dH);
-        ctx.fill();
-        
-        ctx.font = `bold ${Math.floor(dH * 0.36)}px 'Orbitron', monospace`;
-        ctx.fillStyle = odoTextColor;
-        ctx.fillText(`ODO: ${(totalDistance/1000).toFixed(1)} km`, cx, dY + dH * 0.32);
-        ctx.font = `bold ${Math.floor(dH * 0.52)}px 'Orbitron', monospace`;
-        ctx.fillStyle = speedTextColor;
-        ctx.fillText(`${Math.round(speed)} km/h`, cx, dY + dH * 0.76);
-      }
-      
-      resizeCanvas();
-      renderizarCicloSuave();
-    })();
-  </script>
-  
+        resizeCanvas();
+        renderizarCicloSuave();
+      })();
+    </script>
 </body>
+
 </html>
