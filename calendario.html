@@ -23,7 +23,6 @@
       position: relative;
     }
 
-    /* Partículas de fundo */
     body::before {
       content: "";
       position: fixed;
@@ -62,7 +61,6 @@
       z-index: 1;
     }
 
-    /* ────────── Cubo 3D (canto esquerdo, menor) ────────── */
     .cube-wrapper {
       position: fixed;
       top: 20px;
@@ -126,71 +124,32 @@
       font-size: 0.7rem;
     }
 
-    .face::after {
-      content: "";
-      position: absolute;
-      inset: 3px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 215, 0, 0.2);
-      pointer-events: none;
-    }
+    .faceFront { transform: translateZ(40px); background: radial-gradient(circle at 30% 30%, #3d1e6d, #1a0a2e); }
+    .faceFront .store-icon { font-size: 1.3rem; margin-bottom: 1px; filter: drop-shadow(0 0 6px gold); }
+    .faceFront .store-name { font-size: 0.55rem; letter-spacing: 1.5px; color: #ffd700; }
 
-    .face.front { transform: translateZ(40px); background: radial-gradient(circle at 30% 30%, #3d1e6d, #1a0a2e); }
-    .face.front .store-icon { font-size: 1.3rem; margin-bottom: 1px; filter: drop-shadow(0 0 6px gold); }
-    .face.front .store-name { font-size: 0.55rem; letter-spacing: 1.5px; color: #ffd700; }
+    .faceBack { transform: rotateY(180deg) translateZ(40px); background: radial-gradient(circle at 70% 40%, #2d1b4e, #140a24); font-size: 0.8rem; letter-spacing: 2px; color: #ffd966; }
+    .faceRight { transform: rotateY(90deg) translateZ(40px); background: radial-gradient(circle at 50% 50%, #3b206b, #1e0c38); font-size: 0.7rem; color: #f0c27b; }
+    .faceLeft { transform: rotateY(-90deg) translateZ(40px); background: radial-gradient(circle at 50% 50%, #2c1a54, #150a2b); font-size: 0.9rem; font-weight: 900; color: #ffd700; }
+    .faceTop { transform: rotateX(90deg) translateZ(40px); background: radial-gradient(circle at 50% 40%, #4a2575, #1e0c38); font-size: 1.5rem; }
+    .faceBottom { transform: rotateX(-90deg) translateZ(40px); background: radial-gradient(circle at 50% 50%, #2d1b4e, #140a24); font-size: 1.1rem; letter-spacing: 2px; color: #ffd966; }
 
-    .face.back { transform: rotateY(180deg) translateZ(40px); background: radial-gradient(circle at 70% 40%, #2d1b4e, #140a24); font-size: 0.8rem; letter-spacing: 2px; color: #ffd966; }
-    .face.right { transform: rotateY(90deg) translateZ(40px); background: radial-gradient(circle at 50% 50%, #3b206b, #1e0c38); font-size: 0.7rem; color: #f0c27b; }
-    .face.left { transform: rotateY(-90deg) translateZ(40px); background: radial-gradient(circle at 50% 50%, #2c1a54, #150a2b); font-size: 0.9rem; font-weight: 900; color: #ffd700; }
-    .face.top { transform: rotateX(90deg) translateZ(40px); background: radial-gradient(circle at 50% 40%, #4a2575, #1e0c38); font-size: 1.5rem; }
-    .face.bottom { transform: rotateX(-90deg) translateZ(40px); background: radial-gradient(circle at 50% 50%, #2d1b4e, #140a24); font-size: 1.1rem; letter-spacing: 2px; color: #ffd966; }
-
-    /* ────────── Header (novo banner azul royal/prata) ────────── */
     #headerMain {
       width: 100%;
       padding: 20px 18px;
       border-radius: 24px;
-      background: linear-gradient(135deg, #1e3c72, #2a5298, #1e3c72);
+      background: linear-gradient(135deg, rgba(30, 60, 114, 0.85), rgba(42, 82, 152, 0.85));
+      background-position: center;
+      background-size: cover;
       text-align: center;
       box-shadow:
         0 20px 40px rgba(0, 40, 100, 0.25),
         0 10px 20px rgba(0, 0, 0, 0.5),
-        inset 0 -3px 6px rgba(0, 0, 0, 0.2),
-        0 0 30px rgba(173, 216, 230, 0.2);
+        inset 0 -3px 6px rgba(0, 0, 0, 0.2);
       transform: rotateX(3deg) translateZ(15px);
       transform-style: preserve-3d;
-      transition: all 0.35s ease;
       border: 2px solid rgba(255, 255, 255, 0.2);
-      position: relative;
-      overflow: hidden;
-    }
-
-    #headerMain::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg,
-          transparent 40%,
-          rgba(255, 255, 255, 0.25) 50%,
-          transparent 60%);
-      animation: shine 4s infinite;
-      pointer-events: none;
-    }
-
-    @keyframes shine {
-      0% { transform: translateX(-100%) translateY(-100%); }
-      100% { transform: translateX(100%) translateY(100%); }
-    }
-
-    #headerMain:hover {
-      transform: rotateX(1deg) translateZ(25px);
-      box-shadow:
-        0 30px 50px rgba(0, 70, 150, 0.35),
-        0 15px 30px rgba(0, 0, 0, 0.6),
-        0 0 50px rgba(173, 216, 230, 0.35);
+      backdrop-filter: blur(10px);
     }
 
     #clock {
@@ -205,8 +164,6 @@
       display: inline-block;
       backdrop-filter: blur(8px);
       color: #fff;
-      position: relative;
-      z-index: 1;
     }
 
     #titleApp {
@@ -216,8 +173,6 @@
       letter-spacing: 2px;
       margin: 4px 0;
       color: #e0f0ff;
-      position: relative;
-      z-index: 1;
     }
 
     #yearBadge {
@@ -231,11 +186,8 @@
       font-weight: 800;
       letter-spacing: 2px;
       color: #ffd700;
-      position: relative;
-      z-index: 1;
     }
 
-    /* ────────── Controles ────────── */
     .controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -245,11 +197,7 @@
       padding: 15px;
       border-radius: 20px;
       backdrop-filter: blur(20px);
-      box-shadow:
-        0 15px 30px rgba(0, 0, 0, 0.5),
-        inset 0 1px 1px rgba(255, 215, 0, 0.1),
-        0 0 20px rgba(212, 175, 55, 0.15);
-      transform: translateZ(15px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 215, 0, 0.25);
     }
 
@@ -261,23 +209,12 @@
       background: rgba(0, 0, 0, 0.5);
       padding: 8px 12px;
       border-radius: 15px;
-      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
-    }
-
-    .year-selector button {
-      font-size: 1.3rem;
-      padding: 12px 18px;
-      width: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     #yearVal {
       font-size: 1.5rem;
       font-weight: 900;
       letter-spacing: 3px;
-      text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
       color: #ffd700;
     }
 
@@ -289,46 +226,14 @@
       color: #ffd966;
       font-weight: 700;
       cursor: pointer;
-      box-shadow:
-        0 6px 15px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 215, 0, 0.15);
       transition: all 0.25s ease;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-      letter-spacing: 0.5px;
-      transform: translateZ(10px);
       font-size: 1rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button::after {
-      content: "";
-      position: absolute;
-      top: -40%;
-      left: -20%;
-      width: 60%;
-      height: 180%;
-      background: linear-gradient(90deg,
-          transparent,
-          rgba(255, 215, 0, 0.15),
-          transparent);
-      transform: rotate(25deg);
-      transition: 0.4s;
-      pointer-events: none;
     }
 
     button:hover {
       background: linear-gradient(145deg, #3d3d55, #2a2a3a);
-      box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.6),
-        0 0 20px rgba(255, 215, 0, 0.25);
       border-color: rgba(255, 215, 0, 0.6);
       color: #fff;
-    }
-
-    button:active {
-      transform: translateZ(0px) scale(0.94);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
 
     .btn-action {
@@ -336,17 +241,8 @@
       color: #fff;
       font-weight: 800;
       border-color: rgba(255, 215, 0, 0.5);
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-      letter-spacing: 1px;
     }
 
-    .btn-action:hover {
-      background: linear-gradient(145deg, #3a6ab5, #2a5298);
-      box-shadow: 0 10px 30px rgba(42, 82, 152, 0.5);
-      color: #fff;
-    }
-
-    /* ────────── Navegação do mês ────────── */
     .month-nav {
       display: flex;
       justify-content: space-between;
@@ -356,11 +252,7 @@
       background: rgba(0, 0, 0, 0.4);
       border-radius: 20px;
       backdrop-filter: blur(15px);
-      box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.5),
-        0 0 20px rgba(212, 175, 55, 0.1);
       border: 1px solid rgba(255, 215, 0, 0.2);
-      transform: translateZ(12px);
     }
 
     .month-nav button {
@@ -371,48 +263,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
       border-radius: 50%;
-      border: 2px solid rgba(255, 215, 0, 0.5);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4), 0 0 15px rgba(30, 60, 114, 0.4);
       color: #fff;
-    }
-
-    .month-nav button:hover {
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6), 0 0 30px rgba(30, 60, 114, 0.6);
-      transform: scale(1.05) translateZ(15px);
     }
 
     #monthLabel {
       font-size: 1.7rem;
       font-weight: 900;
       color: #ffd700;
-      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.7);
       letter-spacing: 3px;
     }
 
-    /* ────────── Card calendário ────────── */
     .card {
-      background: linear-gradient(145deg, rgba(18, 10, 35, 0.9), rgba(8, 4, 18, 0.95));
+      background: linear-gradient(145deg, rgba(18, 10, 35, 0.85), rgba(8, 4, 18, 0.9));
       border-radius: 28px;
       padding: 18px;
       width: 100%;
-      box-shadow:
-        0 25px 50px rgba(0, 0, 0, 0.7),
-        inset 0 1px 1px rgba(255, 215, 0, 0.1),
-        0 0 30px rgba(138, 43, 226, 0.15);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(25px);
-      transform: rotateY(-1.5deg) translateZ(35px);
-      transform-style: preserve-3d;
-      transition: all 0.4s ease;
       border: 1px solid rgba(255, 215, 0, 0.2);
-    }
-
-    .card:hover {
-      transform: rotateY(0deg) translateZ(45px);
-      box-shadow:
-        0 35px 70px rgba(0, 0, 0, 0.8),
-        0 0 40px rgba(212, 175, 55, 0.2);
     }
 
     .weekdays {
@@ -423,8 +292,6 @@
       color: #ffd966;
       font-size: 0.85rem;
       margin-bottom: 12px;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
-      letter-spacing: 1px;
     }
 
     .days-grid {
@@ -446,24 +313,7 @@
       border: 1px solid rgba(255, 215, 0, 0.2);
       position: relative;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow:
-        0 8px 18px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
-      transform: translateZ(12px);
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
       color: #e0d0f0;
-    }
-
-    .day:hover:not(.empty) {
-      transform: translateZ(25px) scale(1.08);
-      box-shadow:
-        0 15px 30px rgba(0, 0, 0, 0.7),
-        0 0 25px rgba(255, 215, 0, 0.3);
-      border-color: rgba(255, 215, 0, 0.7);
-      background: linear-gradient(145deg, rgba(50, 30, 80, 0.95), rgba(25, 12, 50, 0.95));
-      z-index: 5;
-      color: #fff;
     }
 
     .day.empty {
@@ -476,32 +326,13 @@
     .day.today {
       border: 2.5px solid #ffd700;
       background: linear-gradient(145deg, rgba(255, 215, 0, 0.3), rgba(255, 180, 0, 0.15));
-      box-shadow:
-        0 0 30px rgba(255, 215, 0, 0.6),
-        0 8px 18px rgba(0, 0, 0, 0.5);
       font-weight: 900;
       color: #fff;
-      animation: pulseToday 2s infinite ease-in-out;
-    }
-
-    @keyframes pulseToday {
-      0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 8px 18px rgba(0, 0, 0, 0.5); }
-      50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 12px 25px rgba(0, 0, 0, 0.6); }
     }
 
     .day.holiday {
       background: linear-gradient(145deg, #c0392b, #e74c3c);
       color: #fff;
-      border-color: rgba(255, 215, 0, 0.5);
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-      font-weight: 800;
-      box-shadow: 0 8px 18px rgba(231, 76, 60, 0.3), 0 0 15px rgba(255, 100, 100, 0.3);
-    }
-
-    .day.holiday:hover {
-      box-shadow: 0 15px 30px rgba(231, 76, 60, 0.5), 0 0 25px rgba(255, 100, 100, 0.5);
-      background: linear-gradient(145deg, #e74c3c, #c0392b);
-      transform: translateZ(28px) scale(1.1);
     }
 
     .holiday-name {
@@ -513,11 +344,7 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      padding: 0 2px;
-      font-weight: 600;
-      opacity: 0.95;
       color: #ffeaa7;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     .note-dot {
@@ -526,16 +353,8 @@
       background: #ffd700;
       border-radius: 50%;
       margin-top: 3px;
-      box-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.6);
-      animation: glowDot 1.5s infinite alternate;
     }
 
-    @keyframes glowDot {
-      0% { box-shadow: 0 0 6px #ffd700; }
-      100% { box-shadow: 0 0 16px #ffd700, 0 0 30px rgba(255, 215, 0, 0.8); }
-    }
-
-    /* ────────── Modal ────────── */
     .modal {
       display: none;
       position: fixed;
@@ -554,20 +373,7 @@
       border-radius: 28px;
       width: 100%;
       max-width: 400px;
-      box-shadow:
-        0 40px 80px rgba(0, 0, 0, 0.9),
-        inset 0 1px 0 rgba(255, 215, 0, 0.15),
-        0 0 50px rgba(155, 89, 182, 0.3);
-      transform: rotateX(2deg) translateZ(50px);
       border: 2px solid rgba(255, 215, 0, 0.3);
-    }
-
-    .modal-content h4 {
-      font-size: 1.4rem;
-      margin-bottom: 16px;
-      color: #ffd700;
-      text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-      letter-spacing: 1.5px;
     }
 
     textarea {
@@ -579,81 +385,38 @@
       background: rgba(0, 0, 0, 0.55);
       border: 1px solid rgba(255, 215, 0, 0.3);
       color: #fff;
-      font-size: 1rem;
-      resize: vertical;
-      box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.7);
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      transition: border 0.3s;
-    }
-
-    textarea:focus {
-      outline: none;
-      border-color: rgba(255, 215, 0, 0.7);
-      box-shadow: inset 0 4px 18px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.2);
-    }
-
-    /* ────────── Responsividade (cubo reposiciona) ────────── */
-    @media (min-width: 768px) {
-      body { padding: 30px; }
-      .container { max-width: 600px; }
-      .cube-wrapper { top: 25px; left: 25px; }
-      #clock { font-size: 2.2rem; }
-      #titleApp { font-size: 1.8rem; }
-      .day { font-size: 1.2rem; }
-      .holiday-name { font-size: 0.7rem; }
-      .month-nav button { width: 60px; height: 60px; font-size: 2.2rem; }
-      #monthLabel { font-size: 1.9rem; }
     }
 
     @media (max-width: 380px) {
-      .cube-wrapper {
-        width: 60px;
-        height: 60px;
-        top: 10px;
-        left: 10px;
-      }
+      .cube-wrapper { width: 60px; height: 60px; }
       .cube { width: 60px; height: 60px; }
-      .face { width: 60px; height: 60px; font-size: 0.6rem; border-radius: 8px; }
-      .face.front { transform: translateZ(30px); font-size: 0.7rem; }
-      .face.back { transform: rotateY(180deg) translateZ(30px); font-size: 0.65rem; }
-      .face.right { transform: rotateY(90deg) translateZ(30px); font-size: 0.6rem; }
-      .face.left { transform: rotateY(-90deg) translateZ(30px); font-size: 0.75rem; }
-      .face.top { transform: rotateX(90deg) translateZ(30px); font-size: 1.2rem; }
-      .face.bottom { transform: rotateX(-90deg) translateZ(30px); font-size: 0.9rem; }
-      .day { font-size: 0.8rem; border-radius: 10px; }
-      .holiday-name { font-size: 0.48rem; }
-      button { padding: 10px 14px; font-size: 0.8rem; }
-      .month-nav button { width: 46px; height: 46px; font-size: 1.5rem; }
-      #clock { font-size: 1.3rem; }
-      #titleApp { font-size: 1.1rem; }
+      .face { width: 60px; height: 60px; }
     }
   </style>
 </head>
 <body>
-  <!-- Cubo 3D fixo no canto superior esquerdo -->
+
   <div class="cube-wrapper" id="cubeWrapper">
     <div class="cube" id="mainCube">
-      <div class="face front">
+      <div class="face faceFront">
         <span class="store-icon">🏪</span>
         <span class="store-name">SEVERINO</span>
       </div>
-      <div class="face back" id="cubeClock">00:00</div>
-      <div class="face right" id="cubeMonth">Abril</div>
-      <div class="face left" id="cubeYear">2026</div>
-      <div class="face top">📅</div>
-      <div class="face bottom">3D</div>
+      <div class="face faceBack" id="cubeClock">00:00</div>
+      <div class="face faceRight" id="cubeMonth">Abril</div>
+      <div class="face faceLeft" id="cubeYear">2026</div>
+      <div class="face faceTop">📅</div>
+      <div class="face faceBottom">3D</div>
     </div>
   </div>
 
   <div class="container">
-    <!-- Header / Banner da loja (nova cor azul) -->
     <header id="headerMain">
       <div id="clock">00:00:00</div>
       <h2 id="titleApp">Severino Store</h2>
       <div id="yearBadge">2026</div>
     </header>
 
-    <!-- Controles -->
     <div class="controls">
       <div class="year-selector">
         <button onclick="changeYear(-1)">◀</button>
@@ -664,14 +427,12 @@
       <button class="btn-action" onclick="resetBg()">↺ Padrão</button>
     </div>
 
-    <!-- Navegação do mês -->
     <div class="month-nav">
       <button onclick="changeMonth(-1)">‹</button>
       <span id="monthLabel">Abril</span>
       <button onclick="changeMonth(1)">›</button>
     </div>
 
-    <!-- Vitrine do calendário -->
     <div class="card">
       <div class="weekdays">
         <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
@@ -680,13 +441,12 @@
     </div>
   </div>
 
-  <!-- Modal de lembretes -->
   <div class="modal" id="modal">
     <div class="modal-content">
       <h4 id="mTitle">📝 Lembrete</h4>
       <textarea id="mInput" placeholder="Digite seu lembrete..."></textarea>
       <div style="display:flex; gap:12px; margin-top:5px;">
-        <button style="flex:1; background:linear-gradient(145deg, #27ae60, #2ecc71); color:#fff; font-weight:800; border-color:rgba(255,215,0,0.5);" onclick="saveNote()">💾 Salvar</button>
+        <button style="flex:1; background:linear-gradient(145deg, #27ae60, #2ecc71); color:#fff; font-weight:800;" onclick="saveNote()">💾 Salvar</button>
         <button style="flex:1;" onclick="closeModal()">❌ Sair</button>
       </div>
     </div>
@@ -718,8 +478,8 @@
       const modal = document.getElementById('modal');
       const mTitle = document.getElementById('mTitle');
       const mInput = document.getElementById('mInput');
-      const headerMain = document.getElementById('headerMain');
       const imgIn = document.getElementById('imgIn');
+      const headerMain = document.getElementById('headerMain');
 
       function render() {
         yearVal.textContent = curYear;
@@ -758,8 +518,6 @@
         render();
       };
       window.closeModal = () => { modal.style.display = "none"; };
-      modal.addEventListener('click', (e) => { if (e.target === modal) window.closeModal(); });
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.closeModal(); });
 
       window.changeMonth = (delta) => {
         curMonth += delta;
@@ -777,28 +535,38 @@
       setInterval(updateClock, 1000);
       updateClock();
 
+      // CORRIGIDO: Agora aplica a imagem apenas no cabeçalho (área do relógio)
       imgIn.onchange = (e) => {
         const file = e.target.files[0];
         if (file) {
           const reader = new FileReader();
           reader.onload = (ev) => {
-            headerMain.style.background = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${ev.target.result}) center/cover`;
-            localStorage.setItem('bg_lc', ev.target.result);
+            const imgData = ev.target.result;
+            headerMain.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${imgData})`;
+            try {
+              localStorage.setItem('bg_calendario_header', imgData);
+            } catch (err) {
+              console.log("Imagem muito pesada para histórico do LocalStorage.");
+            }
           };
           reader.readAsDataURL(file);
         }
       };
-      window.resetBg = () => {
-        localStorage.removeItem('bg_lc');
-        headerMain.style.background = "linear-gradient(135deg, #1e3c72, #2a5298, #1e3c72)";
-      };
-      const savedBg = localStorage.getItem('bg_lc');
-      if (savedBg) headerMain.style.background = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${savedBg}) center/cover`;
 
-      // Interação cubo (arrastar)
+      window.resetBg = () => {
+        localStorage.removeItem('bg_calendario_header');
+        headerMain.style.backgroundImage = "linear-gradient(135deg, rgba(30, 60, 114, 0.85), rgba(42, 82, 152, 0.85))";
+      };
+
+      const savedBg = localStorage.getItem('bg_calendario_header');
+      if (savedBg) {
+        headerMain.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${savedBg})`;
+      }
+
       const cubeWrapper = document.getElementById('cubeWrapper');
       const mainCube = document.getElementById('mainCube');
       let isDragging = false, prevX = 0, prevY = 0, rotX = -8, rotY = 0, autoAnimPaused = false;
+      
       cubeWrapper.addEventListener('mousedown', (e) => {
         isDragging = true; prevX = e.clientX; prevY = e.clientY;
         mainCube.style.animationPlayState = 'paused'; autoAnimPaused = true; e.preventDefault();
@@ -814,18 +582,18 @@
       window.addEventListener('mouseup', () => {
         if (isDragging) {
           isDragging = false;
-          clearTimeout(window._cubeResumeTimeout);
-          window._cubeResumeTimeout = setTimeout(() => {
+          setTimeout(() => {
             if (autoAnimPaused) { mainCube.style.animationPlayState = 'running'; autoAnimPaused = false; mainCube.style.transform = ''; }
           }, 2000);
         }
       });
+
       cubeWrapper.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           isDragging = true; prevX = e.touches[0].clientX; prevY = e.touches[0].clientY;
           mainCube.style.animationPlayState = 'paused'; autoAnimPaused = true;
         }
-      }, { passive: false });
+      }, { passive: true });
       window.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         const dx = e.touches[0].clientX - prevX, dy = e.touches[0].clientY - prevY;
@@ -833,12 +601,11 @@
         rotX = Math.max(-30, Math.min(30, rotX));
         mainCube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
         prevX = e.touches[0].clientX; prevY = e.touches[0].clientY;
-      }, { passive: false });
+      }, { passive: true });
       window.addEventListener('touchend', () => {
         if (isDragging) {
           isDragging = false;
-          clearTimeout(window._cubeResumeTimeout);
-          window._cubeResumeTimeout = setTimeout(() => {
+          setTimeout(() => {
             if (autoAnimPaused) { mainCube.style.animationPlayState = 'running'; autoAnimPaused = false; mainCube.style.transform = ''; }
           }, 2000);
         }
