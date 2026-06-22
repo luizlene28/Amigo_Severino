@@ -16,39 +16,35 @@
         .header { background: #0f1430; padding: 15px; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .container { display: flex; height: calc(100vh - 70px); }
         .sidebar { width: 400px; background: var(--bg-secondary); padding: 20px; overflow-y: auto; z-index: 10; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
-        .card { background: var(--bg-card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .card { background: var(--bg-card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; position: relative; }
         label { font-size: 0.8em; color: var(--text-secondary); text-transform: uppercase; font-weight: bold; }
-        select, input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; background: #0a0e27; color: white; border: 1px solid var(--border); font-size: 16px; }
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--accent); color: #0a0e27; font-size: 16px; transition: 0.3s; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; background: #0a0e27; color: white; border: 1px solid var(--border); font-size: 16px; }
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--accent); color: #0a0e27; font-size: 16px; transition: 0.3s; margin-top: 10px; }
         .btn:active { transform: scale(0.98); }
         .results-card { display: none; }
         .dist-box { text-align: center; padding: 15px; background: rgba(0,212,170,0.1); border-radius: 10px; margin-bottom: 15px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .mini-card { background: #0a0e27; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid var(--border); }
         #map { flex: 1; background: #0a0e27; }
-        @media (max-width: 800px) { .container { flex-direction: column; } .sidebar { width: 100%; height: 60%; } #map { height: 40%; } }
-        .mode-indicator { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: bold; margin-left: 10px; }
-        .mode-online { background: #00d4aa33; color: #00d4aa; }
-        .mode-offline { background: #ff6b6b33; color: #ff6b6b; }
+        @media (max-width: 800px) { .container { flex-direction: column; } .sidebar { width: 100%; height: 50%; } #map { height: 50%; } }
+        .loading { display: none; text-align: center; color: var(--accent); margin: 10px 0; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h2 style="color: var(--accent)">Rota Fácil! 🗺️ <span id="modeTag" class="mode-indicator mode-online">ONLINE</span></h2>
-        <select id="mapMode" style="width: auto; margin: 0; padding: 5px;" onchange="toggleMode()">
-            <option value="online">Modo Online (Preciso)</option>
-            <option value="offline">Modo Offline (Estimado)</option>
-        </select>
+        <h2 style="color: var(--accent)">Rota Fácil! 🗺️ <span style="font-size: 0.6em; color: var(--text-secondary)">BRASIL TOTAL</span></h2>
     </div>
     <div class="container">
         <div class="sidebar">
             <div class="card">
-                <label>Origem</label>
-                <select id="os" onchange="upCities('o')"></select>
-                <select id="oc"></select>
-                <label>Destino</label>
-                <select id="ds" onchange="upCities('d')"></select>
-                <select id="dc"></select>
+                <label>Cidade de Origem</label>
+                <input type="text" id="origem" placeholder="Ex: Macapa AP ou Sao Paulo">
+                
+                <label>Cidade de Destino</label>
+                <input type="text" id="destino" placeholder="Ex: Goiobal, Belem PA, Rio de Janeiro">
+                
+                <div id="loader" class="loading">Calculando rota nacional... ⏳</div>
+                
                 <button class="btn" onclick="calc()">Calcular Viagem</button>
             </div>
             <div id="res" class="results-card">
@@ -82,132 +78,72 @@
         <div id="map"></div>
     </div>
 
-   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // DB Super Expandido - Amapá e Pará (Região de Belém Ampliada)
-        const DB = {
-    "AP": { 
-        n: "Amapá", 
-        lat: 0.034, 
-        lon: -51.06, 
-        cities: [
-            "Amapá","Calçoene","Cutias","Ferreira Gomes","Itaubal","Laranjal do Jari","Macapá","Mazagão","Oiapoque","Pedra Branca do Amapari","Porto Grande","Pracuúba","Santana","Serra do Navio","Tartarugalzinho","Vitória do Jari","Abacate da Pedreira","Anauerapucu","Aporema","Ariri","Bailique","Boca do Jari","Cabralzinho","Cachaço","Campina de São Pedro","Camaipi","Carnot","Carvão","Cassiporé","Chaves","Chefe Clodoaldo","Colônia do Matapi","Comunidade do Igarapé Grande","Cunani","Curiaú","Fazendinha","Igarapé do Lago","Ilha de Santana","Inajá","Industrial","Itaubal do Piririm","Lourenço","Luzia","Macacoari","Maruanum","Matapi","Mazagão Velho","Munguba","Mutum","Nazaré","Outeiro do Lourenço","Pacuí","Paredão","Piaçacá","Piaçaba","Pirativa","Porto Céu","Região do Mel","Ribeirão","Santa Luzia do Pacuí","Santo Antônio da Pedreira","São Joaquim do Pacuí","São Tomé","Sertãozinho","Sucuriju","Turiaca","Vila Amazonas","Vila Velha do Cassiporé","Vila Progresso","Vila Nova","Vila dos Evangélicos","Vila do Trem","Vila Fátima","Vila Gorete","Vila Reis",
-            "Paredão (Ferreira Gomes)", "Vila do Amapari (Ferreira Gomes)", "Assentamento Matapi (Ferreira Gomes)", "Igarapé do Limão (Ferreira Gomes)", "Vila Triunfo (Ferreira Gomes)", "Corredor do Pedreirinho (Ferreira Gomes)", "Porto do Meio (Ferreira Gomes)", "Fazenda Pacuí (Ferreira Gomes)",
-            "Vila Novo Horizonte (Tartarugalzinho)", "Cedro (Tartarugalzinho)", "Terra Firme (Tartarugalzinho)", "Bom Jesus (Tartarugalzinho)", "Vila Itaubal (Tartarugalzinho)", "Assentamento Entre Rios (Tartarugalzinho)", "Lago Novo (Tartarugalzinho)", "Vila Mangueira (Tartarugalzinho)", "Nazarezinho (Tartarugalzinho)", "Andiroba (Tartarugalzinho)", "Igarapé Grande (Tartarugalzinho)",
-            "Base de Aviação (Amapá)", "Sucuriju (Amapá)", "Piquiá (Amapá)", "Vila Mutum (Amapá)", "Calçoene Velho (Amapá)", "Assentamento Raimundo Osmar Ribeiro (Amapá)", "Vila do Cruzeiro (Amapá)", "Região dos Lagos (Amapá)", "Igarapé Grande (Amapá)",
-            "Lourenço (Calçoene)", "Cunani (Calçoene)", "Vila do Goiabal (Calçoene)", "Praia do Goiabal (Calçoene)", "Igarapé Asfalto (Calçoene)", "Assentamento Firmino (Amapá/Calçoene)", "Vila Carnot (Calçoene)", "Freguesia do Amapá (Calçoene)",
-            "Trinta Reis (Macapá)", "Luz de Fátima (Macapá)", "Vila Progresso (Bailique)", "Vila Macedônia (Bailique)", "Maruanum II (Macapá)", "Carapanatuba (Macapá)", "Mel da Pedreira (Macapá)", "Piaçaba Novo (Macapá)", "Abacate da Pedreira Novo (Macapá)",
-            "Igarapé do Costa (Santana)", "Anauerapucu de Cima (Santana)", "Vila Piaçacá (Santana)", "Ilha de Santana Nova (Santana)",
-            "Mazagão Novo (Mazagão)", "Carvão Novo (Mazagão)", "Vila de Mazagão Velho (Mazagão)", "Maracá (Mazagão)",
-            "Vila Velha (Oiapoque)", "Clevelândia do Norte (Oiapoque)", "Vila Manga (Oiapoque)", "Assentamento Vila Nova (Oiapoque)",
-            "Colônia do Matapi (Porto Grande)", "Cupixi (Porto Grande)", "Vila Nova Novo (Porto Grande)", "Assentamento Perimetral (Porto Grande)",
-            "Água Fria (Pedra Branca)", "Vila do Incra (Pedra Branca)", "Serra do Navio Velha (Serra do Navio)", "Colônia Água Branca (Serra do Navio)"
-        ] 
-    },
-    "PA": { 
-        n: "Pará", 
-        lat: -1.45, 
-        lon: -48.48, 
-        cities: [
-            // Cidades e distritos originais mantidos
-            "Abaetetuba","Abel Figueiredo","Acará","Afuá","Água Azul do Norte","Alenquer","Almeirim","Altamira","Anajás","Ananindeua","Anapu","Augusto Corrêa","Aurora do Pará","Aveiro","Bagre","Baião","Bannach","Barcarena","Belém","Belterra","Benevides","Bom Jesus do Tocantins","Bonito","Bragança","Brasil Novo","Brejo Grande do Araguaia","Breu Branco","Breves","Bujaru","Cachoeira do Arari","Cachoeira do Piriá","Cametá","Canaã dos Carajás","Capanema","Capitão Poço","Castanhal","Chaves","Colares","Conceição do Araguaia","Concórdia do Pará","Cumaru do Norte","Curionópolis","Curralinho","Curuá","Curuça","Dom Eliseu","Eldorado do Carajás","Faro","Floresta do Araguaia","Garrafão do Norte","Goianésia do Pará","Gurupá","Igarapé-Açu","Igarapé-Miri","Inhangapi","Ipixuna do Pará","Irituia","Itaituba","Itupiranga","Jacareacanga","Jacundá","Juruti","Limoeiro do Ajuru","Mãe do Rio","Magalhães Barata","Marabá","Maracanã","Marapanim","Marituba","Medicilândia","Melgaço","Mocajuba","Moju","Mojuí dos Campos","Monte Alegre","Muaná","Nova Esperança do Piriá","Novo Progresso","Novo Repartimento","Óbidos","Oriximiná","Ourilândia do Norte","Pacajá","Paragominas","Parauapebas","Pau D'Arco","Placas","Ponta de Pedras","Portel","Porto de Moz","Prainha","Primavera","Redenção","Rio Maria","Rondon do Pará","Rurópolis","Salinópolis","Salvaterra","Santa Bárbara do Pará","Santa Cruz do Arari","Santa Izabel do Pará","Santa Maria das Barreiras","Santa Maria do Pará","Santana do Araguaia","Santarém","Santarém Novo","Santo Antônio do Tauá","São Caetano de Odivelas","São Domingos do Araguaia","São Domingos do Capim","São Félix do Xingu","São Francisco do Pará","São Geraldo do Araguaia","São João da Ponta","São João de Pirabas","São João do Araguaia","São Miguel do Guamá","São Sebastião da Boa Vista","Sapucaia","Senador José Porfírio","Soure","Tailândia","Terra Alta","Terra Santa","Tomé-Açu","Tracuateua","Trairão","Tucumã","Tucuruí","Ulianópolis","Uruará","Vigia","Viseu","Vitória do Xingu","Xinguara","Alter do Chão","Algodoal","Almoço","Americano","Araras","Apeú","Assentamento Palmares","Boca do Acre","Cairari","Carajás","Castelo dos Sonhos","Colares","Curuai","Icoaraci","Igarapé-Açu","Ilha de Mosqueiro","Joana Peres","Miritituba","Monte Dourado","Murucupi","Outeiro","Paragominas Novo","Porto Trombetas","Quatro Bocas","Região do Salto","São Francisco do Mainardi","Taboleiro","Vila do Conde","Vila dos Cabanos","Vila do Trinta","Vila Mandi","Vila Permanente","Vila Socorro",
-            
-            // --- EXPANSÃO MÁXIMA DA REGIÃO METROPOLITANA DE BELÉM ---
-            // Distritos, Ilhas e Localidades de Belém
-            "Icoaraci (Belém)", "Mosqueiro (Belém)", "Outeiro (Belém)", "Cotijuba (Belém)", "Ilha do Combu (Belém)", "Bengui (Belém)", "Entroncamento (Belém)", "Val-de-Cans (Belém)", "Tenoné (Belém)", "Tapanã (Belém)", "Ilha de Paquetá (Belém)", "Ilha das Onças (Belém)", "Ilha do Jutuba (Belém)", "Baía do Sol (Mosqueiro)", "Vila de Mosqueiro (Belém)", "Fama (Outeiro)", "Brasília (Outeiro)", "Itaiteua (Outeiro)", "Quinta dos Prantos (Belém)",
-            
-            // Ananindeua
-            "Cidade Nova (Ananindeua)", "Coqueiro (Ananindeua)", "Guajará (Ananindeua)", "Distrito Industrial (Ananindeua)", "Águas Lindas (Ananindeua)", "Jaderlândia (Ananindeua)", "Curuçambá (Ananindeua)", "Aurá (Ananindeua)", "Igreja Perpétuo Socorro (Ananindeua)", "Vila Maguari (Ananindeua)", "Abacatal (Ananindeua)",
-            
-            // Marituba
-            "Almir Gabriel (Marituba)", "Decouville (Marituba)", "Nova Marituba (Marituba)", "Uriboca (Marituba)", "Che Guevara (Marituba)", "Bairro Novo (Marituba)", "São Francisco (Marituba)", "Vila União (Marituba)", "Campina de Marituba (Marituba)",
-            
-            // Benevides
-            "Murinin (Benevides)", "Benfica (Benevides)", "Distrito de Benfica (Benevides)", "Santa Maria (Benevides)", "Taiassuí (Benevides)", "Neópolis (Benevides)", "Assentamento Milton Santos (Benevides)", "Juaba (Benevides)", "Vila de Mosqueiro (Benevides - Limite)",
-            
-            // Santa Bárbara do Pará
-            "Genipaúba (Santa Bárbara)", "Pau D'Arco (Santa Bárbara)", "Colônia de Santana (Santa Bárbara)", "Cajueiro (Santa Bárbara)", "Apeú-Salvaterra (Santa Bárbara)", "Vila de Santa Bárbara (Santa Bárbara)", "Santo Amaro (Santa Bárbara)",
-            
-            // Castanhal e arredores metropolitanos próximos
-            "Apeú (Castanhal)", "Igreja do Apeú (Castanhal)", "Agrovila de Castanhal (Castanhal)", "Vila Marapanim (Castanhal)", "Macapazinho (Castanhal)", "Capanema Novo (Castanhal)", "Vila do Pará (Castanhal)", "Inhangapi Velho (Castanhal)"
-        ] 
-    }
-};
-
         let map, route, distKm = 0;
-        let modoOffline = false;
-
-        function toggleMode() {
-            const sel = document.getElementById('mapMode');
-            const tag = document.getElementById('modeTag');
-            modoOffline = (sel.value === 'offline');
-            tag.textContent = modoOffline ? 'OFFLINE' : 'ONLINE';
-            tag.className = 'mode-indicator ' + (modoOffline ? 'mode-offline' : 'mode-online');
-        }
 
         function init() {
-            map = L.map('map').setView([-15.0, -55.0], 4);
+            map = L.map('map').setView([-14.235, -51.925], 4);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-            const ufs = Object.keys(DB).sort();
-            ['os', 'ds'].forEach(id => {
-                const s = document.getElementById(id);
-                s.innerHTML = '<option value="">Estado</option>' + ufs.map(u => `<option value="${u}">${u}</option>`).join('');
-            });
         }
 
-        function upCities(t) {
-            const uf = document.getElementById(t+'s').value;
-            const c = document.getElementById(t+'c');
-            c.innerHTML = '<option value="">Cidade</option>';
-            if(uf && DB[uf]) {
-                DB[uf].cities.sort().forEach(city => {
-                    const opt = document.createElement('option');
-                    opt.value = city;
-                    opt.textContent = city;
-                    c.appendChild(opt);
-                });
+        // NOVO BUSCADOR SEGURO: Não causa conflito de CORS com o seu Nginx
+        async function buscarCoordenadas(local) {
+            let termo = local.replace(/-/g, ' ');
+            try {
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(termo)},Brasil&limit=1`;
+                const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    return { lat: data[0].lat, lon: data[0].lon };
+                }
+            } catch (err) {
+                console.error("Erro busca secundária", err);
             }
+            return null;
         }
 
         async function calc() {
-            const os = document.getElementById('os').value;
-            const oc = document.getElementById('oc').value;
-            const ds = document.getElementById('ds').value;
-            const dc = document.getElementById('dc').value;
+            const txtOrigem = document.getElementById('origem').value.trim();
+            const txtDestino = document.getElementById('destino').value.trim();
+            const loader = document.getElementById('loader');
 
-            if(!oc || !dc) return alert("Selecione Origem e Destino!");
+            if (!txtOrigem || !txtDestino) return alert("Por favor, digite a origem e o destino!");
 
-            if(!modoOffline && navigator.onLine) {
-                try {
-                    const r1 = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${oc},${os},Brasil`);
-                    const d1 = await r1.json();
-                    const r2 = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${dc},${ds},Brasil`);
-                    const d2 = await r2.json();
-                    
-                    const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${d1[0].lon},${d1[0].lat};${d2[0].lon},${d2[0].lat}?overview=full&geometries=geojson`);
-                    const data = await res.json();
-                    
-                    distKm = data.routes[0].distance / 1000;
-                    plot(data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]));
-                } catch(e) {
-                    calcularSimples(os, ds);
+            loader.style.display = 'block';
+
+            try {
+                const de = await buscarCoordenadas(txtOrigem);
+                const para = await buscarCoordenadas(txtDestino);
+
+                if (!de || !para) {
+                    loader.style.display = 'none';
+                    return alert("Localidade não encontrada. Verifique se digitou o nome correto.");
                 }
-            } else {
-                calcularSimples(os, ds);
-            }
-            show();
-        }
+                
+                // Puxa a rota da sua VPS com o mapa do Brasil inteiro completo
+                const res = await fetch(`https://amigoseverino.com.br/osrm-api/route/v1/driving/${de.lon},${de.lat};${para.lon},${para.lat}?overview=full&geometries=geojson`);
+                
+                if(!res.ok) {
+                    throw new Error("Servidor OSRM recusou o cálculo.");
+                }
 
-        function calcularSimples(os, ds) {
-            const lat1 = DB[os].lat; const lon1 = DB[os].lon;
-            const lat2 = DB[ds].lat; const lon2 = DB[ds].lon;
-            const R = 6371;
-            const dLat = (lat2-lat1)*Math.PI/180;
-            const dLon = (lon2-lon1)*Math.PI/180;
-            const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-            distKm = (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))) * 1.2;
-            plot([[lat1, lon1], [lat2, lon2]]);
+                const data = await res.json();
+                
+                if(!data.routes || data.routes.length === 0) {
+                    loader.style.display = 'none';
+                    return alert("Não há estradas registradas entre esses pontos.");
+                }
+
+                distKm = data.routes[0].distance / 1000;
+                plot(data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]));
+                show();
+            } catch(e) {
+                console.error(e);
+                alert("Erro ao traçar rota. Verifique a grafia ou tente novamente.");
+            } finally {
+                loader.style.display = 'none';
+            }
         }
 
         function plot(coords) {
